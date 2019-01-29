@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignInActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <include layout="@layout/tool_bar" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="3">
+
+            <EditText
+                android:id="@+id/txtPhone"
+                android:layout_width="match_parent"
+                android:background="@color/colorPrimary"
+                android:layout_height="@dimen/txt_nor_height"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="3"
+                android:textColorHint="#fff"
+                android:hint="Số Điện Thoại"
+                android:inputType="phone"
+                android:paddingLeft="15dp"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="3">
+
+            <EditText
+                android:id="@+id/txtPassword"
+                android:layout_width="match_parent"
+                android:background="@color/colorPrimaryEditText"
+                android:layout_height="@dimen/txt_nor_height"
+                android:layout_marginLeft="30dp"
+                android:fontFamily="sans-serif"
+                android:layout_marginRight="30dp"
+                android:layout_weight="3"
+                android:textColorHint="#fff"
+                android:hint="Mật khẩu"
+                android:inputType="textPassword"
+                android:paddingLeft="15dp"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_nor_height"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_normal"
+                android:text="Đăng nhập"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:onClick="signIn" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_nor_height"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_reverse"
+                android:text="Tạo tài khoản mới ?"
+                android:textColor="#006699"
+                android:onClick="toSignUp"
+                android:textSize="18dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:background="#00000000"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/forgetyourpass"
+                android:onClick="toResetPassword"
+                android:textColor="#000"
+                android:textSize="18dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50" />
+    </TableLayout>
+
+</LinearLayout>

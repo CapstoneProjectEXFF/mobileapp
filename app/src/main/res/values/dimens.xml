@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="toolbar_min_height">50dp</dimen>
+    <dimen name="toolbar_min_width">16dp</dimen>
+    <dimen name="btn_nor_height">50dp</dimen>
+    <dimen name="btn_nor_width">250dp</dimen>
+    <dimen name="txt_nor_width">250dp</dimen>
+    <dimen name="txt_nor_height">45dp</dimen>
+    <dimen name="label_nor_height">35dp</dimen>
+    <dimen name="label_nor_width">250dp</dimen>
+</resources>

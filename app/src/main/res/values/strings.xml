@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ExchangeSystem</string>
+    <string name="forgetyourpass"><u><i>Quên mật khẩu ?</i></u></string>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/toolbar_default"
+    android:gravity="center"
+    android:minHeight="50dp">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/btn_transparent"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:onClick="onBackButton" />
+
+    <TextView
+        android:id="@+id/lbl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginLeft="-40dp"
+        android:text="Trao Đổi và Từ Thiện"
+        android:textColor="#FFFFFF"
+        android:textSize="24dp" />
+
+</LinearLayout>
