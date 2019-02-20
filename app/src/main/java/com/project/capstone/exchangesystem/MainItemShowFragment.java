@@ -3,6 +3,7 @@ package com.project.capstone.exchangesystem;
 import Utils.RmaAPIUtils;
 import adapter.ItemAdapter;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class MainItemShowFragment extends Fragment {
@@ -58,21 +61,28 @@ public class MainItemShowFragment extends Fragment {
     }
 
     private void GetBrandNewItems() {
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        rmaAPIService.getAllItems("Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJwaG9uZU51bWJlclwiOlwiMDk3ODQzOTcxOFwiLFwiZnVsbE5hbWVcIjpudWxsLFwic3RhdHVzXCI6bnVsbCxcInJvbGVCeVJvbGVJZFwiOntcImlkXCI6MSxcIm5hbWVcIjpcInVzZXJcIn19IiwiZXhwIjoxNTUxNDE2NjA0fQ.akJMpxrPogLNMxb5zD1CRjnKOeFJ2bZkNVUoG_d8Vy3glhkWLQrqVGEVc9ocSuQsu0dr2dmHDVMovJeaxeuLWw").enqueue(new Callback<List<Item>>() {
-            @Override
-            public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                System.out.println("Done first step in Show Item");
-                List<Item> result = response.body();
-                for (int i = 0; i < result.size(); i++) {
-                    itemArrayList.add(result.get(i));
-                    itemAdapter.notifyDataSetChanged();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+        String authorization = sharedPreferences.getString("authorization", null);
+        if (authorization != null) {
+            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+            rmaAPIService.getAllItems(authorization).enqueue(new Callback<List<Item>>() {
+                @Override
+                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
+                    System.out.println("Done first step in Show Item");
+                    List<Item> result = response.body();
+                    for (int i = 0; i < result.size(); i++) {
+                        itemArrayList.add(result.get(i));
+                        itemAdapter.notifyDataSetChanged();
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Call<List<Item>> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
+
+                @Override
+                public void onFailure(Call<List<Item>> call, Throwable t) {
+                    System.out.println(t.getMessage());
+                }
+            });
+        } else {
+            System.out.println("Fail Test Authorization");
+        }
     }
 }

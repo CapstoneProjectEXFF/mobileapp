@@ -107,6 +107,7 @@ public class SignInActivity extends AppCompatActivity {
                                 editor.putString("phoneNumberSignIn", phoneNumber);
                                 editor.putString("userId", id.toString());
                                 editor.putString("username", fullName);
+                                editor.putString("authorization", authorization);
                                 editor.commit();
 
 
