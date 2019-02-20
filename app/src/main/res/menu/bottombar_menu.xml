@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/bottombaritem_main"
+        android:icon="@drawable/ic_main_24dp"
+        android:title="Main"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_charity"
+        android:icon="@drawable/ic_charity_24dp"
+        android:title="Charity"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_notification"
+        android:icon="@drawable/ic_notification_24dp"
+        android:title="Notification"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/bottombaritem_profile"
+        android:icon="@drawable/ic_profile_24dp"
+        android:title="Profile"
+        app:showAsAction="ifRoom"/>
+</menu>

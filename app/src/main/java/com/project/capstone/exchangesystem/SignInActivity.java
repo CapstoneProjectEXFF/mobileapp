@@ -64,14 +64,11 @@ public class SignInActivity extends AppCompatActivity {
         final Map<String, String> jsonBody = new HashMap<String, String>();
         jsonBody.put("phoneNumber", phone);
         jsonBody.put("password", password);
-//        String jsonBody = gson.toJson(myObject);
         progressDialog.show();
         rmaAPIService.login(jsonBody).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-//                Toast.makeText()
                 progressDialog.cancel();
-                System.out.println("Done first step");
                 Toast.makeText(getApplicationContext(), "Vào rồi", Toast.LENGTH_LONG).show();
                 System.out.println("successfull: " + response.isSuccessful());
                 System.out.println("body " + response.body());
@@ -83,14 +80,8 @@ public class SignInActivity extends AppCompatActivity {
                     if (response.body() != null) {
 
                         try {
-//                            JsonParser parser = new JsonParser();
-//                            JSONObject jsonObject =(JSONObject)  parser.parse(response.body().toString());
 
-                            String temp = "{\"phoneNumber\":\"0978439718\",\"password\":\"0978439718\"}";
-//                            JSONObject jsonObject = new JSONObject(response.body().toString());
-//                            JSONObject jsonObject = (JSONObject) response.body();
                             LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
-
 
                             String authorization = (String) responeBody.get("Authorization");
                             System.out.println(authorization);
@@ -99,7 +90,7 @@ public class SignInActivity extends AppCompatActivity {
 
                             Double id = (Double) userInfo.get("id");
                             System.out.println(id);
-//
+
                             String phoneNumber = (String) userInfo.get("phoneNumber");
                             System.out.println(phoneNumber);
 
@@ -111,32 +102,32 @@ public class SignInActivity extends AppCompatActivity {
 //
 //
 //
-//                            if (status.equals("1")) {
-//                                SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-//                                editor.putString("phoneNumberSignIn", phoneNumber);
-//                                editor.putString("userId", id);
-//                                editor.putString("username", fullname);
-//                                editor.commit();
-//
-//
-//                                // login thẳng vào Main
-////                            Intent intent = new Intent(context, MainActivity.class);
-////                            startActivity(intent);
-//                            } else {
-//                                Intent intent = new Intent(context, MainActivity.class);
-//                                intent.putExtra("phoneNumber", phoneNumber);
-//                                intent.putExtra("type", "create-account");
-//                                intent.putExtra("userId", id);
-//                                intent.putExtra("userName", fullname);
-////                            startActivity(intent);
-//                            }
+                            if (status.equals("1")) {
+                                SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
+                                editor.putString("phoneNumberSignIn", phoneNumber);
+                                editor.putString("userId", id.toString());
+                                editor.putString("username", fullName);
+                                editor.commit();
+
+
+                                // login thẳng vào Main
+                                Intent intent = new Intent(context, MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(context, VerifyActivity.class);
+                                intent.putExtra("phoneNumber", phoneNumber);
+                                intent.putExtra("type", "create-account");
+                                intent.putExtra("userId", id);
+                                intent.putExtra("userName", fullName);
+                                startActivity(intent);
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Số điện thoại hoặc mật khẩu không đúng", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Số điện thoại hoặc mật khẩu không đúng! Đăng Nhập Lại", Toast.LENGTH_LONG).show();
                         txtPhone.setText("");
                         txtPassword.setText("");
                     }
@@ -147,26 +138,23 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-
                 progressDialog.cancel();
                 Toast toast = Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT);
                 System.out.println("message from failure: " + t.getMessage());
-
                 toast.show();
-
             }
         });
-
     }
 
     public void toSignUp(View view) {
         Intent intent = new Intent(this, SignUpAcitivity.class);
+        startActivity(intent);
 
     }
 
     public void toResetPassword(View view) {
         Intent intent = new Intent(this, ForgetPasswordActivity.class);
-
+        startActivity(intent);
     }
 
     public void onBackButton(View view) {
