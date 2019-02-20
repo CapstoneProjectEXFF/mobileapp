@@ -49,9 +49,9 @@ public class MainItemShowFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.mainRecyclerView);
         itemArrayList = new ArrayList<>();
-        itemAdapter = new ItemAdapter(container.getContext(), itemArrayList);
+        itemAdapter = new ItemAdapter(view.getContext(), itemArrayList);
         mainRecyclerView.setHasFixedSize(true);
-        mainRecyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 2));
+        mainRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
         mainRecyclerView.setAdapter(itemAdapter);
         GetBrandNewItems();
         return view;

@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = MainItemShowFragment.newInstance();
                         break;
                     case R.id.bottombaritem_charity:
-                        // TODO
-                        return true;
+                        selectedFragment = MainCharityPostFragment.newInstance();
+                        break;
                     case R.id.bottombaritem_notification:
                         // TODO
                         return true;

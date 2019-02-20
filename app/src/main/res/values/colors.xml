@@ -6,4 +6,10 @@
     <color name="colorPrimaryLighter">#0079b6</color>
     <color name="colorSecondary">#8b8b8b</color>
     <color name="colorPrimaryEditText">#1b313b</color>
+    <color name="white">#ffffff</color>
+    <color name="feed_bg">#d3d6db</color>
+    <color name="feed_item_bg">#ffffff</color>
+    <color name="feed_item_border">#c2c3c8</color>
+    <color name="link">#0a80d1</color>
+    <color name="timestamp">#a0a3a7</color>
 </resources>
