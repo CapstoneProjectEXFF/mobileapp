@@ -6,7 +6,7 @@
     tools:context=".MainItemShowFragment">
 
     <LinearLayout
-        android:background="@color/colorPrimary"
+        android:background="@color/feed_bg"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,7 +16,7 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryEditText"
             android:layout_margin="5dp"
-            android:text="Brand New Product"
+            android:text="Lastest Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -24,8 +24,6 @@
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </android.support.v7.widget.RecyclerView>
-
     </LinearLayout>
 </LinearLayout>
