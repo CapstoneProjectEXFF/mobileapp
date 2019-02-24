@@ -3,16 +3,22 @@ package com.project.capstone.exchangesystem;
 import Utils.RmaAPIUtils;
 import adapter.ItemAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import model.Item;
 import model.User;
@@ -31,6 +37,9 @@ public class MainItemShowFragment extends Fragment {
     RecyclerView mainRecyclerView;
     ArrayList<Item> itemArrayList;
     ItemAdapter itemAdapter;
+    AppBarLayout appBarLayout;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    Menu menu;
 
 
     public MainItemShowFragment() {
@@ -49,16 +58,31 @@ public class MainItemShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
+
+
+        final View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
+        appBarLayout = (AppBarLayout) view.findViewById(R.id.appbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+
+
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.mainRecyclerView);
         itemArrayList = new ArrayList<>();
-        itemAdapter = new ItemAdapter(view.getContext(), itemArrayList);
+        itemAdapter = new ItemAdapter(view.getContext(), itemArrayList, new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+                Toast.makeText(view.getContext(), item.getDescription(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(view.getContext(), DescriptionItem.class);
+                intent.putExtra("descriptionItem", item);
+                startActivity(intent);
+            }
+        });
         mainRecyclerView.setHasFixedSize(true);
         mainRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
         mainRecyclerView.setAdapter(itemAdapter);
         GetBrandNewItems();
         return view;
     }
+
 
     private void GetBrandNewItems() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
@@ -85,4 +109,6 @@ public class MainItemShowFragment extends Fragment {
             System.out.println("Fail Test Authorization");
         }
     }
+
+
 }

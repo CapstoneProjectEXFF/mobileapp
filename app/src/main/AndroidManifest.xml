@@ -34,7 +34,10 @@
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".CreateSuccessActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".VerifyActivity"></activity>
+        <activity android:name=".VerifyActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".DescriptionItem"></activity>
     </application>
 
 </manifest>
