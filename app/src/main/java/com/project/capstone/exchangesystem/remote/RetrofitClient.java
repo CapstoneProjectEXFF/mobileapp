@@ -1,4 +1,4 @@
-package remote;
+package com.project.capstone.exchangesystem.remote;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -8,7 +8,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class RetrofitClient {
     private static Retrofit retrofit = null;

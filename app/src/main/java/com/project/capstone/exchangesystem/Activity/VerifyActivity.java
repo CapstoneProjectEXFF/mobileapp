@@ -1,7 +1,8 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import com.project.capstone.exchangesystem.R;
 
 public class VerifyActivity extends AppCompatActivity {
 

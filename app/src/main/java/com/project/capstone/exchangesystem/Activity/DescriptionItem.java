@@ -1,14 +1,13 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import android.support.v7.widget.Toolbar;
+import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
-import model.Item;
-
-import java.text.DecimalFormat;
+import com.project.capstone.exchangesystem.model.Item;
 
 public class DescriptionItem extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;

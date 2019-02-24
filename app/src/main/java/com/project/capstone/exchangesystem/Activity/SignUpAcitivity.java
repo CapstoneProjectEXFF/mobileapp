@@ -1,7 +1,6 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
-import Utils.RmaAPIUtils;
-import android.app.ProgressDialog;
+import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -12,12 +11,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import model.User;
-import remote.RmaAPIService;
+import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.model.User;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;

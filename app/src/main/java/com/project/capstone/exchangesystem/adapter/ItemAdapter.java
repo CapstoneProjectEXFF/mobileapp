@@ -1,4 +1,4 @@
-package adapter;
+package com.project.capstone.exchangesystem.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,14 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.project.capstone.exchangesystem.MainActivity;
 import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
-import model.Item;
+import com.project.capstone.exchangesystem.model.Item;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {

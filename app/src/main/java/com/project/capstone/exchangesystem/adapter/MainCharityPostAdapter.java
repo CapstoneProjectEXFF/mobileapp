@@ -1,8 +1,7 @@
-package adapter;
+package com.project.capstone.exchangesystem.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
-import model.CharityPostItem;
+import com.project.capstone.exchangesystem.model.CharityPostItem;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainCharityPostAdapter extends BaseAdapter {

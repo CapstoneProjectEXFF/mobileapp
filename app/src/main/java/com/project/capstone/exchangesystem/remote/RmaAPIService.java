@@ -1,12 +1,10 @@
-package remote;
+package com.project.capstone.exchangesystem.remote;
 
-import com.google.gson.JsonObject;
-import model.Item;
-import model.User;
+import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.model.User;
 import retrofit2.Call;
 import retrofit2.http.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

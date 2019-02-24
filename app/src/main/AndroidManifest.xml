@@ -21,7 +21,7 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".Activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,15 +29,15 @@
             </intent-filter>
         </activity>
         <!-- <activity android:name=".WelcomeActivity" /> -->
-        <activity android:name=".SignUpAcitivity" />
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".ForgetPasswordActivity" />
-        <activity android:name=".CreateSuccessActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".VerifyActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".DescriptionItem"></activity>
+        <activity android:name=".Activity.SignUpAcitivity" />
+        <activity android:name=".Activity.SignInActivity" />
+        <activity android:name=".Activity.ForgetPasswordActivity" />
+        <activity android:name=".Activity.CreateSuccessActivity" />
+        <activity android:name=".Activity.MainActivity" />
+        <activity android:name=".Activity.VerifyActivity" />
+        <activity android:name=".Activity.ProfileActivity" />
+        <activity android:name=".Activity.SearchActivity" />
+        <activity android:name=".Activity.DescriptionItem"></activity>
     </application>
 
 </manifest>

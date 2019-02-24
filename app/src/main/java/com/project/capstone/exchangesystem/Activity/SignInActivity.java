@@ -1,12 +1,11 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
-import Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,24 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
-import model.User;
-import org.json.JSONException;
-import org.json.JSONObject;
-import remote.RmaAPIService;
+import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
-import service.UserService;
+import com.project.capstone.exchangesystem.service.UserService;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class SignInActivity extends AppCompatActivity {
     Context context;

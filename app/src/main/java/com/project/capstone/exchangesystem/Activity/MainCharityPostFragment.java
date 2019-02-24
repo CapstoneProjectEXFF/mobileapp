@@ -1,18 +1,15 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
-import adapter.MainCharityPostAdapter;
-import android.content.Context;
-import android.net.Uri;
+import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import model.CharityPostItem;
+import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.model.CharityPostItem;
 
 import java.util.ArrayList;
 

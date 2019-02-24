@@ -1,8 +1,6 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
-import Utils.RmaAPIUtils;
-//import adapter.ItemAdapter;
-import adapter.ItemAdapter;
+//import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,13 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
+        import android.view.MenuItem;
 import android.view.View;
-import model.Item;
-import remote.RmaAPIService;
-
-import java.util.ArrayList;
+import com.project.capstone.exchangesystem.R;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;

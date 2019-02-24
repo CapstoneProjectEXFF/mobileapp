@@ -1,9 +1,10 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import com.project.capstone.exchangesystem.R;
 
 public class CreateSuccessActivity extends AppCompatActivity {
 
