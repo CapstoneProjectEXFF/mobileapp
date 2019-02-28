@@ -88,11 +88,8 @@ public class SearchActivity extends AppCompatActivity implements ViewTimKiem {
                 startActivity(intent);
             }
         });
-
         activitySearchBinding.searchRecyclerView.setAdapter(resultAdapter);
         resultAdapter.setfilter(sanPhamList);
-
-
     }
 
     @Override

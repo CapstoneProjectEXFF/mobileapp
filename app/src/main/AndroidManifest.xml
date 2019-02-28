@@ -36,8 +36,11 @@
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.VerifyActivity" />
         <activity android:name=".Activity.ProfileActivity" />
-        <activity android:theme="@style/AppTheme2" android:name=".Activity.SearchActivity" />
-        <activity android:name=".Activity.DescriptionItem"></activity>
+        <activity
+            android:name=".Activity.SearchActivity"
+            android:theme="@style/AppTheme2" />
+        <activity android:name=".Activity.DescriptionItem" />
+        <activity android:name=".Activity.TradeActivity"></activity>
     </application>
 
 </manifest>
