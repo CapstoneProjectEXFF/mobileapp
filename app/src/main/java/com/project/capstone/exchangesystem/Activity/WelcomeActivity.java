@@ -38,4 +38,6 @@ public class WelcomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
+
+
 }

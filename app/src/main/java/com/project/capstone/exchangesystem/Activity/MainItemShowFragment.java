@@ -102,5 +102,10 @@ public class MainItemShowFragment extends Fragment {
         }
     }
 
+    public void toSearch(View view) {
+        Intent iTimKiem = new Intent(getActivity(), SearchActivity.class);
+        startActivity(iTimKiem);
+    }
+
 
 }

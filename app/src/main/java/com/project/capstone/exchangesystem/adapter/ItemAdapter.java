@@ -25,6 +25,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         void onItemClick(Item item);
     }
 
+    public void setfilter(ArrayList<Item> tempArray) {
+        //wordlist = new ArrayList<>();
+        itemArrayList.clear();
+        itemArrayList.addAll(tempArray);
+        notifyDataSetChanged();
+    }
 
     public ItemAdapter(Context context, ArrayList<Item> itemArrayList, OnItemClickListener listener) {
         this.context = context;

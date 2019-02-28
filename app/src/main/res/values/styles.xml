@@ -9,7 +9,14 @@
         <item name="android:windowBackground">@drawable/app_background</item>
 
     </style>
+    <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@drawable/app_background</item>
 
+    </style>
     <style name="menuitemcolor" parent="AppTheme">
         <item name="android:textColorPrimary">@color/bgToolbar</item>
         <item name="drawerArrowStyle">@style/changecolordrawertoogle</item>

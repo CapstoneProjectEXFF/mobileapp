@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     public void toSearch(View view) {
         Intent iTimKiem = new Intent(this, SearchActivity.class);
         startActivity(iTimKiem);
     }
-
 }

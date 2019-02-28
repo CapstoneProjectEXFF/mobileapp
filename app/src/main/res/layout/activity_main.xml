@@ -26,8 +26,8 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         app:itemBackground="?attr/colorPrimary"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@android:color/holo_blue_bright"
+        app:itemTextColor="@android:color/holo_blue_bright"
         app:menu="@menu/bottombar_menu" />
 
 

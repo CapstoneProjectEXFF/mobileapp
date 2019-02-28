@@ -36,7 +36,7 @@
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.VerifyActivity" />
         <activity android:name=".Activity.ProfileActivity" />
-        <activity android:name=".Activity.SearchActivity" />
+        <activity android:theme="@style/AppTheme2" android:name=".Activity.SearchActivity" />
         <activity android:name=".Activity.DescriptionItem"></activity>
     </application>
 

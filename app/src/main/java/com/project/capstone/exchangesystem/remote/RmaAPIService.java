@@ -26,9 +26,10 @@ public interface RmaAPIService {
     Call<Object> checkValidationLogin(@Query("phone") String phone);
 
     @GET("/item")
-//    @Headers({"Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJwaG9uZU51bWJlclwiOlwiMDk3ODQzOTcxOFwiLFwiZnVsbE5hbWVcIjpudWxsLFwic3RhdHVzXCI6bnVsbCxcInJvbGVCeVJvbGVJZFwiOntcImlkXCI6MSxcIm5hbWVcIjpcInVzZXJcIn19IiwiZXhwIjoxNTUxNDE2NjA0fQ.akJMpxrPogLNMxb5zD1CRjnKOeFJ2bZkNVUoG_d8Vy3glhkWLQrqVGEVc9ocSuQsu0dr2dmHDVMovJeaxeuLWw"})
-//    Call<Object> getAllItems(@Header(("Authorization")) String authorization);
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
+
+    @GET("/itemSearch")
+    Call<List<Item>> findItems(@Query("name") String name);
 }
 
