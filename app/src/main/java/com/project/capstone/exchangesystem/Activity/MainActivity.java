@@ -11,6 +11,8 @@ import android.os.Bundle;
         import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
+import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -54,4 +56,6 @@ public class MainActivity extends AppCompatActivity {
         Intent iTimKiem = new Intent(this, SearchActivity.class);
         startActivity(iTimKiem);
     }
+
+
 }

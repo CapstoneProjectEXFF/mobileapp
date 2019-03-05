@@ -4,8 +4,8 @@ import com.project.capstone.exchangesystem.remote.RetrofitClient;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 
 public class RmaAPIUtils {
-        public static final String LOCAL_IP = "http://172.16.8.61";
-//    public static final String LOCAL_IP = "http://172.16.19.36";
+//        public static final String LOCAL_IP = "http://10.82.137.166";
+    public static final String LOCAL_IP = "http://172.16.0.47";
 
 //    public static final String LOCAL_IP = "http://172.16.1.85";
 

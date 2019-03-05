@@ -120,14 +120,14 @@ public class SignUpAcitivity extends AppCompatActivity {
 
         if ((flag == true) && (flag1 == true) && (flag2 == true) && (flag3 == true) && (flag4 == true)) {
 
-            user.setFirstName(fistname);
-            user.setLastName(lastname);
+
+            user.setFullName(fistname + " " + lastname);
             user.setPhone(phone);
-            user.setPassword(password);
+//            user.setPassword(password);
 
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", phone);
-            jsonBody.put("password", password);
+//            jsonBody.put("password", password);
             jsonBody.put("fullname", fistname + " " + lastname);
             jsonBody.put("status", "normal");
 

@@ -1,4 +1,4 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.fragment;
 
 import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
 import android.os.Bundle;

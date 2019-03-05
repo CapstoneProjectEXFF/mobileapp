@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.List;
 
 public class Item implements Serializable {
 
@@ -15,21 +17,80 @@ public class Item implements Serializable {
     @Expose
     private String name;
 
-    @SerializedName("userId")
-    @Expose
-    private int userId;
 
     @SerializedName("description")
     @Expose
     private String description;
 
+    @SerializedName("address")
+    @Expose
+    private String address;
+
     @SerializedName("status")
     @Expose
-    private boolean status;
+    private String status;
 
-    @SerializedName("image")
+    @SerializedName("privacy")
     @Expose
-    private String image;
+    private String privacy;
+
+    @SerializedName("createTime")
+    @Expose
+    private Timestamp createTime;
+
+    @SerializedName("modifyTime")
+    @Expose
+    private Timestamp modifyTime;
+
+    @SerializedName("category")
+    @Expose
+    private Category category;
+
+
+    @SerializedName("user")
+    @Expose
+    private User user;
+
+    @SerializedName("images")
+    @Expose
+    private List<Image> images;
+
+    public String getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Timestamp modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setImage(List<Image> images) {
+        this.images = images;
+    }
 
     public int getId() {
         return id;
@@ -47,13 +108,6 @@ public class Item implements Serializable {
         this.name = name;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getDescription() {
         return description;
@@ -63,28 +117,53 @@ public class Item implements Serializable {
         this.description = description;
     }
 
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Item(int id, String name, int userId, String description, boolean status, String image) {
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<Image> getImage() {
+        return images;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public Item(int id, String name, String description, String address, String status, String privacy, Timestamp createTime, Timestamp modifyTime, Category category, User user, List<Image> images) {
         this.id = id;
         this.name = name;
-        this.userId = userId;
         this.description = description;
+        this.address = address;
         this.status = status;
-        this.image = image;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+        this.privacy = privacy;
+        this.createTime = createTime;
+        this.modifyTime = modifyTime;
+        this.category = category;
+        this.user = user;
+        this.images = images;
     }
 }

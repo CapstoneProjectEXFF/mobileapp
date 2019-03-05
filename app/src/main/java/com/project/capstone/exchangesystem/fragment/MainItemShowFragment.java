@@ -1,5 +1,7 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.fragment;
 
+import com.project.capstone.exchangesystem.Activity.DescriptionItem;
+import com.project.capstone.exchangesystem.Activity.SearchActivity;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import android.content.Intent;

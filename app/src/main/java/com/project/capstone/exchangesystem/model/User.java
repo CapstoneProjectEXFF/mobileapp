@@ -7,33 +7,38 @@ public class User {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private int id;
 
     @SerializedName("phoneNumber")
     @Expose
     private String phone;
 
-    @SerializedName("password")
-    @Expose
-    private String password;
+//    @SerializedName("password")
+//    @Expose
+//    private String password;
 
-    @SerializedName("firstName")
+    @SerializedName("fullName")
     @Expose
-    private String firstName;
+    private String fullName;
 
-    @SerializedName("lastName")
+    @SerializedName("avatar")
     @Expose
-    private String lastName;
+    private String avatar;
 
-    @SerializedName("activated")
+
+    @SerializedName("status")
     @Expose
-    private boolean activated;
+    private String status;
 
-    public String getId() {
+    @SerializedName("roleByRoleId")
+    @Expose
+    private Role roleByRoleId;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,35 +50,56 @@ public class User {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getStatus() {
+        return status;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public boolean isActivated() {
-        return activated;
+    public Role getRoleByRoleId() {
+        return roleByRoleId;
     }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
+    public void setRoleByRoleId(Role roleByRoleId) {
+        this.roleByRoleId = roleByRoleId;
+    }
+
+    public User(int id, String phone,  String fullName, String avatar, String status, Role roleByRoleId) {
+        this.id = id;
+        this.phone = phone;
+//        this.password = password;
+        this.fullName = fullName;
+        this.avatar = avatar;
+        this.status = status;
+        this.roleByRoleId = roleByRoleId;
+    }
+
+    public User() {
     }
 }

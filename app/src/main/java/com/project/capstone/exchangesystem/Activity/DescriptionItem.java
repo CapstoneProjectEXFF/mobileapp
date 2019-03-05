@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.Item;
+
+import java.util.List;
 
 public class DescriptionItem extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
@@ -37,7 +40,7 @@ public class DescriptionItem extends AppCompatActivity {
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
         txtName = item.getName();
         txtDescription = item.getDescription();
-        image = item.getImage();
+        image = item.getImage().get(0).getUrl();
 
 
         txtNameDescriptionItem.setText(txtName);
@@ -68,5 +71,13 @@ public class DescriptionItem extends AppCompatActivity {
         txtNameUserDescriotionItem = (TextView) findViewById(R.id.txtNameUserDescriotionItem);
         txtViewDescriptionItem = (TextView) findViewById(R.id.txtViewDescriptionItem);
         btnTrade = (Button) findViewById(R.id.btnTrade);
+    }
+
+    public void toTradeActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), TradeActivity.class);
+        Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
+        intent.putExtra("descriptionItem", item);
+        startActivity(intent);
+
     }
 }
