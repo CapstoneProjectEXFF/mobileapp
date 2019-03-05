@@ -3,7 +3,9 @@ package com.project.capstone.exchangesystem.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CharityPostItem {
+import java.io.Serializable;
+
+public class CharityPostItem  implements Serializable {
 
     @SerializedName("id")
     @Expose
