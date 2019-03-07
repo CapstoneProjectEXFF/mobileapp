@@ -16,9 +16,9 @@ import java.util.ArrayList;
 
 
 public class YourInventoryFragment extends Fragment {
-    GridView gridViewYourInventory;
-    ArrayList<Item> yourInventoryList;
-    TradeAdapter tradeAdapter;
+    private GridView gridViewYourInventory;
+    private ArrayList<Item> yourInventoryList;
+    private TradeAdapter tradeAdapter;
 
     public YourInventoryFragment() {
     }
@@ -49,13 +49,13 @@ public class YourInventoryFragment extends Fragment {
     }
 
     private void GetYourTradeInventory() {
-        for (int i = 0; i < 4; i++) {
-            yourInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+
+            yourInventoryList.add(new Item(1, "test 1 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+            yourInventoryList.add(new Item(1, "test 2 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+            yourInventoryList.add(new Item(1, "test 3 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+            yourInventoryList.add(new Item(1, "test 4 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
             tradeAdapter.notifyDataSetChanged();
-        }
+
     }
 
 //    private void CheckItem() {

@@ -17,9 +17,9 @@ import java.util.ArrayList;
 
 
 public class MyInventoryFragment extends Fragment {
-    GridView gridViewMyInventory;
-    ArrayList<Item> myInventoryList;
-    TradeAdapter tradeAdapter;
+    private GridView gridViewMyInventory;
+    private ArrayList<Item> myInventoryList;
+    private TradeAdapter tradeAdapter;
 
 
     public MyInventoryFragment() {
@@ -50,8 +50,8 @@ public class MyInventoryFragment extends Fragment {
 
     private void GetMyTradeInventory() {
         for (int i = 0; i < 3; i++) {
-            myInventoryList.add(new Item(1, "iphone 7 "+ i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            tradeAdapter.notifyDataSetChanged();
+            myInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
         }
+        tradeAdapter.notifyDataSetChanged();
     }
 }

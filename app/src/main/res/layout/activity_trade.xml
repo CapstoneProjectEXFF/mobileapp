@@ -30,12 +30,20 @@
             android:layout_weight="2" />
     </LinearLayout>
 
-    <fragment
+    <!--<fragment-->
+    <!--android:id="@+id/fragment_switch"-->
+    <!--android:name="com.project.capstone.exchangesystem.fragment.YourInventoryFragment"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="450dp"-->
+    <!--android:layout_marginLeft="5dp"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--/>-->
+
+    <FrameLayout
         android:id="@+id/fragment_switch"
-        android:name="com.project.capstone.exchangesystem.fragment.YourInventoryFragment"
         android:layout_width="match_parent"
         android:layout_height="450dp"
-
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp" />

@@ -14,6 +14,7 @@ import com.project.capstone.exchangesystem.model.CharityPostItem;
 import com.project.capstone.exchangesystem.model.Item;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TradeAdapter extends BaseAdapter {
@@ -32,6 +33,13 @@ public class TradeAdapter extends BaseAdapter {
         public CheckBox checkBoxTrade;
 //        public TextView txtTradeIDItem;
 
+    }
+
+    public void setfilter(ArrayList<Item> tempArray) {
+        //wordlist = new ArrayList<>();
+        itemList.clear();
+        itemList.addAll(tempArray);
+        notifyDataSetChanged();
     }
 
     @Override

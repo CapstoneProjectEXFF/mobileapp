@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.Activity;
 
+import android.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,26 +12,38 @@ import com.project.capstone.exchangesystem.fragment.YourInventoryFragment;
 
 public class TradeActivity extends AppCompatActivity {
 
+    Fragment selectedFragment;
+    Fragment defaultFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
+
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        defaultFragment = YourInventoryFragment.newInstance();
+
+        tx.replace(R.id.fragment_switch, defaultFragment);
+        tx.commit();
     }
 
 
     public void toYourInventoryFragment(View view) {
         Fragment selectedFragment = null;
-        selectedFragment = YourInventoryFragment.newInstance();
+        selectedFragment = new YourInventoryFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_switch, selectedFragment);
+        transaction.replace(R.id.fragment_switch, selectedFragment).addToBackStack(null);
         transaction.commit();
+
     }
 
     public void toMyInventoryFragment(View view) {
         Fragment selectedFragment = null;
-        selectedFragment = MyInventoryFragment.newInstance();
+        selectedFragment = new MyInventoryFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_switch, selectedFragment);
+        transaction.replace(R.id.fragment_switch, selectedFragment).addToBackStack(null);
         transaction.commit();
     }
+
+
 }

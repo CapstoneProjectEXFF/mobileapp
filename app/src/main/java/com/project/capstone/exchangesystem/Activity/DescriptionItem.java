@@ -40,7 +40,7 @@ public class DescriptionItem extends AppCompatActivity {
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
         txtName = item.getName();
         txtDescription = item.getDescription();
-        image = item.getImage().get(0).getUrl();
+//        image = item.getImage().get(0).getUrl();
 
 
         txtNameDescriptionItem.setText(txtName);
