@@ -105,6 +105,11 @@ public class SignInActivity extends AppCompatActivity {
                                 // login thẳng vào Main
                                 Intent intent = new Intent(context, MainActivity.class);
                                 startActivity(intent);
+
+                                //login vào createItem
+//                                Intent intent = new Intent(context, CreateItemActivity.class);
+//                                startActivity(intent);
+
                             } else {
                                 Intent intent = new Intent(context, VerifyActivity.class);
                                 intent.putExtra("phoneNumber", phoneNumber);

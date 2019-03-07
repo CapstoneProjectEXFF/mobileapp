@@ -1,5 +1,7 @@
 package com.project.capstone.exchangesystem.remote;
 
+import com.project.capstone.exchangesystem.model.Category;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.User;
 import retrofit2.Call;
@@ -31,5 +33,20 @@ public interface RmaAPIService {
 
     @GET("/itemSearch")
     Call<List<Item>> findItems(@Query("name") String name);
+
+    @GET("/category")
+    Call<List<Category>> getAllCategory();
+
+    @POST("/item")
+    Call<Item> createItem(@Body Map<String, Object> body, @Header("Authorization") String authorization);
+
+    @PUT("/item/{id}")
+    Call<Object> updateItem(@Body Map<String, String> body, @Header("Authorization") String authorization, @Path("id") int itemId);
+
+    @GET("/item/{id}")
+    Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
+
+    @GET("/image/{itemId}")
+    Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
 }
 
