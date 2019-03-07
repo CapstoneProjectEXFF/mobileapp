@@ -31,8 +31,6 @@ public class MainItemShowFragment extends Fragment {
     RecyclerView mainRecyclerView;
     ArrayList<Item> itemArrayList;
     ItemAdapter itemAdapter;
-    AppBarLayout appBarLayout;
-    CollapsingToolbarLayout collapsingToolbarLayout;
     Menu menu;
 
 
@@ -55,10 +53,6 @@ public class MainItemShowFragment extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
-        appBarLayout = (AppBarLayout) view.findViewById(R.id.appbar);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-
-
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.mainRecyclerView);
         itemArrayList = new ArrayList<>();
         itemAdapter = new ItemAdapter(view.getContext(), itemArrayList, new ItemAdapter.OnItemClickListener() {

@@ -79,7 +79,7 @@ public class SignInActivity extends AppCompatActivity {
 
                             LinkedTreeMap<String, Object> userInfo = (LinkedTreeMap<String, Object>) responeBody.get("User");
 
-                            Double id = (Double) userInfo.get("id");
+                            int id = (int) Math.round((Double) userInfo.get("id"));
                             System.out.println(id);
 
                             String phoneNumber = (String) userInfo.get("phoneNumber");
@@ -89,14 +89,16 @@ public class SignInActivity extends AppCompatActivity {
                             System.out.println(fullName);
 
                             String status = (String) userInfo.get("status");
-                            System.out.println(status);
-//
-//
-//
+                            System.out.println("test "+status);
+
+                            String avatar = (String) userInfo.get("avatar");
+                            System.out.println(avatar);
+
                             if (status.equals("1")) {
                                 SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
+                                editor.putString("avatar", avatar);
                                 editor.putString("phoneNumberSignIn", phoneNumber);
-                                editor.putString("userId", id.toString());
+                                editor.putInt("userId", id);
                                 editor.putString("username", fullName);
                                 editor.putString("authorization", authorization);
                                 editor.commit();

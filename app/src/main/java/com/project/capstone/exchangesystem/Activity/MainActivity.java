@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.Activity;
 
 //import com.project.capstone.exchangesystem.adapter.ItemAdapter;
+
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,9 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-        import android.view.MenuItem;
+import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.fragment.UserProfileFragment;
 import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
 import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
 
@@ -40,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                         // TODO
                         return true;
                     case R.id.bottombaritem_profile:
-                        // TODO
-                        return true;
+                        selectedFragment = UserProfileFragment.newInstance();
+                        break;
                 }
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_layout, selectedFragment);
@@ -55,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     public void toSearch(View view) {
         Intent iTimKiem = new Intent(this, SearchActivity.class);
         startActivity(iTimKiem);
+    }
+
+    public void toOwnInventory(View view) {
+        Intent iOwnInventory = new Intent(this, OwnInventory.class);
+        startActivity(iOwnInventory);
     }
 
 

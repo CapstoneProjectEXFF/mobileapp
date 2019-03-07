@@ -28,6 +28,7 @@
         app:itemBackground="?attr/colorPrimary"
         app:itemIconTint="@android:color/holo_blue_bright"
         app:itemTextColor="@android:color/holo_blue_bright"
+        android:background="@color/colorPrimary"
         app:menu="@menu/bottombar_menu" />
 
 

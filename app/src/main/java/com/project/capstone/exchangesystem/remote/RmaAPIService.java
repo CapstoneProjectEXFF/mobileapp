@@ -30,6 +30,8 @@ public interface RmaAPIService {
     @GET("/item")
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
+    @GET("/user/{id}/item")
+    Call<List<Item>> getItemsByUserId(@Path("id") int userID);
 
     @GET("/itemSearch")
     Call<List<Item>> findItems(@Query("name") String name);
