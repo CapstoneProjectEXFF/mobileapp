@@ -8,7 +8,7 @@
     tools:context=".Activity.OwnInventory">
 
     <android.support.v7.widget.Toolbar
-        android:background="#42dcff"
+        android:background="@color/feed_bg"
         app:titleTextColor="#ff3da1"
         app:title="Laptop"
         android:id="@+id/inventoryToolbar"
@@ -21,14 +21,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryEditText"
-                android:layout_margin="5dp"
-                android:text="Your Own Inventory"
+            <LinearLayout
+                android:background="@color/feed_bg"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryEditText"
+                    android:layout_margin="5dp"
+                    android:text="Your Own Inventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Item"
+                    android:onClick="toAddItemActivity"/>
+            </LinearLayout>
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/inventoryRecyclerView"

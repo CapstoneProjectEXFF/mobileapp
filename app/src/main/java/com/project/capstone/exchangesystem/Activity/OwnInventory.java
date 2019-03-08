@@ -1,11 +1,16 @@
 package com.project.capstone.exchangesystem.Activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
@@ -30,6 +35,7 @@ public class OwnInventory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_own_inventory);
         direct();
+        ActionToolbar();
         GetData();
 
     }
@@ -41,18 +47,24 @@ public class OwnInventory extends AppCompatActivity {
         itemAdapter = new ItemAdapter(getApplicationContext(), itemArrayList, new ItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-
+                Toast.makeText(getApplicationContext(), item.getDescription(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), DescriptionItem.class);
+                intent.putExtra("descriptionItem", item);
+                startActivity(intent);
             }
         });
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
     }
 
     private void GetData() {
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         String authorization = sharedPreferences.getString("authorization", null);
-        int userID = sharedPreferences.getInt("userId",0);
+        int userID = sharedPreferences.getInt("userId", 0);
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
@@ -75,5 +87,21 @@ public class OwnInventory extends AppCompatActivity {
         } else {
             System.out.println("Fail Test Authorization");
         }
+    }
+
+    private void ActionToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    public void toAddItemActivity(View view) {
+        Intent iTimKiem = new Intent(this, CreateItemActivity.class);
+        startActivity(iTimKiem);
     }
 }
