@@ -48,8 +48,8 @@ public class OwnInventory extends AppCompatActivity {
             @Override
             public void onItemClick(Item item) {
                 Toast.makeText(getApplicationContext(), item.getDescription(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), DescriptionItem.class);
-                intent.putExtra("descriptionItem", item);
+                Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+                intent.putExtra("itemId", item.getId());
                 startActivity(intent);
             }
         });

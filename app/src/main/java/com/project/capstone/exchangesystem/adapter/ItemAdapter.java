@@ -65,7 +65,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .into(holder.imgItem);
 
-
     }
 
 
