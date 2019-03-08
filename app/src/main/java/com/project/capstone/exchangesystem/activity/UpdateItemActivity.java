@@ -15,6 +15,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -41,6 +44,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
 
     private final String PRIVACY_PUBLIC = "Công khai";
     private final String PRIVACY_FRIENDS = "Bạn bè";
+    private final String TITLE = "Cập nhật thông tin";
 
     TextView txtTitle, btnUpdate, txtError, btnCancel;
     Spinner spCategory;
@@ -63,12 +67,15 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     GridLayout gridLayout;
     FirebaseImg firebaseImg;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_item);
         context = this;
         getComponents();
+        setToolbar();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -86,19 +93,19 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         getAllCategory();
         getAllPrivacy();
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String itemName = edtItemName.getText().toString();
-                String itemAddress = edtItemAddress.getText().toString();
-                String itemDes = edtItemDes.getText().toString();
-                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100) {
-                    notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
-                } else {
-                    setItemData(itemName, itemAddress, itemDes);
-                }
-            }
-        });
+//        btnUpdate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String itemName = edtItemName.getText().toString();
+//                String itemAddress = edtItemAddress.getText().toString();
+//                String itemDes = edtItemDes.getText().toString();
+//                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100) {
+//                    notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
+//                } else {
+//                    setItemData(itemName, itemAddress, itemDes);
+//                }
+//            }
+//        });
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,13 +116,44 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(context, OwnInventory.class);
+//                startActivity(intent);
+//            }
+//        });
+    }
+
+    private void setToolbar() {
+        toolbar.setTitle(TITLE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, OwnInventory.class);
-                startActivity(intent);
+                finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemName = edtItemName.getText().toString();
+        String itemAddress = edtItemAddress.getText().toString();
+        String itemDes = edtItemDes.getText().toString();
+        if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() == 0) {
+            notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
+        } else {
+            setItemData(itemName, itemAddress, itemDes);
+        }
+        return true;
     }
 
     private void setItemData(String itemName, String itemAddress, String itemDes) {
@@ -145,8 +183,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
             edtItemAddress.setHint("Bạn chưa điền địa chỉ");
             edtItemAddress.setHintTextColor(Color.RED);
         }
-        if (desLength < 100) {
-            txtError.setText("Mô tả còn thiếu " + (100 - desLength) + " ký tự");
+        if (desLength == 0) {
+            txtError.setText("Bạn chưa thêm mô tả đồ dùng");
             txtError.setVisibility(View.VISIBLE);
         }
     }
@@ -323,11 +361,11 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void getComponents() {
-        txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText("Cập nhật thông tin");
+//        txtTitle = findViewById(R.id.txtTitle);
+//        txtTitle.setText("Cập nhật thông tin");
         txtError = findViewById(R.id.txtError);
-        btnUpdate = findViewById(R.id.btnConfirm);
-        btnUpdate.setText("Lưu");
+//        btnUpdate = findViewById(R.id.btnConfirm);
+//        btnUpdate.setText("Lưu");
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
@@ -337,7 +375,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         rmaAPIService = RmaAPIUtils.getAPIService();
         spCategory = findViewById(R.id.spCategory);
         spCategory.setPopupBackgroundResource(R.color.white);
-        btnCancel = findViewById(R.id.btnCancel);
+        toolbar = findViewById(R.id.tbToolbar);
+//        btnCancel = findViewById(R.id.btnCancel);
     }
 
     private void createImageView() {

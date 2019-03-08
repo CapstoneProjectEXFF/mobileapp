@@ -14,6 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -38,6 +41,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
 
     private final String PRIVACY_PUBLIC = "Công khai";
     private final String PRIVACY_FRIENDS = "Bạn bè";
+    private final String TITLE = "Thêm món đồ mới";
 
     TextView txtTitle, btnAdd, txtError, btnCancel;
     Spinner spCategory;
@@ -55,6 +59,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     GridLayout gridLayout;
     FirebaseImg firebaseImg;
     RmaAPIService rmaAPIService;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         setContentView(R.layout.activity_create_item);
         context = this;
         getComponents();
+        setToolbar();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -75,21 +81,6 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         getAllPrivacy();
 
         firebaseImg = new FirebaseImg();
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String itemName = edtItemName.getText().toString();
-                String itemAddress = edtItemAddress.getText().toString();
-                String itemDes = edtItemDes.getText().toString();
-                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100) {
-                    notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
-                } else {
-                    if (firebaseImg.checkLoginFirebase()) {
-                        setItemData(itemName, itemAddress, itemDes);
-                    }
-                }
-            }
-        });
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,14 +90,39 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
+    }
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+    private void setToolbar() {
+        toolbar.setTitle(TITLE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, OwnInventory.class);
-                startActivity(intent);
+                finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemName = edtItemName.getText().toString();
+        String itemAddress = edtItemAddress.getText().toString();
+        String itemDes = edtItemDes.getText().toString();
+        if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() == 0) {
+            notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
+        } else {
+            if (firebaseImg.checkLoginFirebase()) {
+                setItemData(itemName, itemAddress, itemDes);
+            }
+        }
+        return true;
     }
 
     private void setItemData(String itemName, String itemAddress, String itemDes) {
@@ -128,8 +144,8 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
             edtItemAddress.setHint("Bạn chưa điền địa chỉ");
             edtItemAddress.setHintTextColor(Color.RED);
         }
-        if (desLength < 100) {
-            txtError.setText("Mô tả còn thiếu " + (100 - desLength) + " ký tự");
+        if (desLength == 0) {
+            txtError.setText("Bạn chưa thêm mô tả đồ dùng");
             txtError.setVisibility(View.VISIBLE);
         }
     }
@@ -241,11 +257,11 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void getComponents() {
-        txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText("Thêm món đồ mới");
+//        txtTitle = findViewById(R.id.txtTitle);
+//        txtTitle.setText("Thêm món đồ mới");
         txtError = findViewById(R.id.txtError);
-        btnAdd = findViewById(R.id.btnConfirm);
-        btnAdd.setText("Hoàn thành");
+//        btnAdd = findViewById(R.id.btnConfirm);
+//        btnAdd.setText("Hoàn thành");
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
@@ -255,7 +271,9 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         rmaAPIService = RmaAPIUtils.getAPIService();
         spCategory = findViewById(R.id.spCategory);
         spCategory.setPopupBackgroundResource(R.color.white);
-        btnCancel = findViewById(R.id.btnCancel);
+//        btnCancel = findViewById(R.id.btnCancel);
+
+        toolbar = findViewById(R.id.tbToolbar);
     }
 
     private void createImageView() {
