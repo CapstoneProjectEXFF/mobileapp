@@ -1,15 +1,10 @@
 package com.project.capstone.exchangesystem.Activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -32,37 +27,29 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.model.Category;
-import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
-import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
-public class CreateItemActivity extends AppCompatActivity {
+public class CreateDonationPostActivity extends AppCompatActivity {
 
     private final int GALLERY_REQUEST = 2;
     private final int IMAGE_SIZE = 160;
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    private final String PRIVACY_PUBLIC = "Công khai";
-    private final String PRIVACY_FRIENDS = "Bạn bè";
     TextView lblToolbar;
-    Spinner spCategory;
     RmaAPIService rmaAPIService;
-    List<String> categoryList, privacyList, urlList;
+    List<String> urlList;
     Button btnAdd, btnAddImage;
     ImageView tmpImage;
-    EditText edtItemName, edtItemDes, edtItemAddress;
-    Spinner spPrivacy;
+    EditText edtContent;
     Context context;
-    ArrayAdapter<String> dataAdapter;
     String imagePath = "aaa", authorization;
     SharedPreferences sharedPreferences;
     FirebaseStorage firebaseStorage;
@@ -70,7 +57,7 @@ public class CreateItemActivity extends AppCompatActivity {
     FirebaseAuth fbAuth;
     FirebaseUser fbUser;
     List<Uri> selectedImages;
-    int onClickFlag, selectedPosition;
+    int onClickFlag, selectedPosition, imageCount = 0;
 
     List<ImageView> imageList;
 
@@ -80,16 +67,12 @@ public class CreateItemActivity extends AppCompatActivity {
     //upload
     Button btnUpload;
 
-    Uri selectedImage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_item);
+        setContentView(R.layout.activity_create_donation_post);
         context = this;
         getComponents();
-        getAllCategory();
-        getAllPrivacy();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -107,8 +90,7 @@ public class CreateItemActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                checkLoginFirebase();
-                createItem();
+                createPost();
             }
         });
 
@@ -136,17 +118,16 @@ public class CreateItemActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Đang tải hình ảnh...");
         progressDialog.show();
+
         for (int i = 0; i < selectedImages.size(); i++) {
-            final int imageCount = i;
 
             if (selectedImages.get(i) != null) {
-
                 StorageReference reference = storageReference.child("images/" + UUID.randomUUID().toString());
                 reference.putFile(selectedImages.get(i)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(CreateItemActivity.this, "Tải thành công", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateDonationPostActivity.this, "Tải thành công", Toast.LENGTH_SHORT).show();
                             task.getResult().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -161,17 +142,37 @@ public class CreateItemActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(CreateItemActivity.this, "Không thể đăng được hình " + (imageCount + 1) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateDonationPostActivity.this, "Không thể đăng được hình " + (urlList.size() + 1) + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.setMessage("Đã tải được " + imageCount + "/" + selectedImages.size() + " hình");
+                        progressDialog.setMessage("Đã tải được " + urlList.size() + "/" + selectedImages.size() + " hình");
                     }
                 });
             }
         }
         progressDialog.dismiss();
+    }
+
+    private boolean checkLoginFirebase() {
+        final boolean[] result = {true};
+        if (fbUser == null) {
+            fbAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    Toast.makeText(CreateDonationPostActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+                    result[0] = true;
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CreateDonationPostActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    result[0] = false;
+                }
+            });
+        }
+        return result[0];
     }
 
     private void getImageFromGallery() {
@@ -194,7 +195,7 @@ public class CreateItemActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
             if (onClickFlag == ADD_IMAGE_FLAG) {
                 if (data.getClipData() != null) {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++){
+                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                         selectedImages.add(data.getClipData().getItemAt(i).getUri());
                         createImageView();
                     }
@@ -213,102 +214,7 @@ public class CreateItemActivity extends AppCompatActivity {
         }
     }
 
-    private void createItem() {
-        String itemName = edtItemName.getText().toString();
-        String itemDes = edtItemDes.getText().toString();
-        String itemAddress = edtItemAddress.getText().toString();
-        int privacy = spPrivacy.getSelectedItemPosition();
-        int category = spCategory.getSelectedItemPosition();
-        final Map<String, Object> jsonBody = new HashMap<String, Object>();
-
-        jsonBody.put("name", itemName);
-        jsonBody.put("description", itemDes);
-        jsonBody.put("address", itemAddress);
-        jsonBody.put("privacy", "" + privacy);
-        jsonBody.put("category", "" + (category + 1));
-        jsonBody.put("urls", urlList);
-
-        if (authorization != null) {
-            rmaAPIService.createItem(jsonBody, authorization).enqueue(new Callback<Item>() {
-
-                @Override
-                public void onResponse(Call<Item> call, Response<Item> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_LONG).show();
-
-                            //go to update screen
-                            Intent intent = new Intent(context, UpdateItemActivity.class);
-                            intent.putExtra("itemId", response.body().getId());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Item> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
-
-    private void getAllCategory() {
-        Toast.makeText(getApplicationContext(), "getAllCategory", Toast.LENGTH_LONG).show();
-        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                Toast.makeText(getApplicationContext(), "Test category!!!!!", Toast.LENGTH_LONG).show();
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        List<Category> result = response.body();
-                        categoryList = new ArrayList<>();
-                        for (int i = 0; i < result.size(); i++) {
-                            categoryList.add(result.get(i).getName());
-                            System.out.println("Cate 1: " + categoryList.get(i));
-                        }
-                        Toast.makeText(getApplicationContext(), "list size " + categoryList.size(), Toast.LENGTH_LONG).show();
-                        setDataForSpinner(spCategory, categoryList);
-                    } else {
-                        System.out.println("httpstatus " + response.code());
-                        Toast.makeText(getApplicationContext(), "body null", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed category", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                System.out.println("Fail");
-                Toast.makeText(getApplicationContext(), "AAAAAAAAAAA", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-    }
-
-    private void getComponents() {
-        lblToolbar = findViewById(R.id.lbl_toolbar);
-        lblToolbar.setText("Thêm món đồ mới");
-        btnAdd = findViewById(R.id.btnAdd);
-        btnAddImage = findViewById(R.id.btnAddImage);
-        edtItemName = findViewById(R.id.edtItemName);
-        edtItemDes = findViewById(R.id.edtItemDes);
-        edtItemAddress = findViewById(R.id.edtItemAddress);
-        spPrivacy = findViewById(R.id.spPrivacy);
-        spPrivacy.setPopupBackgroundResource(R.color.white);
-        rmaAPIService = RmaAPIUtils.getAPIService();
-        spCategory = findViewById(R.id.spCategory);
-        spCategory.setPopupBackgroundResource(R.color.white);
-    }
-
     private void createImageView() {
-
         gridLayout = (GridLayout) findViewById(R.id.imageGrid);
         final ImageView imageView = new ImageView(this);
 
@@ -347,36 +253,48 @@ public class CreateItemActivity extends AppCompatActivity {
         }
     }
 
-    private void getAllPrivacy() {
-        privacyList = new ArrayList<>();
-        privacyList.add(PRIVACY_PUBLIC);
-        privacyList.add(PRIVACY_FRIENDS);
-        setDataForSpinner(spPrivacy, privacyList);
-    }
+    private void createPost() {
+        String content = edtContent.getText().toString();
+        final Map<String, Object> jsonBody = new HashMap<String, Object>();
 
-    private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
-        dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_category_item, dataArray);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_category_item);
-        spinner.setAdapter(dataAdapter);
-    }
+        jsonBody.put("content", content);
+        jsonBody.put("urls", urlList);
 
-    private boolean checkLoginFirebase() {
-        final boolean[] result = {true};
-        if (fbUser == null) {
-            fbAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        if (authorization != null) {
+            rmaAPIService.createDonationPost(jsonBody, authorization).enqueue(new Callback<DonationPost>() {
+
                 @Override
-                public void onSuccess(AuthResult authResult) {
-                    Toast.makeText(CreateItemActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-                    result[0] = true;
+                public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_LONG).show();
+
+                            //go to update screen
+                            Intent intent = new Intent(context, UpdateDonationPostActivity.class);
+                            intent.putExtra("donationPostId", response.body().getId());
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
+                    }
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+
                 @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CreateItemActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                    result[0] = false;
+                public void onFailure(Call<DonationPost> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
                 }
             });
         }
-        return result[0];
+    }
+
+    private void getComponents() {
+        lblToolbar = findViewById(R.id.lbl_toolbar);
+        lblToolbar.setText("Tạo bài viết mới");
+        edtContent = findViewById(R.id.edtContent);
+        btnAdd = findViewById(R.id.btnAdd);
+        btnAddImage = findViewById(R.id.btnAddImage);
+        rmaAPIService = RmaAPIUtils.getAPIService();
     }
 }

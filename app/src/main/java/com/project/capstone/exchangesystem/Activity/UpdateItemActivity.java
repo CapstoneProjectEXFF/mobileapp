@@ -264,28 +264,6 @@ public class UpdateItemActivity extends AppCompatActivity {
 
     private void loadItem() {
         if (authorization != null) {
-            rmaAPIService.getImagesByItemId(authorization, itemId).enqueue(new Callback<List<Image>>() {
-                @Override
-                public void onResponse(Call<List<Image>> call, Response<List<Image>> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            for (int i = 0; i < response.body().size(); i++) {
-                                urlList.add(response.body().get(i).getUrl());
-                                createImageView();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "image null", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "load image failed", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Image>> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "load image failed!!!", Toast.LENGTH_LONG).show();
-                }
-            });
             rmaAPIService.getItemById(authorization, itemId).enqueue(new Callback<Item>() {
                 @Override
                 public void onResponse(Call<Item> call, Response<Item> response) {
@@ -296,6 +274,11 @@ public class UpdateItemActivity extends AppCompatActivity {
                             edtItemAddress.setText(response.body().getAddress());
                             spPrivacy.setSelection(Integer.parseInt(response.body().getPrivacy()));
                             spCategory.setSelection((response.body().getCategory().getId() - 1));
+                            for (int i = 0; i < response.body().getImages().size(); i++){
+                                urlList.add(response.body().getImages().get(i).getUrl());
+                                selectedImages.add(null);
+                                createImageView();
+                            }
                         } else {
                             Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
                         }
