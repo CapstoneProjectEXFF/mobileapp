@@ -17,6 +17,10 @@ public class DonationPost implements Serializable {
     @Expose
     private String content;
 
+    @SerializedName("address")
+    @Expose
+    private String address;
+
     @SerializedName("status")
     @Expose
     private String status;
@@ -55,6 +59,14 @@ public class DonationPost implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getStatus() {

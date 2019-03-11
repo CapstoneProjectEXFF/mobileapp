@@ -48,7 +48,7 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     List<String> urlList;
     Button btnAdd, btnAddImage;
     ImageView tmpImage;
-    EditText edtContent;
+    EditText edtContent, edtAddress;
     Context context;
     String imagePath = "aaa", authorization;
     SharedPreferences sharedPreferences;
@@ -255,9 +255,11 @@ public class CreateDonationPostActivity extends AppCompatActivity {
 
     private void createPost() {
         String content = edtContent.getText().toString();
+        String address = edtAddress.getText().toString();
         final Map<String, Object> jsonBody = new HashMap<String, Object>();
 
         jsonBody.put("content", content);
+        jsonBody.put("address", address);
         jsonBody.put("urls", urlList);
 
         if (authorization != null) {
@@ -293,6 +295,7 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         lblToolbar = findViewById(R.id.lbl_toolbar);
         lblToolbar.setText("Tạo bài viết mới");
         edtContent = findViewById(R.id.edtContent);
+        edtAddress = findViewById(R.id.edtAddress);
         btnAdd = findViewById(R.id.btnAdd);
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();

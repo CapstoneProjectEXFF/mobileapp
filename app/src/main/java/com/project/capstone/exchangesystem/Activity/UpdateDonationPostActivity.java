@@ -41,7 +41,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     List<ImageView> imageList;
     Button btnUpdate, btnAddImage;
     ImageView tmpImage;
-    EditText edtContent;
+    EditText edtContent, edtAddress;
     Context context;
     String imagePath, authorization;
     int donationPostId, onClickFlag = -1, selectedPosition;
@@ -88,8 +88,10 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
 
     private void updateDonationPost() {
         String content = edtContent.getText().toString();
+        String address = edtAddress.getText().toString();
         final Map<String, Object> jsonBody = new HashMap<String, Object>();
         jsonBody.put("content", content);
+        jsonBody.put("address", address);
 //        jsonBody.put("urls", urlList);
 
         if (authorization != null) {
@@ -128,6 +130,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
                             edtContent.setText(response.body().getContent());
+                            edtAddress.setText(response.body().getAddress());
                             for (int i = 0; i < response.body().getImages().size(); i++){
                                 urlList.add(response.body().getImages().get(i).getUrl());
                                 selectedImages.add(null);
@@ -238,6 +241,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
         lblToolbar = findViewById(R.id.lbl_toolbar);
         lblToolbar.setText("Chỉnh sửa bài viết");
         edtContent = findViewById(R.id.edtContent);
+        edtAddress = findViewById(R.id.edtAddress);
         btnUpdate = findViewById(R.id.btnUpdate);
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
