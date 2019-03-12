@@ -101,6 +101,7 @@ public class SignInActivity extends AppCompatActivity {
                                 editor.putInt("userId", id);
                                 editor.putString("username", fullName);
                                 editor.putString("authorization", authorization);
+                                editor.putString("status", status);
                                 editor.commit();
 
 

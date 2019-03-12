@@ -5,7 +5,7 @@ import com.project.capstone.exchangesystem.remote.RmaAPIService;
 
 public class RmaAPIUtils {
 //        public static final String LOCAL_IP = "http://10.82.137.166";
-    public static final String LOCAL_IP = "http://172.16.2.0";
+    public static final String LOCAL_IP = "http://192.168.1.158";
 
 
 
