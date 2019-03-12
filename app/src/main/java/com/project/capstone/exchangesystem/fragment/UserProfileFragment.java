@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.project.capstone.exchangesystem.Activity.EditUserProfileActivity;
 import com.project.capstone.exchangesystem.Activity.OwnInventory;
 import com.project.capstone.exchangesystem.Activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
@@ -45,6 +46,7 @@ public class UserProfileFragment extends Fragment {
                 ChangePassword();
                 return true;
             case R.id.edituserprofile:
+                EditUserProfile();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -52,6 +54,11 @@ public class UserProfileFragment extends Fragment {
 
     private void ChangePassword() {
         Intent intent = new Intent(getContext(), ChangePassword.class);
+        startActivity(intent);
+    }
+
+    private void EditUserProfile() {
+        Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
         startActivity(intent);
     }
 
