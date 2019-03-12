@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,11 +9,20 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.TradeAdapter;
 import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class YourInventoryFragment extends Fragment {
@@ -40,32 +50,67 @@ public class YourInventoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_your_inventory, container, false);
         gridViewYourInventory = (GridView) view.findViewById(R.id.gridViewYourInventory);
+
+
         yourInventoryList = new ArrayList<>();
         tradeAdapter = new TradeAdapter(view.getContext(), yourInventoryList);
         gridViewYourInventory.setAdapter(tradeAdapter);
         GetYourTradeInventory();
-//        CheckItem();
+
+        Item item = (Item) getActivity().getIntent().getSerializableExtra("descriptionItem");
+        String idTradeItem = String.valueOf(item.getId());
+        System.out.println("test IdTradeItem " + idTradeItem);
+
+        GridView tempGridView = (GridView) view.findViewById(R.id.gridViewYourInventory);
+        int count = tempGridView.getAdapter().getCount();
+        System.out.println("test count " + count);
+        for (int i = 0; i < count; i++) {
+            LinearLayout itemLayout = (LinearLayout) tempGridView.getChildAt(i);
+            TextView idView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
+
+            System.out.println(idView.getText());
+            if (idView.getText().equals(idTradeItem)) {
+
+                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
+                checkBox.setChecked(true);
+            }
+        }
+
+
+        CheckItem();
         return view;
     }
 
     private void GetYourTradeInventory() {
+        Item item = (Item) getActivity().getIntent().getSerializableExtra("descriptionItem");
+        int yourID = item.getUser().getId();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+        String authorization = sharedPreferences.getString("authorization", null);
+        if (authorization != null) {
+            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+            rmaAPIService.getItemsByUserId(yourID).enqueue(new Callback<List<Item>>() {
+                @Override
+                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
+                    List<Item> result = response.body();
+                    for (int i = 0; i < result.size(); i++) {
+                        yourInventoryList.add(result.get(i));
+                        tradeAdapter.notifyDataSetChanged();
+                    }
+                }
 
-            yourInventoryList.add(new Item(1, "test 1 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "test 2 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "test 3 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            yourInventoryList.add(new Item(1, "test 4 " , "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
-            tradeAdapter.notifyDataSetChanged();
+                @Override
+                public void onFailure(Call<List<Item>> call, Throwable t) {
+                    System.out.println(t.getMessage());
+                }
+            });
+        } else {
+            System.out.println("Fail Test Authorization");
+        }
+        tradeAdapter.notifyDataSetChanged();
 
     }
 
-//    private void CheckItem() {
-//        int count = gridViewYourInventory.getAdapter().getCount();
-//
-//        for (int i = 0; i < count; i++) {
-//
-//            LinearLayout itemLayout = (LinearLayout) gridViewYourInventory.getChildAt(i); // Find by under LinearLayout
-//            CheckBox checkbox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
-//            checkbox.setChecked(true);
-//        }
-//    }
+    private void CheckItem() {
+
+    }
 }
