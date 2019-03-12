@@ -417,4 +417,8 @@ public class UpdateItemActivity extends AppCompatActivity {
             btnAddImage.setEnabled(false);
         }
     }
+
+    public void onBackButton(View view) {
+        finish();
+    }
 }

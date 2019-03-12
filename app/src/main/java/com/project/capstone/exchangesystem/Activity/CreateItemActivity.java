@@ -376,4 +376,8 @@ public class CreateItemActivity extends AppCompatActivity {
             });
         }
     }
+
+    public void onBackButton(View view) {
+        finish();
+    }
 }

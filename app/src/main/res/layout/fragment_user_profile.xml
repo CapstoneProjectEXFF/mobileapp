@@ -6,7 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.UserProfileFragment">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/userProfileToolbar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        app:logo="@drawable/logo"
+        app:theme="@style/menuitemcolor"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:layout_collapseMode="pin"
 
+        />
     <RelativeLayout
         android:id="@+id/rellay1"
         android:layout_width="match_parent"
@@ -86,7 +95,9 @@
             android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_settings" />
+            android:src="@drawable/ic_settings"
+
+            />
 
     </RelativeLayout>
 
@@ -172,12 +183,8 @@
                     android:textSize="13sp" />
 
             </LinearLayout>
-
         </RelativeLayout>
-
     </LinearLayout>
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

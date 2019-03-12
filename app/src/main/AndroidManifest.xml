@@ -41,9 +41,10 @@
             android:theme="@style/AppTheme2" />
         <activity android:name=".Activity.DescriptionItem" />
         <activity android:name=".Activity.TradeActivity" />
-        <activity android:name=".Activity.CreateItemActivity"></activity>
-        <activity android:name=".Activity.UpdateItemActivity"></activity>
-        <activity android:name=".Activity.OwnInventory"></activity>
+        <activity android:name=".Activity.CreateItemActivity" />
+        <activity android:name=".Activity.UpdateItemActivity" />
+        <activity android:name=".Activity.OwnInventory" />
+        <activity android:name=".Activity.ChangePassword"></activity>
     </application>
 
 </manifest>

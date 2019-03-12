@@ -8,8 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
@@ -39,6 +38,8 @@ public class OwnInventory extends AppCompatActivity {
         GetData();
 
     }
+
+
 
     private void direct() {
         toolbar = findViewById(R.id.inventoryToolbar);
@@ -104,4 +105,6 @@ public class OwnInventory extends AppCompatActivity {
         Intent iTimKiem = new Intent(this, CreateItemActivity.class);
         startActivity(iTimKiem);
     }
+
+
 }

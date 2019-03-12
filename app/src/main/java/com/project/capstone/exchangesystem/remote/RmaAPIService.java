@@ -42,6 +42,9 @@ public interface RmaAPIService {
     @POST("/item")
     Call<Item> createItem(@Body Map<String, Object> body, @Header("Authorization") String authorization);
 
+    @POST("/user/changePassword")
+    Call<Object> changePassword(@Body Map<String, String> body, @Header("Authorization") String authorization);
+
     @PUT("/item/{id}")
     Call<Object> updateItem(@Body Map<String, String> body, @Header("Authorization") String authorization, @Path("id") int itemId);
 
