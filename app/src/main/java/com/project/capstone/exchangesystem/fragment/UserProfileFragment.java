@@ -1,17 +1,17 @@
 package com.project.capstone.exchangesystem.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.project.capstone.exchangesystem.Activity.EditUserProfileActivity;
 import com.project.capstone.exchangesystem.Activity.OwnInventory;
+import com.project.capstone.exchangesystem.Activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +30,36 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_userprofile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.changepassword:
+                ChangePassword();
+                return true;
+            case R.id.edituserprofile:
+                EditUserProfile();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void ChangePassword() {
+        Intent intent = new Intent(getContext(), ChangePassword.class);
+        startActivity(intent);
+    }
+
+    private void EditUserProfile() {
+        Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -41,6 +71,9 @@ public class UserProfileFragment extends Fragment {
         ImageView imageView = view.findViewById(R.id.imgUserProfile);
         TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
         TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
+
+        Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
@@ -59,8 +92,11 @@ public class UserProfileFragment extends Fragment {
 
         return view;
     }
+
     public void toOwnInventory(View view) {
         Intent iOwnInventory = new Intent(getContext(), OwnInventory.class);
         startActivity(iOwnInventory);
     }
+
+
 }
