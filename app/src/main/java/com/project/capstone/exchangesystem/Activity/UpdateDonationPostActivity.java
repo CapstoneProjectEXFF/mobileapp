@@ -35,11 +35,11 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    TextView lblToolbar;
+    TextView txtTitle, btnUpdate;
     RmaAPIService rmaAPIService;
     List<String> urlList;
     List<ImageView> imageList;
-    Button btnUpdate, btnAddImage;
+    Button btnAddImage;
     ImageView tmpImage;
     EditText edtContent, edtAddress;
     Context context;
@@ -238,11 +238,12 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     }
 
     private void getComponents() {
-        lblToolbar = findViewById(R.id.lbl_toolbar);
-        lblToolbar.setText("Chỉnh sửa bài viết");
+        txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setText("Chỉnh sửa bài viết");
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
-        btnUpdate = findViewById(R.id.btnUpdate);
+        btnUpdate = findViewById(R.id.btnConfirm);
+        btnUpdate.setText("Lưu");
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
     }
