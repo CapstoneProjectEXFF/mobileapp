@@ -25,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.project.capstone.exchangesystem.FirebaseImg;
+//import com.project.capstone.exchangesystem.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
@@ -65,7 +65,7 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     GridLayout gridLayout;
     ProgressDialog progressDialog;
 
-    FirebaseImg firebaseImg;
+//    FirebaseImg firebaseImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         //list uri
         selectedImages = new ArrayList<>();
 
-        firebaseImg = new FirebaseImg();
+//        firebaseImg = new FirebaseImg();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
