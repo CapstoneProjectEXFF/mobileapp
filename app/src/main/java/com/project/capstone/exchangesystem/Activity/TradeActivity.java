@@ -45,5 +45,9 @@ public class TradeActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    public void sendTradeRequest(View view) {
+
+    }
+
 
 }

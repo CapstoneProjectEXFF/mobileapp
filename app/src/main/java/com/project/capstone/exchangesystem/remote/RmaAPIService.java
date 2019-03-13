@@ -48,6 +48,7 @@ public interface RmaAPIService {
     @POST("/user/updateInfo")
     Call<Object> updateInfo(@Body Map<String, String> body, @Header("Authorization") String authorization);
 
+
     @PUT("/item/{id}")
     Call<Object> updateItem(@Body Map<String, String> body, @Header("Authorization") String authorization, @Path("id") int itemId);
 
@@ -56,7 +57,5 @@ public interface RmaAPIService {
 
     @GET("/image/{itemId}")
     Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
-
-
 }
 
