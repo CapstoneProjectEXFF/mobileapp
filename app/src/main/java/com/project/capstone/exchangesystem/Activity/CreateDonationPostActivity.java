@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.project.capstone.exchangesystem.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
@@ -43,10 +44,10 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    TextView lblToolbar;
+    TextView txtTitle, btnAdd;
     RmaAPIService rmaAPIService;
     List<String> urlList;
-    Button btnAdd, btnAddImage;
+    Button btnAddImage;
     ImageView tmpImage;
     EditText edtContent, edtAddress;
     Context context;
@@ -64,8 +65,7 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     GridLayout gridLayout;
     ProgressDialog progressDialog;
 
-    //upload
-    Button btnUpload;
+    FirebaseImg firebaseImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +87,20 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         //list uri
         selectedImages = new ArrayList<>();
 
+        firebaseImg = new FirebaseImg();
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPost();
+                if (checkLoginFirebase()) {
+                    uploadImagesToFireBase();
+                }
+//                if (firebaseImg.checkLoginFirebase()) {
+//                    DonationPost newPost = new DonationPost();
+//                    newPost.setAddress(edtAddress.getText().toString());
+//                    newPost.setContent(edtContent.getText().toString());
+//                    firebaseImg.uploadImagesToFireBase(context, selectedImages, urlList, null, newPost);
+//                }
             }
         });
 
@@ -99,17 +109,6 @@ public class CreateDonationPostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
                 getImageFromGallery();
-            }
-        });
-
-        //upload
-        btnUpload = findViewById(R.id.btnUpload);
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkLoginFirebase()){
-                    uploadImagesToFireBase();
-                }
             }
         });
     }
@@ -127,15 +126,20 @@ public class CreateDonationPostActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(CreateDonationPostActivity.this, "Tải thành công", Toast.LENGTH_SHORT).show();
                             task.getResult().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     imagePath = uri.toString(); //get url
                                     urlList.add(imagePath);
+//                                    Toast.makeText(CreateDonationPostActivity.this, "Tải thành công " + urlList, Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
+                                    if (urlList.size() == selectedImages.size()) {
+                                        createPost();
+                                    }
+
                                 }
                             });
+
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -147,12 +151,11 @@ public class CreateDonationPostActivity extends AppCompatActivity {
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.setMessage("Đã tải được " + urlList.size() + "/" + selectedImages.size() + " hình");
+                        progressDialog.setMessage("Vui lòng chờ!!!");
                     }
                 });
             }
         }
-        progressDialog.dismiss();
     }
 
     private boolean checkLoginFirebase() {
@@ -292,11 +295,12 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     }
 
     private void getComponents() {
-        lblToolbar = findViewById(R.id.lbl_toolbar);
-        lblToolbar.setText("Tạo bài viết mới");
+        txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setText("Tạo bài viết mới");
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
-        btnAdd = findViewById(R.id.btnAdd);
+        btnAdd = findViewById(R.id.btnConfirm);
+        btnAdd.setText("Đăng bài");
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
     }
