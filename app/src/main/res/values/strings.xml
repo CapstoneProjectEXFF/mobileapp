@@ -9,4 +9,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="twitterUsername">\@joeytribbiani</string>
+
+    <!--Facebook-->
+    <string name="facebook_app_id">293758374637458</string>
+    <string name="facebook_login_protocol_schema">fb293758374637458</string>
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://exff-104b8.firebaseapp.com/.well-known/assetlinks.json\" }]</string>
 </resources>
