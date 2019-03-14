@@ -67,7 +67,8 @@ public interface RmaAPIService {
     @POST("/transaction")
     Call<Object> sendTradeRequest(@Header("Authorization") String authorization, @Body TransactionRequestWrapper body);
 
-//    @GET
+    @GET("/donationPost")
+    Call<List<DonationPost>> getDonationPost(@Query("page") int page, @Query("size") int size);
 
 }
 
