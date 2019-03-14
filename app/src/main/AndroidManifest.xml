@@ -60,16 +60,25 @@
         </activity>
 
         <activity android:name=".Activity.TradeActivity" />
-        <activity android:name=".Activity.CreateItemActivity"></activity>
-        <activity android:name=".Activity.UpdateItemActivity"></activity>
-        <activity android:name=".Activity.OwnInventory"></activity>
         <activity android:name=".Activity.CreateItemActivity" />
         <activity android:name=".Activity.UpdateItemActivity" />
         <activity android:name=".Activity.OwnInventory" />
         <activity android:name=".Activity.ChangePassword" />
         <activity android:name=".Activity.EditUserProfileActivity" />
-        <activity android:name=".Activity.DescriptionDonationPostActivity"></activity>
-  
+        <activity android:name=".Activity.DescriptionDonationPostActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="exff-104b8.firebaseapp.com"
+                    android:pathPrefix="/donation-post.html" />
+            </intent-filter>
+        </activity>
+
         <!--Facebook-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
