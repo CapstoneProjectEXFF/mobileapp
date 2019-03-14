@@ -39,14 +39,34 @@
     <!--android:layout_marginRight="5dp"-->
     <!--android:layout_marginBottom="5dp"-->
     <!--/>-->
-
-    <FrameLayout
-        android:id="@+id/fragment_switch"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_height="450dp">
+        <FrameLayout
+            android:id="@+id/fragment_switch1"
+            android:layout_width="185dp"
+            android:layout_height="450dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp" />
+        <FrameLayout
+            android:id="@+id/fragment_switch2"
+            android:layout_width="185dp"
+            android:layout_height="450dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp" />
+
+    </LinearLayout>
+
+    <!--<FrameLayout-->
+        <!--android:id="@+id/fragment_switch"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="450dp"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginBottom="5dp" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2.5dp"
             android:layout_weight="1"
+            android:onClick="sendTradeRequest"
             android:text="Trade Request" />
 
     </LinearLayout>

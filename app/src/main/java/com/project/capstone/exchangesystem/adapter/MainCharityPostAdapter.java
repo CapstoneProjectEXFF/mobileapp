@@ -9,34 +9,38 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.model.DonationPost;
 import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.CharityPostItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainCharityPostAdapter extends BaseAdapter {
     Context context;
-    ArrayList<CharityPostItem> charityPostItemArrayList;
+    ArrayList<DonationPost> donationPosts;
 
-    public MainCharityPostAdapter(Context context, ArrayList<CharityPostItem> charityPostItemArrayList) {
+    public MainCharityPostAdapter(Context context, ArrayList<DonationPost> donationPosts) {
         this.context = context;
-        this.charityPostItemArrayList = charityPostItemArrayList;
+        this.donationPosts = donationPosts;
     }
 
     @Override
     public int getCount() {
-        return charityPostItemArrayList.size();
+        return donationPosts.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return charityPostItemArrayList.get(position);
+        return donationPosts.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
     }
+
     public class ViewHolder {
         public TextView txtContent, txtNameCharity, txtTimestamp;
         public ImageView imgCharityPost, imgProfileCharity;
@@ -59,19 +63,24 @@ public class MainCharityPostAdapter extends BaseAdapter {
         } else {
             viewHolder = (MainCharityPostAdapter.ViewHolder) convertView.getTag();
         }
-        CharityPostItem charityPostItem = (CharityPostItem) getItem(position);
-        viewHolder.txtNameCharity.setText(charityPostItem.getName());
+        DonationPost donationPost = (DonationPost) getItem(position);
+        viewHolder.txtNameCharity.setText(donationPost.getContent().substring(0, 15));
 
 //        viewHolder.txtContent.setText(charityPostItem.getContent());
 //        Log.d("Test ", product.getDescription() + product.getName());
         viewHolder.txtContent.setMaxLines(2);
         viewHolder.txtContent.setEllipsize(TextUtils.TruncateAt.END);
-        viewHolder.txtContent.setText(charityPostItem.getContent());
-        Picasso.with(context).load(charityPostItem.getImage())
+        viewHolder.txtContent.setText(donationPost.getContent());
+
+        Date date = new Date();
+        date.setTime(donationPost.getCreateTime().getTime());
+        String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        viewHolder.txtTimestamp.setText(formattedDate);
+        Picasso.with(context).load(donationPost.getImages().get(0).getUrl())
                 .placeholder(R.drawable.no)
                 .error(R.drawable.loadingimage)
                 .into(viewHolder.imgCharityPost);
-        Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
+        Picasso.with(context).load(donationPost.getUser().getAvatar())
                 .placeholder(R.drawable.no)
                 .error(R.drawable.loadingimage)
                 .into(viewHolder.imgProfileCharity);

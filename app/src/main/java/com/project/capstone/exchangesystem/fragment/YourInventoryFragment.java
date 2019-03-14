@@ -59,25 +59,8 @@ public class YourInventoryFragment extends Fragment {
 
         Item item = (Item) getActivity().getIntent().getSerializableExtra("descriptionItem");
         String idTradeItem = String.valueOf(item.getId());
-        System.out.println("test IdTradeItem " + idTradeItem);
-
-        GridView tempGridView = (GridView) view.findViewById(R.id.gridViewYourInventory);
-        int count = tempGridView.getAdapter().getCount();
-        System.out.println("test count " + count);
-        for (int i = 0; i < count; i++) {
-            LinearLayout itemLayout = (LinearLayout) tempGridView.getChildAt(i);
-            TextView idView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-
-            System.out.println(idView.getText());
-            if (idView.getText().equals(idTradeItem)) {
-
-                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
-                checkBox.setChecked(true);
-            }
-        }
 
 
-        CheckItem();
         return view;
     }
 
@@ -110,7 +93,5 @@ public class YourInventoryFragment extends Fragment {
 
     }
 
-    private void CheckItem() {
 
-    }
 }

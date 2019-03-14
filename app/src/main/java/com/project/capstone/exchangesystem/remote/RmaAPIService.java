@@ -51,6 +51,7 @@ public interface RmaAPIService {
     @GET("/item/{id}")
     Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
 
+
     @POST("/donationPost")
     Call<DonationPost> createDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization);
 
@@ -59,5 +60,15 @@ public interface RmaAPIService {
 
     @GET("/donationPost/{id}")
     Call<DonationPost> getDonationPostById(@Header("Authorization") String authorization, @Path("id") int donationPostId);
+
+    @GET("/image/{itemId}")
+    Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
+
+    @POST("/transaction")
+    Call<Object> sendTradeRequest(@Header("Authorization") String authorization, @Body TransactionRequestWrapper body);
+
+    @GET("/donationPost")
+    Call<List<DonationPost>> getDonationPost(@Query("page") int page, @Query("size") int size);
+
 }
 
