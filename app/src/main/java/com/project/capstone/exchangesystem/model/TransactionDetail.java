@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.model;
 
+import android.support.annotation.Nullable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,6 +20,14 @@ public class TransactionDetail implements Serializable {
     @SerializedName("itemId")
     @Expose
     private Integer itemId;
+
+    @SerializedName("userId")
+    @Expose
+    private Integer userId;
+
+    @SerializedName("item")
+    @Expose
+    private Item item;
 
     public int getId() {
         return id;
@@ -44,9 +53,30 @@ public class TransactionDetail implements Serializable {
         this.itemId = itemId;
     }
 
-    public TransactionDetail(int id, Integer transactionId, Integer itemId) {
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public TransactionDetail(int id, Integer transactionId, Integer itemId, Integer userId, Item item) {
         this.id = id;
         this.transactionId = transactionId;
         this.itemId = itemId;
+        this.userId = userId;
+        this.item = item;
+    }
+
+    public TransactionDetail() {
     }
 }

@@ -64,6 +64,10 @@ public interface RmaAPIService {
     @GET("/image/{itemId}")
     Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
 
+    @POST("/transaction")
+    Call<Object> sendTradeRequest(@Header("Authorization") String authorization, @Body TransactionRequestWrapper body);
+
+//    @GET
 
 }
 

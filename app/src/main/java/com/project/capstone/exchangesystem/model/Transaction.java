@@ -34,10 +34,18 @@ public class Transaction implements Serializable {
     @Expose
     private Timestamp createTime;
 
-
     @SerializedName("modifyTime")
     @Expose
     private Timestamp modifyTime;
+
+    @SerializedName("sender")
+    @Expose
+    private User sender;
+
+    @SerializedName("receiver")
+    @Expose
+    private User receiver;
+
 
     public int getId() {
         return id;
@@ -103,5 +111,9 @@ public class Transaction implements Serializable {
         this.status = status;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
+    }
+
+    public Transaction() {
+
     }
 }
