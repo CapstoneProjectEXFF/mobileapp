@@ -1,6 +1,8 @@
 package com.project.capstone.exchangesystem.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +89,7 @@ public class TradeAdapter extends BaseAdapter {
             viewHolder.txtNameTradeItem = (TextView) convertView.findViewById(R.id.txtNameTradeItem);
             viewHolder.imgTradeItem = (ImageView) convertView.findViewById(R.id.imgTradeItem);
             viewHolder.checkBoxTrade = (CheckBox) convertView.findViewById(R.id.checkBoxTrade);
-//            viewHolder.txtTradeIDItem = (TextView) convertView.findViewById(R.id.txtTradeIDItem);
+            viewHolder.txtTradeIDItem = (TextView) convertView.findViewById(R.id.txtTradeIDItem);
             convertView.setTag(viewHolder);
 
         } else {
@@ -95,7 +97,13 @@ public class TradeAdapter extends BaseAdapter {
         }
         Item item = (Item) getItem(position);
         viewHolder.txtNameTradeItem.setText(item.getName());
-//        viewHolder.txtTradeIDItem.setText(item.getId());
+        viewHolder.txtTradeIDItem.setText(String.valueOf(item.getId()));
+        Intent intent = ((Activity) context).getIntent();
+        Item temp = (Item) intent.getSerializableExtra("descriptionItem");
+        String idTradeItem = String.valueOf(temp.getId());
+        if (idTradeItem.equals(String.valueOf(item.getId()))) {
+            viewHolder.checkBoxTrade.setChecked(true);
+        }
         Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
                 .placeholder(R.drawable.no)
                 .error(R.drawable.loadingimage)

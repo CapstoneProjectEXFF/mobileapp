@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,12 +9,20 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
 import com.project.capstone.exchangesystem.adapter.TradeAdapter;
 import com.project.capstone.exchangesystem.model.CharityPostItem;
 import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class MyInventoryFragment extends Fragment {
@@ -49,8 +58,34 @@ public class MyInventoryFragment extends Fragment {
     }
 
     private void GetMyTradeInventory() {
-        for (int i = 0; i < 3; i++) {
-            myInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+//        for (int i = 0; i < 3; i++) {
+//            myInventoryList.add(new Item(1, "iphone 7 " + i, "417 Quang Trung", "1", "1", "2", null, null, null, null, null));
+//        }
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+        String authorization = sharedPreferences.getString("authorization", null);
+        int userID = sharedPreferences.getInt("userId", 0);
+
+        if (authorization != null) {
+            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+            rmaAPIService.getItemsByUserId(userID).enqueue(new Callback<List<Item>>() {
+                @Override
+                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
+                    List<Item> result = response.body();
+//                    myInventoryList.addAll(result);
+                    for (int i = 0; i < result.size(); i++) {
+                        myInventoryList.add(result.get(i));
+                        tradeAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Item>> call, Throwable t) {
+                    System.out.println(t.getMessage());
+                }
+            });
+        } else {
+            System.out.println("Fail Test Authorization");
         }
         tradeAdapter.notifyDataSetChanged();
     }

@@ -127,9 +127,9 @@ public class SignUpAcitivity extends AppCompatActivity {
 
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", phone);
-//            jsonBody.put("password", password);
+            jsonBody.put("password", password);
             jsonBody.put("fullname", fistname + " " + lastname);
-            jsonBody.put("status", "normal");
+            jsonBody.put("status", "1");
 
 
             rmaAPIService.register(jsonBody).enqueue(new Callback<Object>() {

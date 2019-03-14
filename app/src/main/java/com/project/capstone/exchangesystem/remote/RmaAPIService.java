@@ -1,9 +1,6 @@
 package com.project.capstone.exchangesystem.remote;
 
-import com.project.capstone.exchangesystem.model.Category;
-import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.model.Item;
-import com.project.capstone.exchangesystem.model.User;
+import com.project.capstone.exchangesystem.model.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -42,13 +39,25 @@ public interface RmaAPIService {
     @POST("/item")
     Call<Item> createItem(@Body Map<String, Object> body, @Header("Authorization") String authorization);
 
+    @POST("/user/changePassword")
+    Call<Object> changePassword(@Body Map<String, String> body, @Header("Authorization") String authorization);
+
+    @POST("/user/updateInfo")
+    Call<Object> updateInfo(@Body Map<String, String> body, @Header("Authorization") String authorization);
+
     @PUT("/item/{id}")
     Call<Object> updateItem(@Body Map<String, String> body, @Header("Authorization") String authorization, @Path("id") int itemId);
 
     @GET("/item/{id}")
     Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
 
-    @GET("/image/{itemId}")
-    Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
+    @POST("/donationPost")
+    Call<DonationPost> createDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization);
+
+    @PUT("/donationPost/{id}")
+    Call<Object> updateDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization, @Path("id") int donationPostId);
+
+    @GET("/donationPost/{id}")
+    Call<DonationPost> getDonationPostById(@Header("Authorization") String authorization, @Path("id") int donationPostId);
 }
 

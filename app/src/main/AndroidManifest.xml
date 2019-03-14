@@ -63,7 +63,12 @@
         <activity android:name=".Activity.CreateItemActivity"></activity>
         <activity android:name=".Activity.UpdateItemActivity"></activity>
         <activity android:name=".Activity.OwnInventory"></activity>
-
+        <activity android:name=".Activity.CreateItemActivity" />
+        <activity android:name=".Activity.UpdateItemActivity" />
+        <activity android:name=".Activity.OwnInventory" />
+        <activity android:name=".Activity.ChangePassword" />
+        <activity android:name=".Activity.EditUserProfileActivity"></activity>
+  
         <!--Facebook-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -72,6 +77,7 @@
             android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
+
     </application>
 
 </manifest>
