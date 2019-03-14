@@ -89,6 +89,8 @@
                 android:textSize="20sp"
                 android:paddingBottom="10dp"
                 android:id="@+id/txtViewDescriptionItem"
+                android:text="test"
+                android:textColor="@color/colorBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </ScrollView>

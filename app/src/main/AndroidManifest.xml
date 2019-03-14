@@ -45,7 +45,8 @@
         <activity android:name=".Activity.UpdateItemActivity" />
         <activity android:name=".Activity.OwnInventory" />
         <activity android:name=".Activity.ChangePassword" />
-        <activity android:name=".Activity.EditUserProfileActivity"></activity>
+        <activity android:name=".Activity.EditUserProfileActivity" />
+        <activity android:name=".Activity.DescriptionDonationPostActivity"></activity>
     </application>
 
 </manifest>
