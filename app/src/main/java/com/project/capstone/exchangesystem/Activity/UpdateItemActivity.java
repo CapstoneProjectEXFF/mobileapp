@@ -1,35 +1,22 @@
 package com.project.capstone.exchangesystem.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.project.capstone.exchangesystem.model.PostAction;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.Category;
-import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.squareup.picasso.Picasso;
@@ -40,6 +27,8 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.*;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_UPDATE_ACTION;
+
 public class UpdateItemActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 2;
@@ -49,26 +38,22 @@ public class UpdateItemActivity extends AppCompatActivity {
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    TextView lblToolbar;
+    TextView txtTitle, btnUpdate, txtError;
     Spinner spCategory;
     RmaAPIService rmaAPIService;
     List<String> categoryList, privacyList, urlList;
     List<ImageView> imageList;
-    Button btnUpdate, btnAddImage;
+    Button btnAddImage;
     ImageView tmpImage;
     EditText edtItemName, edtItemDes, edtItemAddress;
     Spinner spPrivacy;
     Context context;
     ArrayAdapter<String> dataAdapter;
-    String imagePath, authorization;
+    String authorization;
     int itemId, onClickFlag = -1, selectedPosition;
     SharedPreferences sharedPreferences;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
-    FirebaseAuth fbAuth;
-    FirebaseUser fbUser;
+
     List<Uri> selectedImages;
-    Uri selectedImage;
     GridLayout gridLayout;
 
     @Override
@@ -83,11 +68,6 @@ public class UpdateItemActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-        fbAuth = FirebaseAuth.getInstance();
-        fbUser = fbAuth.getCurrentUser();
-
         imageList = new ArrayList<>();
         urlList = new ArrayList<>();
         //list uri
@@ -100,8 +80,14 @@ public class UpdateItemActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                checkLoginFirebase();
-                updateItem();
+                String itemName = edtItemName.getText().toString();
+                String itemAddress = edtItemAddress.getText().toString();
+                String itemDes = edtItemDes.getText().toString();
+                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100){
+                    notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
+                } else {
+                        setItemData(itemName, itemAddress, itemDes);
+                }
             }
         });
 
@@ -114,22 +100,29 @@ public class UpdateItemActivity extends AppCompatActivity {
         });
     }
 
-    private void checkLoginFirebase() {
-        if (fbUser != null) {
-            uploadImagesToFireBase();
-        } else {
-            fbAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    Toast.makeText(UpdateItemActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-                    uploadImagesToFireBase();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(UpdateItemActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+    private void setItemData(String itemName, String itemAddress, String itemDes) {
+        Item item = new Item();
+        item.setId(itemId);
+        item.setName(itemName);
+        item.setAddress(itemAddress);
+        item.setDescription(itemDes);
+        item.setPrivacy("" + spCategory.getSelectedItemPosition());
+        item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
+        new PostAction().manageItem(item, null, authorization, context, ITEM_UPDATE_ACTION);
+    }
+
+    private void notifyError(int nameLength, int addressLength, int desLength) {
+        if (nameLength == 0){
+            edtItemName.setHint("Bạn chưa điền tên đồ dùng");
+            edtItemName.setHintTextColor(Color.RED);
+        }
+        if (addressLength == 0){
+            edtItemAddress.setHint("Bạn chưa điền địa chỉ");
+            edtItemAddress.setHintTextColor(Color.RED);
+        }
+        if (desLength < 100){
+            txtError.setText("Mô tả còn thiếu " + (100 - desLength) + " ký tự");
+            txtError.setVisibility(View.VISIBLE);
         }
     }
 
@@ -219,49 +212,6 @@ public class UpdateItemActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadImagesToFireBase() {
-        if (selectedImage != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Đang tải...");
-            progressDialog.show();
-
-            StorageReference reference = storageReference.child("images/" + UUID.randomUUID().toString());
-
-            reference.putFile(selectedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        progressDialog.dismiss();
-                        Toast.makeText(UpdateItemActivity.this, "Tải thành công", Toast.LENGTH_SHORT).show();
-                        task.getResult().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                imagePath = uri.toString(); //get url
-                                if (onClickFlag == 0) { //change url
-                                    urlList.set(imageList.indexOf(tmpImage), imagePath);
-                                } else { //add url
-                                    urlList.add(imagePath);
-                                }
-                            }
-                        });
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(UpdateItemActivity.this, "Tải thất bại" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                }
-            });
-        }
-    }
-
     private void loadItem() {
         if (authorization != null) {
             rmaAPIService.getItemById(authorization, itemId).enqueue(new Callback<Item>() {
@@ -274,7 +224,7 @@ public class UpdateItemActivity extends AppCompatActivity {
                             edtItemAddress.setText(response.body().getAddress());
                             spPrivacy.setSelection(Integer.parseInt(response.body().getPrivacy()));
                             spCategory.setSelection((response.body().getCategory().getId() - 1));
-                            for (int i = 0; i < response.body().getImages().size(); i++){
+                            for (int i = 0; i < response.body().getImages().size(); i++) {
                                 urlList.add(response.body().getImages().get(i).getUrl());
                                 selectedImages.add(null);
                                 createImageView();
@@ -297,9 +247,11 @@ public class UpdateItemActivity extends AppCompatActivity {
     }
 
     private void getComponents() {
-        lblToolbar = findViewById(R.id.lbl_toolbar);
-        lblToolbar.setText("Cập nhật thông tin");
-        btnUpdate = findViewById(R.id.btnUpdate);
+        txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setText("Cập nhật thông tin");
+        txtError = findViewById(R.id.txtError);
+        btnUpdate = findViewById(R.id.btnConfirm);
+        btnUpdate.setText("Lưu");
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
@@ -309,50 +261,6 @@ public class UpdateItemActivity extends AppCompatActivity {
         rmaAPIService = RmaAPIUtils.getAPIService();
         spCategory = findViewById(R.id.spCategory);
         spCategory.setPopupBackgroundResource(R.color.white);
-    }
-
-    private void updateItem() {
-        String itemName = edtItemName.getText().toString();
-        String itemDes = edtItemDes.getText().toString();
-        String itemAddress = edtItemAddress.getText().toString();
-        int privacy = spPrivacy.getSelectedItemPosition();
-        int category = spCategory.getSelectedItemPosition();
-        final Map<String, String> jsonBody = new HashMap<String, String>();
-        jsonBody.put("name", itemName);
-        jsonBody.put("description", itemDes);
-        jsonBody.put("address", itemAddress);
-        jsonBody.put("privacy", "" + privacy);
-
-        //fake information
-        jsonBody.put("category", "" + (category + 1));
-//        jsonBody.put("url", urlList.get(0));
-
-        if (authorization != null) {
-            rmaAPIService.updateItem(jsonBody, authorization, itemId).enqueue(new Callback<Object>() {
-
-                @Override
-                public void onResponse(Call<Object> call, Response<Object> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_LONG).show();
-                            //go to main
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Failed 1", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Object> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
     }
 
     private void createImageView() {
@@ -399,9 +307,5 @@ public class UpdateItemActivity extends AppCompatActivity {
         if (imageList.size() == 10) {
             btnAddImage.setEnabled(false);
         }
-    }
-
-    public void onBackButton(View view) {
-        finish();
     }
 }

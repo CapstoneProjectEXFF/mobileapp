@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.TextView;
+import com.project.capstone.exchangesystem.Activity.CreateDonationPostActivity;
 import com.project.capstone.exchangesystem.Activity.DescriptionDonationPostActivity;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
@@ -31,6 +33,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 public class MainCharityPostFragment extends Fragment {
     Toolbar toolbar;
     ListView listView;
+    TextView btnAdd;
     MainCharityPostAdapter mainCharityPostAdapter;
     ArrayList<DonationPost> donationPosts;
     View footerView;
@@ -63,6 +66,14 @@ public class MainCharityPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_charity_post, container, false);
+        btnAdd = view.findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateDonationPostActivity.class);
+                startActivity(intent);
+            }
+        });
         listView = (ListView) view.findViewById(R.id.charityPostListView);
         donationPosts = new ArrayList<>();
         mainCharityPostAdapter = new MainCharityPostAdapter(view.getContext(), donationPosts);

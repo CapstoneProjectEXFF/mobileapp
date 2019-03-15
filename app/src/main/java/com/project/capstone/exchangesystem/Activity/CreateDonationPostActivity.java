@@ -1,41 +1,26 @@
 package com.project.capstone.exchangesystem.Activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
+import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
-import com.project.capstone.exchangesystem.remote.RmaAPIService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.*;
+
+import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_CREATE_ACTION;
 
 public class CreateDonationPostActivity extends AppCompatActivity {
 
@@ -44,26 +29,24 @@ public class CreateDonationPostActivity extends AppCompatActivity {
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    TextView txtTitle, btnAdd;
-    RmaAPIService rmaAPIService;
+
+    TextView txtTitle, btnAdd, txtError;
     List<String> urlList;
     Button btnAddImage;
     ImageView tmpImage;
     EditText edtContent, edtAddress;
     Context context;
-    String imagePath = "aaa", authorization;
+    String authorization;
     SharedPreferences sharedPreferences;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
-    FirebaseAuth fbAuth;
-    FirebaseUser fbUser;
+
     List<Uri> selectedImages;
-    int onClickFlag, selectedPosition, imageCount = 0;
+    int onClickFlag, selectedPosition;
 
     List<ImageView> imageList;
 
     GridLayout gridLayout;
-    ProgressDialog progressDialog;
+
+    FirebaseImg firebaseImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,28 +58,25 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-        fbAuth = FirebaseAuth.getInstance();
-        fbUser = fbAuth.getCurrentUser();
-
         imageList = new ArrayList<>();
         urlList = new ArrayList<>();
         //list uri
         selectedImages = new ArrayList<>();
 
+        firebaseImg = new FirebaseImg();
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkLoginFirebase()) {
-                    uploadImagesToFireBase();
+                String address = edtAddress.getText().toString();
+                String content = edtContent.getText().toString();
+                if (address.trim().length() == 0 || content.trim().length() < 100){
+                    notifyError(address.trim().length(), content.trim().length());
+                } else {
+                    if (firebaseImg.checkLoginFirebase()) {
+                        setDonationPostData(address, content);
+                    }
                 }
-//                if (firebaseImg.checkLoginFirebase()) {
-//                    DonationPost newPost = new DonationPost();
-//                    newPost.setAddress(edtAddress.getText().toString());
-//                    newPost.setContent(edtContent.getText().toString());
-//                    firebaseImg.uploadImagesToFireBase(context, selectedImages, urlList, null, newPost);
-//                }
             }
         });
 
@@ -109,69 +89,22 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadImagesToFireBase() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Đang tải hình ảnh...");
-        progressDialog.show();
-
-        for (int i = 0; i < selectedImages.size(); i++) {
-
-            if (selectedImages.get(i) != null) {
-                StorageReference reference = storageReference.child("images/" + UUID.randomUUID().toString());
-                reference.putFile(selectedImages.get(i)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            task.getResult().getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    imagePath = uri.toString(); //get url
-                                    urlList.add(imagePath);
-//                                    Toast.makeText(CreateDonationPostActivity.this, "Tải thành công " + urlList, Toast.LENGTH_SHORT).show();
-                                    progressDialog.dismiss();
-                                    if (urlList.size() == selectedImages.size()) {
-                                        createPost();
-                                    }
-
-                                }
-                            });
-
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Toast.makeText(CreateDonationPostActivity.this, "Không thể đăng được hình " + (urlList.size() + 1) + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.setMessage("Vui lòng chờ!!!");
-                    }
-                });
-            }
-        }
+    private void setDonationPostData(String address, String content) {
+        DonationPost newPost = new DonationPost();
+        newPost.setAddress(address);
+        newPost.setContent(content);
+        firebaseImg.uploadImagesToFireBase(context, selectedImages, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
     }
 
-    private boolean checkLoginFirebase() {
-        final boolean[] result = {true};
-        if (fbUser == null) {
-            fbAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    Toast.makeText(CreateDonationPostActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-                    result[0] = true;
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CreateDonationPostActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                    result[0] = false;
-                }
-            });
+    private void notifyError(int addressLength, int contentLength) {
+        if (addressLength == 0){
+            edtAddress.setHint("Vui lòng nhập địa chỉ");
+            edtAddress.setHintTextColor(Color.RED);
         }
-        return result[0];
+        if (contentLength < 100){
+            txtError.setText("Nội dung còn thiếu " + (100 - contentLength) + " ký tự");
+            txtError.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getImageFromGallery() {
@@ -252,52 +185,14 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         }
     }
 
-    private void createPost() {
-        String content = edtContent.getText().toString();
-        String address = edtAddress.getText().toString();
-        final Map<String, Object> jsonBody = new HashMap<String, Object>();
-
-        jsonBody.put("content", content);
-        jsonBody.put("address", address);
-        jsonBody.put("urls", urlList);
-
-        if (authorization != null) {
-            rmaAPIService.createDonationPost(jsonBody, authorization).enqueue(new Callback<DonationPost>() {
-
-                @Override
-                public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_LONG).show();
-
-                            //go to update screen
-                            Intent intent = new Intent(context, UpdateDonationPostActivity.class);
-                            intent.putExtra("donationPostId", response.body().getId());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DonationPost> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
-
     private void getComponents() {
         txtTitle = findViewById(R.id.txtTitle);
         txtTitle.setText("Tạo bài viết mới");
+        txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
         btnAdd = findViewById(R.id.btnConfirm);
         btnAdd.setText("Đăng bài");
         btnAddImage = findViewById(R.id.btnAddImage);
-        rmaAPIService = RmaAPIUtils.getAPIService();
     }
 }

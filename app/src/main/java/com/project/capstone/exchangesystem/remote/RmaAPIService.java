@@ -46,7 +46,7 @@ public interface RmaAPIService {
     Call<Object> updateInfo(@Body Map<String, String> body, @Header("Authorization") String authorization);
 
     @PUT("/item/{id}")
-    Call<Object> updateItem(@Body Map<String, String> body, @Header("Authorization") String authorization, @Path("id") int itemId);
+    Call<Object> updateItem(@Body Map<String, Object> body, @Header("Authorization") String authorization, @Path("id") int itemId);
 
     @GET("/item/{id}")
     Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
