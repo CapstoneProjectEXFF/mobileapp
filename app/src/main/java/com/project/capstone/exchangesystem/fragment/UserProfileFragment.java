@@ -85,7 +85,7 @@ public class UserProfileFragment extends Fragment {
 
         txtNameUserProfile.setText(userName);
         txtPhoneNumberProfile.setText(phoneNumber);
-        Picasso.with(view.getContext()).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
+        Picasso.with(view.getContext()).load(avatar)
                 .placeholder(R.drawable.no)
                 .error(R.drawable.loadingimage)
                 .into(imageView);
