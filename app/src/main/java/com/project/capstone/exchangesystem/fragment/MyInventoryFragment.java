@@ -2,12 +2,15 @@ package com.project.capstone.exchangesystem.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
@@ -19,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +70,10 @@ public class MyInventoryFragment extends Fragment {
         String authorization = sharedPreferences.getString("authorization", null);
         int userID = sharedPreferences.getInt("userId", 0);
 
+        // Get a List of item ID
+        ArrayList<String> itemList = getArrayList("itemMeIdList");
+
+
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
             rmaAPIService.getItemsByUserId(userID).enqueue(new Callback<List<Item>>() {
@@ -88,5 +96,15 @@ public class MyInventoryFragment extends Fragment {
             System.out.println("Fail Test Authorization");
         }
         tradeAdapter.notifyDataSetChanged();
+    }
+
+
+        public ArrayList<String> getArrayList(String key){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        ArrayList<String> strings = gson.fromJson(json, type);
+        return strings;
     }
 }

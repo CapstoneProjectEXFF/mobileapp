@@ -70,5 +70,8 @@ public interface RmaAPIService {
     @GET("/donationPost")
     Call<List<DonationPost>> getDonationPost(@Query("page") int page, @Query("size") int size);
 
+    @GET("/item/{itemId}")
+    Call<Item> getItemById(@Path("itemId") int id);
+
 }
 
