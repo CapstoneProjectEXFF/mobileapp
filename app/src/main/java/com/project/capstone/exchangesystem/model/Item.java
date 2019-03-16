@@ -166,4 +166,6 @@ public class Item implements Serializable {
         this.user = user;
         this.images = images;
     }
+
+    public Item(){}
 }

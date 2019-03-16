@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -12,10 +13,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.project.capstone.exchangesystem.model.FirebaseImg;
+import com.project.capstone.exchangesystem.model.PostAction;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
@@ -28,6 +27,8 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.*;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_UPDATE_ACTION;
+
 public class UpdateDonationPostActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 2;
@@ -35,7 +36,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
     private final int CHANGE_IMAGE_FLAG = 0;
-    TextView txtTitle, btnUpdate;
+    TextView txtTitle, btnUpdate, txtError;
     RmaAPIService rmaAPIService;
     List<String> urlList;
     List<ImageView> imageList;
@@ -43,16 +44,14 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     ImageView tmpImage;
     EditText edtContent, edtAddress;
     Context context;
-    String imagePath, authorization;
+    String authorization;
     int donationPostId, onClickFlag = -1, selectedPosition;
     SharedPreferences sharedPreferences;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
-    FirebaseAuth fbAuth;
-    FirebaseUser fbUser;
+
     List<Uri> selectedImages;
-    Uri selectedImage;
+
     GridLayout gridLayout;
+    FirebaseImg firebaseImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +63,6 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-        fbAuth = FirebaseAuth.getInstance();
-        fbUser = fbAuth.getCurrentUser();
-
         imageList = new ArrayList<>();
         urlList = new ArrayList<>();
         //list uri
@@ -76,49 +70,43 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         donationPostId = intent.getIntExtra("donationPostId", 0);
+
         loadDonationPost();
+
+        firebaseImg = new FirebaseImg();
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateDonationPost();
+                String address = edtAddress.getText().toString();
+                String content = edtContent.getText().toString();
+                if (address.trim().length() == 0 || content.trim().length() < 100){
+                    notifyError(address.trim().length(), content.trim().length());
+                } else {
+                    if (firebaseImg.checkLoginFirebase()) {
+                        setDonationPostData(address, content);
+                    }
+                }
             }
         });
     }
 
-    private void updateDonationPost() {
-        String content = edtContent.getText().toString();
-        String address = edtAddress.getText().toString();
-        final Map<String, Object> jsonBody = new HashMap<String, Object>();
-        jsonBody.put("content", content);
-        jsonBody.put("address", address);
-//        jsonBody.put("urls", urlList);
+    private void setDonationPostData(String address, String content) {
+        DonationPost donationPost = new DonationPost();
+        donationPost.setId(donationPostId);
+        donationPost.setContent(content);
+        donationPost.setAddress(address);
+        new PostAction().manageDonation(donationPost, null, authorization, context, DONATION_UPDATE_ACTION);
+    }
 
-        if (authorization != null) {
-            rmaAPIService.updateDonationPost(jsonBody, authorization, donationPostId).enqueue(new Callback<Object>() {
-
-                @Override
-                public void onResponse(Call<Object> call, Response<Object> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_LONG).show();
-                            //go to main
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Failed 1", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Object> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                }
-            });
+    private void notifyError(int addressLength, int contentLength) {
+        if (addressLength == 0){
+            edtAddress.setHint("Vui lòng nhập địa chỉ");
+            edtAddress.setHintTextColor(Color.RED);
+        }
+        if (contentLength < 100){
+            txtError.setText("Nội dung còn thiếu " + (100 - contentLength) + " ký tự");
+            txtError.setVisibility(View.VISIBLE);
         }
     }
 
@@ -136,6 +124,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
                                 selectedImages.add(null);
                                 createImageView();
                             }
+//                            donationPost = response.body();
                         } else {
                             Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
                         }
@@ -240,6 +229,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     private void getComponents() {
         txtTitle = findViewById(R.id.txtTitle);
         txtTitle.setText("Chỉnh sửa bài viết");
+        txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
         btnUpdate = findViewById(R.id.btnConfirm);

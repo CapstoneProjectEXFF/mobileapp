@@ -6,6 +6,14 @@
     android:orientation="vertical"
     tools:context=".fragment.MainCharityPostFragment">
 
+    <TextView
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+    android:text="Thêm bài viết"
+    android:textSize="22dp"
+    android:textColor="@color/startblue"
+    android:layout_gravity="right"/>
 
     <ListView
         android:id="@+id/charityPostListView"
