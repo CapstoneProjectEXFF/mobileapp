@@ -1,17 +1,21 @@
 package com.project.capstone.exchangesystem.Activity;
 
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.fragment.MyInventoryFragment;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.fragment.YourInventoryFragment;
@@ -24,45 +28,129 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TradeActivity extends AppCompatActivity {
 
-    Fragment selectedFragment;
-    Fragment leftFragment, rightFragment;
+    RecyclerView recyclerviewMe, recyclerviewYou;
+    Button addMe, addYou;
+    int idMe, idYou;
+    ArrayList<Item> choosedMe, choosedYou;
+    ItemAdapter itemMeAdapter, itemYouAdapter;
+    ArrayList<String> itemIdsMe, itemIdsYou;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
 
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        leftFragment = YourInventoryFragment.newInstance();
-        rightFragment = MyInventoryFragment.newInstance();
+        recyclerviewMe = findViewById(R.id.recyclerviewMe);
+        recyclerviewYou = findViewById(R.id.recyclerviewYou);
+        choosedMe = new ArrayList<>();
+        choosedYou = new ArrayList<>();
+        itemIdsMe = new ArrayList<>();
+        itemIdsYou = new ArrayList<>();
 
 
-        tx.replace(R.id.fragment_switch1, leftFragment);
-        tx.replace(R.id.fragment_switch2, rightFragment);
-        tx.commit();
+        itemMeAdapter = new ItemAdapter(getApplicationContext(), choosedMe, new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+
+            }
+        });
+
+        recyclerviewMe.setHasFixedSize(true);
+        recyclerviewMe.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerviewMe.setAdapter(itemMeAdapter);
+
+        itemYouAdapter = new ItemAdapter(getApplicationContext(), choosedYou, new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+
+            }
+        });
+
+        recyclerviewYou.setHasFixedSize(true);
+        recyclerviewYou.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+        recyclerviewYou.setAdapter(itemYouAdapter);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        final int idMe = sharedPreferences.getInt("userId", 0);
+        System.out.println("Test My Id " + idMe);
+
+        Intent intent = this.getIntent();
+        Item temp = (Item) intent.getSerializableExtra("descriptionItem");
+        final int idYou = temp.getUser().getId();
+        System.out.println("Test Your Id " + idYou);
+
+
+        choosedYou.add(temp);
+        itemYouAdapter.notifyDataSetChanged();
+        itemIdsYou.add(String.valueOf(temp.getId()));
+        saveArrayList(itemIdsYou, "itemYouIdList");
+
+
+        addMe = findViewById(R.id.addMe);
+        addYou = findViewById(R.id.addYou);
+
+        addMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> itemList = getArrayList("itemMeIdList");
+                Intent intent = new Intent(TradeActivity.this, ChooseItemActivity.class);
+                intent.putExtra("id", idMe);
+                intent.putStringArrayListExtra("itemMeIdList", itemList);
+                startActivityForResult(intent, 2);
+            }
+        });
+
+        addYou.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> itemList = getArrayList("itemYouIdList");
+                Intent intent = new Intent(TradeActivity.this, ChooseItemActivity.class);
+                intent.putExtra("id", idYou);
+                intent.putStringArrayListExtra("itemYouIdList", itemList);
+                startActivityForResult(intent, 2);
+            }
+        });
+
+
     }
 
 
-    public void toYourInventoryFragment(View view) {
-//        Fragment selectedFragment = null;
-//        selectedFragment = new YourInventoryFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragment_switch, selectedFragment).addToBackStack(null);
-//        transaction.commit();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    }
 
-    public void toMyInventoryFragment(View view) {
-//        Fragment selectedFragment = null;
-//        selectedFragment = new MyInventoryFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragment_switch, selectedFragment).addToBackStack(null);
-//        transaction.commit();
+        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        final int idMe = sharedPreferences.getInt("userId", 0);
+        System.out.println("Test My Id " + idMe);
+
+        Intent intent = this.getIntent();
+        Item temp = (Item) intent.getSerializableExtra("descriptionItem");
+        final int idYou = temp.getUser().getId();
+        System.out.println("Test Your Id " + idYou);
+        // check if the request code is same as what is passed  here it is 2
+        if (requestCode == 2) {
+            Bundle bundle = data.getExtras();
+            ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+            int id = data.getIntExtra("tempID", 0);
+            System.out.println("Test tempID " + id);
+            if (id == idMe) {
+                System.out.println("test ID ME " + idMe);
+                itemMeAdapter.setfilter(idChoose);
+            } else if (id == idYou) {
+                System.out.println("test ID YOU " + idYou);
+                itemYouAdapter.setfilter(idChoose);
+            }
+        }
+
+
     }
 
     public void sendTradeRequest(View view) {
@@ -80,33 +168,49 @@ public class TradeActivity extends AppCompatActivity {
         GridView gridViewMyInventory = (GridView) findViewById(R.id.gridViewMyInventory);
 
         List<TransactionDetail> transactionDetailList = new ArrayList<>();
-        int countMe = gridViewMyInventory.getAdapter().getCount();
-        for (int i = 0; i < countMe; i++) {
-            LinearLayout itemLayout = (LinearLayout) gridViewMyInventory.getChildAt(i);
-            CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
 
-            if (checkBox.isChecked()) {
-                TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-                TransactionDetail temp = new TransactionDetail();
-                temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
-                temp.setUserId(idMe);
-                transactionDetailList.add(temp);
+
+        int countMe = gridViewMyInventory.getAdapter().getCount();
+        System.out.println(countMe);
+        for (int i = 0; i < countMe; i++) {
+            try {
+                LinearLayout itemLayout = (LinearLayout) gridViewMyInventory.getChildAt(i);
+                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
+                if (checkBox.isChecked()) {
+                    TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
+                    TransactionDetail temp = new TransactionDetail();
+                    temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
+                    temp.setUserId(idMe);
+                    transactionDetailList.add(temp);
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                System.out.println(ex.getCause());
+                System.out.println(ex.getLocalizedMessage());
             }
         }
 
 
         GridView gridViewYourInventory = (GridView) findViewById(R.id.gridViewYourInventory);
         int countYou = gridViewYourInventory.getAdapter().getCount();
+        System.out.println(countYou);
         for (int i = 0; i < countYou; i++) {
-            LinearLayout itemLayout = (LinearLayout) gridViewYourInventory.getChildAt(i);
-            CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
+            try {
+                LinearLayout itemLayout = (LinearLayout) gridViewYourInventory.getChildAt(i);
+                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
 
-            if (checkBox.isChecked()) {
-                TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-                TransactionDetail temp = new TransactionDetail();
-                temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
-                temp.setUserId(idYou);
-                transactionDetailList.add(temp);
+
+                if (checkBox.isChecked()) {
+                    TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
+                    TransactionDetail temp = new TransactionDetail();
+                    temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
+                    temp.setUserId(idYou);
+                    transactionDetailList.add(temp);
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                System.out.println(ex.getCause());
+                System.out.println(ex.getLocalizedMessage());
             }
         }
 
@@ -116,7 +220,7 @@ public class TradeActivity extends AppCompatActivity {
         transaction.setStatus("0");
         transaction.setDonationPostId(-1);
 
-        TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
+        final TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
 
         rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
             @Override
@@ -124,6 +228,23 @@ public class TradeActivity extends AppCompatActivity {
 
                 System.out.println("test response " + response.isSuccessful());
                 System.out.println(response.body());
+                if (response.isSuccessful()) {
+                    try {
+                        LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
+                        if (responeBody.containsKey("message")) {
+                            String mess = (String) responeBody.get("message");
+                            if (mess.equals("Sended")) {
+                                Toast.makeText(getApplicationContext(), "Send Trade Request Successfully", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getApplicationContext(), TransactionDetailActivity.class);
+                                intent.putExtra("transactionDetail", transactionRequestWrapper);
+                                startActivity(intent);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
 
             }
 
@@ -132,6 +253,25 @@ public class TradeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public ArrayList<String> getArrayList(String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        ArrayList<String> strings = gson.fromJson(json, type);
+        return strings;
+    }
+
+    public void saveArrayList(ArrayList<String> list, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();     // This line is IMPORTANT !!!
     }
 
 

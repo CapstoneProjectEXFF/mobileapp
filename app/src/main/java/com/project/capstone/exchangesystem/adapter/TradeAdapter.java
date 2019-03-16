@@ -99,10 +99,18 @@ public class TradeAdapter extends BaseAdapter {
         viewHolder.txtNameTradeItem.setText(item.getName());
         viewHolder.txtTradeIDItem.setText(String.valueOf(item.getId()));
         Intent intent = ((Activity) context).getIntent();
-        Item temp = (Item) intent.getSerializableExtra("descriptionItem");
-        String idTradeItem = String.valueOf(temp.getId());
-        if (idTradeItem.equals(String.valueOf(item.getId()))) {
-            viewHolder.checkBoxTrade.setChecked(true);
+        ArrayList<String> listItem = new ArrayList<>();
+        if (intent.hasExtra("itemMeIdList")) {
+            listItem = intent.getStringArrayListExtra("itemMeIdList");
+            System.out.println("itemMeIdList" + listItem);
+        } else {
+            listItem = intent.getStringArrayListExtra("itemYouIdList");
+            System.out.println("itemYouIdList" + listItem);
+        }
+        for (int i = 0; i < listItem.size(); i++) {
+            if (listItem.get(i).equals(String.valueOf(item.getId()))) {
+                viewHolder.checkBoxTrade.setChecked(true);
+            }
         }
         Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
                 .placeholder(R.drawable.no)

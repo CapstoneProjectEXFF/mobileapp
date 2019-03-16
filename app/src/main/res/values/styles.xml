@@ -18,7 +18,7 @@
 
     </style>
     <style name="menuitemcolor" parent="AppTheme">
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">#ffffff</item>
         <item name="drawerArrowStyle">@style/changecolordrawertoogle</item>
     </style>
 

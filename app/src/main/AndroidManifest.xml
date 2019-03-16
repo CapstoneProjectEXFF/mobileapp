@@ -26,6 +26,7 @@
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
+
         <activity android:name=".Activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,9 +46,7 @@
         <activity
             android:name=".Activity.SearchActivity"
             android:theme="@style/AppTheme2" />
-
         <activity android:name=".Activity.DescriptionItem">
-
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -55,12 +54,11 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="exff-104b8.firebaseapp.com"
-                    android:pathPrefix="/item.html" />
+                    android:pathPrefix="/item.html"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity android:name=".Activity.TradeActivity" />
         <activity android:name=".Activity.CreateItemActivity" />
         <activity android:name=".Activity.UpdateItemActivity" />
@@ -69,6 +67,7 @@
         <activity android:name=".Activity.OwnInventory" />
         <activity android:name=".Activity.ChangePassword" />
         <activity android:name=".Activity.EditUserProfileActivity" />
+
         <activity android:name=".Activity.DescriptionDonationPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -87,11 +86,14 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <provider
-            android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
             android:exported="true" />
 
+        <activity android:name=".Activity.TransactionDetailActivity" />
+        <activity android:name=".Activity.ChooseItemActivity"></activity>
     </application>
 
 </manifest>
