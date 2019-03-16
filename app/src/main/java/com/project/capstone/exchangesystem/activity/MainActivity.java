@@ -1,4 +1,4 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 //import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initFragment();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initFragment(){
+        Fragment selectedFragment = MainItemShowFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, selectedFragment);
+        transaction.commit();
+    }
 
     public void toSearch(View view) {
         Intent iTimKiem = new Intent(this, SearchActivity.class);

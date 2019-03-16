@@ -9,9 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.project.capstone.exchangesystem.Activity.EditUserProfileActivity;
-import com.project.capstone.exchangesystem.Activity.OwnInventory;
-import com.project.capstone.exchangesystem.Activity.ChangePassword;
+import com.project.capstone.exchangesystem.activity.EditUserProfileActivity;
+import com.project.capstone.exchangesystem.activity.OwnInventory;
+import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
 

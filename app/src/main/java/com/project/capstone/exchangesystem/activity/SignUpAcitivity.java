@@ -1,6 +1,6 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -22,13 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpAcitivity extends AppCompatActivity {
-    EditText txtFirstname, txtLastname, txtPhone, txtPassword, txtAddress;
-    CheckBox checkboxCharityAgent;
+    EditText txtFullname, txtPhone, txtPassword, txtAddress;
     private Context context;
     TextView lbl_toolbar;
     boolean flag = true;
 
-    boolean flag1 = true;
     boolean flag2 = true;
     boolean flag3 = true;
     boolean flag4 = true;
@@ -39,17 +37,15 @@ public class SignUpAcitivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_acitivity);
 
-        lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Đăng Kí Tài Khoản");
-        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+//        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+//        lbl_toolbar.setText("Đăng Kí Tài Khoản");
+//        lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
         context = this;
-        txtFirstname = findViewById(R.id.txtFirstname);
-        txtLastname = findViewById(R.id.txtLastname);
+        txtFullname = findViewById(R.id.txtName);
         txtPhone = findViewById(R.id.txtPhone);
         txtPassword = findViewById(R.id.txtPassword);
         txtAddress = findViewById(R.id.txtAddress);
-        checkboxCharityAgent = findViewById(R.id.checkboxCharityAgent);
 
     }
 
@@ -58,12 +54,10 @@ public class SignUpAcitivity extends AppCompatActivity {
 
         User user = new User();
 
-        String fistname = txtFirstname.getText().toString();
-        String lastname = txtLastname.getText().toString();
+        String fullname = txtFullname.getText().toString();
         String phone = txtPhone.getText().toString();
         String password = txtPassword.getText().toString();
         String address = txtAddress.getText().toString();
-        boolean charityAgent = checkboxCharityAgent.isChecked();
 
         rmaAPIService.checkValidationLogin(phone).enqueue(new Callback<Object>() {
             @Override
@@ -82,19 +76,13 @@ public class SignUpAcitivity extends AppCompatActivity {
             }
         });
 
-        if (fistname.length() < 1) {
+        if (fullname.length() < 1) {
             flag = false;
-            txtFirstname.setBackgroundResource(R.drawable.signuperror);
+            txtFullname.setBackgroundResource(R.drawable.signuperror);
         } else {
-            txtFirstname.setBackgroundResource(R.drawable.signupedt);
+            txtFullname.setBackgroundResource(R.drawable.signupedt);
         }
 
-        if (lastname.length() < 1) {
-            flag1 = false;
-            txtLastname.setBackgroundResource(R.drawable.signuperror);
-        } else {
-            txtLastname.setBackgroundResource(R.drawable.signupedt);
-        }
 
         if (!android.util.Patterns.PHONE.matcher(phone).matches()) {
             flag2 = false;
@@ -118,17 +106,17 @@ public class SignUpAcitivity extends AppCompatActivity {
         }
 
 
-        if ((flag == true) && (flag1 == true) && (flag2 == true) && (flag3 == true) && (flag4 == true)) {
+        if ((flag == true) && (flag2 == true) && (flag3 == true) && (flag4 == true)) {
 
 
-            user.setFullName(fistname + " " + lastname);
+            user.setFullName(fullname);
             user.setPhone(phone);
 //            user.setPassword(password);
 
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", phone);
             jsonBody.put("password", password);
-            jsonBody.put("fullname", fistname + " " + lastname);
+            jsonBody.put("fullname", fullname);
             jsonBody.put("status", "1");
 
 
@@ -151,7 +139,11 @@ public class SignUpAcitivity extends AppCompatActivity {
         }
     }
 
-    public void onBackButton(View view) {
+//    public void onBackButton(View view) {
+//        finish();
+//    }
+
+    public void toSignUp(View view) {
         finish();
     }
 }

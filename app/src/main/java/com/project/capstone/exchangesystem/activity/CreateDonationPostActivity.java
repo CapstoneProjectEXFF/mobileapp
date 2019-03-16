@@ -1,4 +1,4 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 import android.content.Context;
 import android.content.Intent;

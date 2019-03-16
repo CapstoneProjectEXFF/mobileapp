@@ -1,187 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SignUpAcitivity">
+    android:background="@drawable/bg_gradient_login"
+    tools:context=".activity.SignUpAcitivity">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+    <!--<include layout="@layout/tool_bar" />-->
 
-        <include layout="@layout/tool_bar" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="2">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đăng ký"
+            android:textColor="#cfff"
+            android:textSize="48dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/txtFirstname"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0.8"
-                android:background="@color/colorPrimaryEditText"
-                android:hint="Họ"
-                android:inputType="textPersonName"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
+        <EditText
+            android:id="@+id/txtPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Số Điện Thoại"
+            android:inputType="phone"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            <EditText
-                android:id="@+id/txtLastname"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1.2"
-                android:background="@color/colorPrimaryEditText"
-                android:hint="Tên"
-                android:inputType="textPersonName"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Họ và tên"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPhone" />
 
-        </TableRow>
+        <EditText
+            android:id="@+id/txtAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Địa chỉ"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="3">
+        <EditText
+            android:id="@+id/txtPassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
 
-            <EditText
-                android:id="@+id/txtPhone"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="3"
-                android:background="@color/colorPrimaryEditText"
-                android:hint="Số điện thoại"
-                android:inputType="textPhonetic"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
-        </TableRow>
+        <EditText
+            android:id="@+id/txtPasswordCheck"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Nhập lại mật khẩu"
+            android:inputType="textPassword"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="3">
+        <Button
+            android:id="@+id/btnSignup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="#f9b43d"
+            android:onClick="signUpUser"
+            android:text="Đăng ký"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPasswordCheck" />
 
-            <EditText
-                android:id="@+id/txtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="3"
-                android:background="@color/colorPrimaryEditText"
-                android:fontFamily="sans-serif"
-                android:hint="Mật khẩu"
-                android:inputType="textPassword"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
-        </TableRow>
+        <Button
+            android:id="@+id/btnSignin"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="#00ff973b"
+            android:onClick="toSignUp"
+            android:text="Đã có tài khoản ?"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
+    </android.support.constraint.ConstraintLayout>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="3">
-
-            <EditText
-                android:id="@+id/txtAddress"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="3"
-                android:background="@color/colorPrimaryEditText"
-                android:fontFamily="sans-serif"
-                android:hint="Địa Chỉ"
-                android:inputType="text"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="3">
-
-            <CheckBox
-                android:id="@+id/checkboxCharityAgent"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="3"
-                android:background="@color/colorPrimaryEditText"
-                android:fontFamily="sans-serif"
-                android:hint="Hoạt Động Từ Thiện"
-                android:paddingLeft="15dp"
-                android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="20dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1">
-
-            <Button
-                android:layout_width="@dimen/btn_nor_width"
-                android:layout_height="@dimen/btn_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_normal"
-                android:onClick="signUpUser"
-                android:text="Đăng ký"
-                android:textColor="#FFFFFF"
-                android:textSize="18dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="@dimen/btn_nor_width"
-                android:layout_height="@dimen/btn_nor_height"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_reverse"
-                android:text="Đã có tài khoản ?"
-                android:textColor="#006699"
-                android:textSize="18dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="60" />
-    </TableLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

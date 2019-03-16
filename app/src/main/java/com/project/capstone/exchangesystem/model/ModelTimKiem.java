@@ -1,13 +1,12 @@
 package com.project.capstone.exchangesystem.model;
 
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ModelTimKiem {

@@ -1,10 +1,8 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,11 +12,9 @@ import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
-import com.project.capstone.exchangesystem.fragment.MyInventoryFragment;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.fragment.YourInventoryFragment;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;

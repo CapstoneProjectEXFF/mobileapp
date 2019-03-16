@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ExchangeSystem</string>
+    <string name="app_name">EXFF</string>
     <string name="forgetyourpass">
         <u>
             <i>Quên mật khẩu ?</i>
@@ -12,6 +12,12 @@
 
     <string name="edituserprofile">Edit User Profile</string>
     <string name="changepass">Change Your Password</string>
+
+    <!--bottom nav bar-->
+    <string name="nav_bar_home">Trang chủ</string>
+    <string name="nav_bar_charity">Từ thiện</string>
+    <string name="nav_bar_notif">Thông báo</string>
+    <string name="nav_bar_profile">Người dùng</string>
 
     <!--Facebook-->
     <string name="facebook_app_id">293758374637458</string>

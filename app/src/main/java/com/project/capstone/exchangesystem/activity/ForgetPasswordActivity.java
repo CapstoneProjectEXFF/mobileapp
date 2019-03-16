@@ -1,14 +1,14 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.project.capstone.exchangesystem.R;
 
-public class VerifyActivity extends AppCompatActivity {
+public class ForgetPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify);
+        setContentView(R.layout.activity_forget_password);
     }
 }

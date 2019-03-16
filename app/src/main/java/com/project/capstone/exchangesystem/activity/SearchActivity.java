@@ -1,14 +1,13 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.adapter.ListAdapter;
@@ -18,7 +17,6 @@ import com.project.capstone.exchangesystem.view.ViewTimKiem;
 import com.project.capstone.exchangesystem.databinding.ActivitySearchBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements ViewTimKiem {
     ActivitySearchBinding activitySearchBinding;

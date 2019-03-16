@@ -1,4 +1,4 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

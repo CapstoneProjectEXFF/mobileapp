@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#0C8AE8</color>
+    <color name="colorPrimaryDark">#4052B5</color>
+    <color name="colorPrimaryLight">#9ED0F5</color>
+    <color name="colorLogin">#DBFDF3</color>
+    <color name="colorLoginDark">#404C66</color>
+    <color name="colorAccent">#0C8AE8</color>
     <color name="colorPrimaryLighter">#0079b6</color>
     <color name="colorSecondary">#8b8b8b</color>
     <color name="colorPrimaryEditText">#1b313b</color>
@@ -25,6 +28,7 @@
     <color name="colorBlack">#000</color>
     <color name="colorRed">#FFF62226</color>
     <color name="tranparentBlack">#B2000000</color>
+    <color name="colorGrayDark">#888888</color>
     <color name="colorGreen">#38f734</color>
     <color name="colorSliderInActive">#8095a1</color>
     <color name="address">#2F7092</color>

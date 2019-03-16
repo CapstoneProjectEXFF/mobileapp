@@ -4,25 +4,25 @@
 
     <item
         android:id="@+id/bottombaritem_main"
-        android:icon="@drawable/ic_main_24dp"
-        android:title="Main"
+        android:icon="@drawable/ic_main"
+        android:title="@string/nav_bar_home"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/bottombaritem_charity"
-        android:icon="@drawable/ic_charity_24dp"
-        android:title="Charity"
+        android:icon="@drawable/ic_charity"
+        android:title="@string/nav_bar_charity"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/bottombaritem_notification"
-        android:icon="@drawable/ic_notification_24dp"
-        android:title="Notification"
+        android:icon="@drawable/ic_notification"
+        android:title="@string/nav_bar_notif"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/bottombaritem_profile"
-        android:icon="@drawable/ic_profile_24dp"
-        android:title="Profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/nav_bar_profile"
         app:showAsAction="ifRoom"/>
 </menu>

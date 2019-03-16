@@ -1,6 +1,6 @@
-package com.project.capstone.exchangesystem.Activity;
+package com.project.capstone.exchangesystem.activity;
 
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -36,9 +36,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        lbl_toolbar = findViewById(R.id.lbl_toolbar);
-        lbl_toolbar.setText("Đăng Nhập");
-        lbl_toolbar.setTypeface(null, Typeface.BOLD);
+//        lbl_toolbar = findViewById(R.id.lbl_toolbar);
+//        lbl_toolbar.setText("Đăng Nhập");
+//        lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
         context = this;
         txtPhone = findViewById(R.id.txtPhone);
@@ -94,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                             String avatar = (String) userInfo.get("avatar");
                             System.out.println(avatar);
 
+                            //TODO hardcode status
                             if (status.equals("1")) {
                                 SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
                                 editor.putString("avatar", avatar);
@@ -152,10 +153,10 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
-    public void toResetPassword(View view) {
-        Intent intent = new Intent(this, ForgetPasswordActivity.class);
-        startActivity(intent);
-    }
+//    public void toResetPassword(View view) {
+//        Intent intent = new Intent(this, ForgetPasswordActivity.class);
+//        startActivity(intent);
+//    }
 
     public void onBackButton(View view) {
         finish();
