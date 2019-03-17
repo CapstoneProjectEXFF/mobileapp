@@ -132,10 +132,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
 
     private void setUserData(String fullName) {
         User user = new User();
-        user.setId(userID);
-        user.setPhone(userPhoneNumber);
         user.setFullName(fullName);
-        user.setStatus(status);
         List<Uri> uri = new ArrayList<>();
         SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
         if (avaCheck){
@@ -173,90 +170,4 @@ public class EditUserProfileActivity extends AppCompatActivity {
             }
         }
     }
-
-//    public void EditProfile(View view) {
-//        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-//        int userID = sharedPreferences.getInt("userId", 0);
-//        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-//        String authorization = sharedPreferences.getString("authorization", null);
-//        String name = sharedPreferences.getString("username", null);
-//        String avatar = sharedPreferences.getString("avatar", null);
-//        String status = sharedPreferences.getString("status", null);
-//        final String edtName = txtName.getText().toString();
-//        String edtAddress = txtAddress.getText().toString();
-//
-//
-//        if (edtName.length() < 6) {
-//            flag1 = false;
-//            Toast.makeText(getApplicationContext(), "Your Name is not long enough\n", Toast.LENGTH_LONG).show();
-//        } else {
-//
-//        }
-//
-//
-////        if (edtAddress.length() < 6) {
-////            flag2 = false;
-////            Toast.makeText(getApplicationContext(), "Your New Address is not long enough\n", Toast.LENGTH_LONG).show();
-////        } else {
-////
-////        }
-//
-//        if (flag1 && flag2) {
-//
-//
-//            final Map<String, String> jsonBody = new HashMap<String, String>();
-//            jsonBody.put("id", String.valueOf(userID));
-//            System.out.println(String.valueOf(userID));
-//            jsonBody.put("phoneNumber", userPhoneNumber);
-//            System.out.println(userPhoneNumber);
-//            jsonBody.put("fullName", edtName);
-//            System.out.println(edtName);
-//            jsonBody.put("avatar", avatar);
-//            System.out.println(avatar);
-//            jsonBody.put("status", status);
-//            System.out.println(status);
-//
-//
-//            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-//            rmaAPIService.updateInfo(jsonBody, authorization).enqueue(new Callback<Object>() {
-//
-//
-//                @Override
-//                public void onResponse(Call<Object> call, Response<Object> response) {
-//
-//                    System.out.println(response.isSuccessful());
-//
-//                    if (response.isSuccessful()) {
-//
-//                        LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
-//                        if (responeBody.containsKey("User")) {
-//                            Toast.makeText(getApplicationContext(), "Change UserProfile Succesfully", Toast.LENGTH_SHORT).show();
-//                            SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-//                            editor.putString("fullname", edtName);
-////                            editor.putString("avatar", user.getAvatar());
-//                            editor.commit();
-//
-//                        }
-//                    } else {
-//                        System.out.println(response.body());
-//                        LinkedTreeMap<String, String> responeBody = (LinkedTreeMap<String, String>) response.body();
-//                        if (responeBody.containsKey("message")) {
-//                            Toast.makeText(getApplicationContext(), responeBody.get("message").toString(), Toast.LENGTH_SHORT).show();
-//                            System.out.println(responeBody.get("message").toString());
-//                            System.out.println(responeBody.get("message").toString());
-//                        }
-//                    }
-//                }
-//                //TODO: updating...
-//
-//                @Override
-//                public void onFailure(Call<Object> call, Throwable t) {
-//                    System.out.println("Fail rồi");
-//                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        } else {
-//            Toast.makeText(getApplicationContext(), "Fail rồi", Toast.LENGTH_LONG).show();
-//        }
-//    }
 }

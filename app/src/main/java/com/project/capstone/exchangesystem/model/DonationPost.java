@@ -45,6 +45,8 @@ public class DonationPost implements Serializable {
     @Expose
     private List<Image> images;
 
+    private List<Integer> imageIds;
+
     public int getId() {
         return id;
     }
@@ -116,4 +118,13 @@ public class DonationPost implements Serializable {
     public void setImages(List<Image> images) {
         this.images = images;
     }
+
+    public List<Integer> getImageIds() {
+        return imageIds;
+    }
+
+    public void setImageIds(List<Integer> imageIds) {
+        this.imageIds = imageIds;
+    }
 }
+

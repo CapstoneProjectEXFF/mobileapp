@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
+import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.model.PostAction;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
@@ -29,7 +31,7 @@ import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_UPDATE_ACTION;
 
-public class UpdateItemActivity extends AppCompatActivity {
+public class UpdateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     private static final int GALLERY_REQUEST = 2;
     private final String PRIVACY_PUBLIC = "Công khai";
@@ -42,6 +44,7 @@ public class UpdateItemActivity extends AppCompatActivity {
     Spinner spCategory;
     RmaAPIService rmaAPIService;
     List<String> categoryList, privacyList, urlList;
+    List<Integer> imageIdList, removedImages;
     List<ImageView> imageList;
     Button btnAddImage;
     ImageView tmpImage;
@@ -55,6 +58,7 @@ public class UpdateItemActivity extends AppCompatActivity {
 
     List<Uri> selectedImages;
     GridLayout gridLayout;
+    FirebaseImg firebaseImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +74,11 @@ public class UpdateItemActivity extends AppCompatActivity {
 
         imageList = new ArrayList<>();
         urlList = new ArrayList<>();
+        imageIdList = new ArrayList<>();
+        removedImages = new ArrayList<>();
         //list uri
         selectedImages = new ArrayList<>();
-
+        firebaseImg = new FirebaseImg();
         Intent intent = getIntent();
         itemId = intent.getIntExtra("itemId", 0);
         loadItem();
@@ -83,10 +89,10 @@ public class UpdateItemActivity extends AppCompatActivity {
                 String itemName = edtItemName.getText().toString();
                 String itemAddress = edtItemAddress.getText().toString();
                 String itemDes = edtItemDes.getText().toString();
-                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100){
+                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100) {
                     notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
                 } else {
-                        setItemData(itemName, itemAddress, itemDes);
+                    setItemData(itemName, itemAddress, itemDes);
                 }
             }
         });
@@ -95,7 +101,8 @@ public class UpdateItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
@@ -108,19 +115,26 @@ public class UpdateItemActivity extends AppCompatActivity {
         item.setDescription(itemDes);
         item.setPrivacy("" + spCategory.getSelectedItemPosition());
         item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
-        new PostAction().manageItem(item, null, authorization, context, ITEM_UPDATE_ACTION);
+        item.setImageIds(removedImages);
+
+        selectedImages.removeAll(Collections.singleton(null));
+        if (selectedImages.size() != 0){
+            firebaseImg.uploadImagesToFireBase(context, selectedImages, item, null, null, authorization, ITEM_UPDATE_ACTION, null);
+        } else {
+            new PostAction().manageItem(item, null, authorization, context, ITEM_UPDATE_ACTION);
+        }
     }
 
     private void notifyError(int nameLength, int addressLength, int desLength) {
-        if (nameLength == 0){
+        if (nameLength == 0) {
             edtItemName.setHint("Bạn chưa điền tên đồ dùng");
             edtItemName.setHintTextColor(Color.RED);
         }
-        if (addressLength == 0){
+        if (addressLength == 0) {
             edtItemAddress.setHint("Bạn chưa điền địa chỉ");
             edtItemAddress.setHintTextColor(Color.RED);
         }
-        if (desLength < 100){
+        if (desLength < 100) {
             txtError.setText("Mô tả còn thiếu " + (100 - desLength) + " ký tự");
             txtError.setVisibility(View.VISIBLE);
         }
@@ -201,6 +215,8 @@ public class UpdateItemActivity extends AppCompatActivity {
             } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                 if (data.getData() != null) {
                     selectedImages.set(selectedPosition, data.getData());
+                    removedImages.add(imageIdList.get(selectedPosition));
+                    imageIdList.remove(selectedPosition);
                     try {
                         Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
                         tmpImage.setImageBitmap(bmp);
@@ -227,6 +243,7 @@ public class UpdateItemActivity extends AppCompatActivity {
                             for (int i = 0; i < response.body().getImages().size(); i++) {
                                 urlList.add(response.body().getImages().get(i).getUrl());
                                 selectedImages.add(null);
+                                imageIdList.add(response.body().getImages().get(i).getId());
                                 createImageView();
                             }
                         } else {
@@ -288,7 +305,8 @@ public class UpdateItemActivity extends AppCompatActivity {
                 onClickFlag = CHANGE_IMAGE_FLAG;
                 tmpImage = imageView;
                 selectedPosition = imageList.indexOf(imageView);
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
 
@@ -307,5 +325,30 @@ public class UpdateItemActivity extends AppCompatActivity {
         if (imageList.size() == 10) {
             btnAddImage.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case 0:
+                getImageFromGallery();
+                break;
+            case 1:
+
+                break;
+            case 2:
+                removeImage();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void removeImage() {
+        selectedImages.remove(selectedPosition);
+        imageList.remove(selectedPosition);
+        removedImages.add(imageIdList.get(selectedPosition));
+        imageIdList.remove(selectedPosition);
+        tmpImage.setVisibility(View.GONE);
     }
 }
