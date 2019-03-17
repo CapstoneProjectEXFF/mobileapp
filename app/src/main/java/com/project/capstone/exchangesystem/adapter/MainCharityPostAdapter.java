@@ -81,12 +81,12 @@ public class MainCharityPostAdapter extends BaseAdapter {
         String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
         viewHolder.txtTimestamp.setText(formattedDate);
         Picasso.with(context).load(donationPost.getImages().get(0).getUrl())
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(viewHolder.imgCharityPost);
         Picasso.with(context).load(donationPost.getUser().getAvatar())
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(viewHolder.imgProfileCharity);
         return convertView;
     }

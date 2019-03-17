@@ -86,8 +86,8 @@ public class UserProfileFragment extends Fragment {
         txtNameUserProfile.setText(userName);
         txtPhoneNumberProfile.setText(phoneNumber);
         Picasso.with(view.getContext()).load(avatar)
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(imageView);
 
         return view;
