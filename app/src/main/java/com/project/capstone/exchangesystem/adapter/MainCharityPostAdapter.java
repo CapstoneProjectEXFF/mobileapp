@@ -64,7 +64,11 @@ public class MainCharityPostAdapter extends BaseAdapter {
             viewHolder = (MainCharityPostAdapter.ViewHolder) convertView.getTag();
         }
         DonationPost donationPost = (DonationPost) getItem(position);
-        viewHolder.txtNameCharity.setText(donationPost.getContent().substring(0, 15));
+        String content = donationPost.getContent();
+        if (content.length() > 15){
+            content = content.substring(0, 15);
+        }
+        viewHolder.txtNameCharity.setText(content);
 
 //        viewHolder.txtContent.setText(charityPostItem.getContent());
 //        Log.d("Test ", product.getDescription() + product.getName());

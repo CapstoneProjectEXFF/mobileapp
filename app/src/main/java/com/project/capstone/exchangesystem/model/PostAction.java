@@ -7,14 +7,10 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.internal.LinkedTreeMap;
-import com.project.capstone.exchangesystem.Activity.MainActivity;
-import com.project.capstone.exchangesystem.Activity.OwnInventory;
-import com.project.capstone.exchangesystem.Activity.UpdateDonationPostActivity;
-import com.project.capstone.exchangesystem.Activity.UpdateItemActivity;
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
-import com.project.capstone.exchangesystem.model.DonationPost;
-import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.activity.MainActivity;
+import com.project.capstone.exchangesystem.activity.OwnInventory;
+import com.project.capstone.exchangesystem.activity.UpdateDonationPostActivity;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class PostAction {

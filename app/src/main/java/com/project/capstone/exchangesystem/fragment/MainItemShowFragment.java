@@ -1,14 +1,12 @@
 package com.project.capstone.exchangesystem.fragment;
 
-import com.project.capstone.exchangesystem.Activity.DescriptionItem;
-import com.project.capstone.exchangesystem.Activity.SearchActivity;
-import com.project.capstone.exchangesystem.Utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.activity.DescriptionItem;
+import com.project.capstone.exchangesystem.activity.SearchActivity;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;

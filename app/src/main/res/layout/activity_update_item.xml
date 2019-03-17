@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".Activity.CreateItemActivity">
+        tools:context=".activity.CreateItemActivity">
 
     <include layout="@layout/edit_item_form"/>
 
