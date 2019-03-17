@@ -17,6 +17,7 @@ import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
 import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
 
 public class MainActivity extends AppCompatActivity {
+    private final Fragment DEFAULT_FRAGMENT = MainItemShowFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
 
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initFragment();
+        initFragment(DEFAULT_FRAGMENT);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -46,16 +47,13 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = UserProfileFragment.newInstance();
                         break;
                 }
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_layout, selectedFragment);
-                transaction.commit();
+                initFragment(selectedFragment);
                 return true;
             }
         });
     }
 
-    private void initFragment(){
-        Fragment selectedFragment = MainItemShowFragment.newInstance();
+    private void initFragment(Fragment selectedFragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, selectedFragment);
         transaction.commit();
