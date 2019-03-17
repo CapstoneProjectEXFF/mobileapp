@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.model.PostAction;
 import com.project.capstone.exchangesystem.R;
@@ -29,7 +30,7 @@ import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_UPDATE_ACTION;
 
-public class UpdateDonationPostActivity extends AppCompatActivity {
+public class UpdateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     private static final int GALLERY_REQUEST = 2;
     private final int IMAGE_SIZE = 160;
@@ -39,6 +40,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
     TextView txtTitle, btnUpdate, txtError;
     RmaAPIService rmaAPIService;
     List<String> urlList;
+    List<Integer> imageIdList, removedImages;
     List<ImageView> imageList;
     Button btnAddImage;
     ImageView tmpImage;
@@ -65,6 +67,8 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
 
         imageList = new ArrayList<>();
         urlList = new ArrayList<>();
+        imageIdList = new ArrayList<>();
+        removedImages = new ArrayList<>();
         //list uri
         selectedImages = new ArrayList<>();
 
@@ -89,6 +93,15 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btnAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickFlag = ADD_IMAGE_FLAG;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
     }
 
     private void setDonationPostData(String address, String content) {
@@ -96,7 +109,14 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
         donationPost.setId(donationPostId);
         donationPost.setContent(content);
         donationPost.setAddress(address);
-        new PostAction().manageDonation(donationPost, null, authorization, context, DONATION_UPDATE_ACTION);
+        donationPost.setImageIds(removedImages);
+
+        selectedImages.removeAll(Collections.singleton(null));
+        if (selectedImages.size() != 0){
+            firebaseImg.uploadImagesToFireBase(context, selectedImages, null, donationPost, null, authorization, DONATION_UPDATE_ACTION, null);
+        } else {
+            new PostAction().manageDonation(donationPost, null, authorization, context, DONATION_UPDATE_ACTION);
+        }
     }
 
     private void notifyError(int addressLength, int contentLength) {
@@ -122,9 +142,9 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
                             for (int i = 0; i < response.body().getImages().size(); i++){
                                 urlList.add(response.body().getImages().get(i).getUrl());
                                 selectedImages.add(null);
+                                imageIdList.add(response.body().getImages().get(i).getId());
                                 createImageView();
                             }
-//                            donationPost = response.body();
                         } else {
                             Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
                         }
@@ -167,7 +187,8 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
                 onClickFlag = CHANGE_IMAGE_FLAG;
                 tmpImage = imageView;
                 selectedPosition = imageList.indexOf(imageView);
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
 
@@ -215,6 +236,8 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
             } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                 if (data.getData() != null) {
                     selectedImages.set(selectedPosition, data.getData());
+                    removedImages.add(imageIdList.get(selectedPosition));
+                    imageIdList.remove(selectedPosition);
                     try {
                         Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
                         tmpImage.setImageBitmap(bmp);
@@ -236,5 +259,30 @@ public class UpdateDonationPostActivity extends AppCompatActivity {
         btnUpdate.setText("Lưu");
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case 0:
+                getImageFromGallery();
+                break;
+            case 1:
+
+                break;
+            case 2:
+                removeImage();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void removeImage() {
+        selectedImages.remove(selectedPosition);
+        imageList.remove(selectedPosition);
+        removedImages.add(imageIdList.get(selectedPosition));
+        imageIdList.remove(selectedPosition);
+        tmpImage.setVisibility(View.GONE);
     }
 }

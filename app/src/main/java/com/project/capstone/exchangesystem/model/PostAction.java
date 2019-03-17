@@ -76,6 +76,8 @@ public class PostAction {
                     }
                 });
             } else if (action == ITEM_UPDATE_ACTION){
+                jsonBody.put("newUrls", urlList);
+                jsonBody.put("removedUrlIds", item.getImageIds());
                 rmaAPIService.updateItem(jsonBody, authorization, item.getId()).enqueue(new Callback<Object>() {
 
                     @Override
@@ -146,8 +148,9 @@ public class PostAction {
                     }
                 });
             } else if (action == DONATION_UPDATE_ACTION) {
-                int donationPostId = donationPost.getId();
-                rmaAPIService.updateDonationPost(jsonBody, authorization, donationPostId).enqueue(new Callback<Object>() {
+                jsonBody.put("newUrls", urlList);
+                jsonBody.put("removedUrlIds", donationPost.getImageIds());
+                rmaAPIService.updateDonationPost(jsonBody, authorization, donationPost.getId()).enqueue(new Callback<Object>() {
 
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
@@ -184,17 +187,10 @@ public class PostAction {
     public void manageUser(final User user, final String url, String authorization, final Context context, int action, final SharedPreferences.Editor editor) {
         setDialog(context);
 
-        int id = user.getId();
-        String phoneNumber = user.getPhone();
         final String fullName = user.getFullName();
-        String status = user.getStatus();
-
         final Map<String, String> jsonBody = new HashMap<String, String>();
-        jsonBody.put("id", "" + id);
-        jsonBody.put("phoneNumber", phoneNumber);
         jsonBody.put("fullName", fullName);
         jsonBody.put("avatar", url);
-        jsonBody.put("status", status);
 
         if (action == USER_UPDATE_ACTION) {
             rmaAPIService.updateInfo(jsonBody, authorization).enqueue(new Callback<Object>() {

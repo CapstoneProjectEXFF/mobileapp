@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -28,7 +29,7 @@ import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_CREATE_ACTION;
 
-public class CreateItemActivity extends AppCompatActivity {
+public class CreateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     private final int GALLERY_REQUEST = 2;
     private final int IMAGE_SIZE = 160;
@@ -83,7 +84,7 @@ public class CreateItemActivity extends AppCompatActivity {
                 String itemName = edtItemName.getText().toString();
                 String itemAddress = edtItemAddress.getText().toString();
                 String itemDes = edtItemDes.getText().toString();
-                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100){
+                if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() < 100) {
                     notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
                 } else {
                     if (firebaseImg.checkLoginFirebase()) {
@@ -97,7 +98,8 @@ public class CreateItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
@@ -113,15 +115,15 @@ public class CreateItemActivity extends AppCompatActivity {
     }
 
     private void notifyError(int nameLength, int addressLength, int desLength) {
-        if (nameLength == 0){
+        if (nameLength == 0) {
             edtItemName.setHint("Bạn chưa điền tên đồ dùng");
             edtItemName.setHintTextColor(Color.RED);
         }
-        if (addressLength == 0){
+        if (addressLength == 0) {
             edtItemAddress.setHint("Bạn chưa điền địa chỉ");
             edtItemAddress.setHintTextColor(Color.RED);
         }
-        if (desLength < 100){
+        if (desLength < 100) {
             txtError.setText("Mô tả còn thiếu " + (100 - desLength) + " ký tự");
             txtError.setVisibility(View.VISIBLE);
         }
@@ -147,7 +149,7 @@ public class CreateItemActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
             if (onClickFlag == ADD_IMAGE_FLAG) {
                 if (data.getClipData() != null) {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++){
+                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                         selectedImages.add(data.getClipData().getItemAt(i).getUri());
                         createImageView();
                     }
@@ -237,7 +239,8 @@ public class CreateItemActivity extends AppCompatActivity {
                 onClickFlag = CHANGE_IMAGE_FLAG;
                 tmpImage = imageView;
                 selectedPosition = imageList.indexOf(imageView);
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
 
@@ -269,5 +272,28 @@ public class CreateItemActivity extends AppCompatActivity {
         dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_category_item, dataArray);
         dataAdapter.setDropDownViewResource(R.layout.spinner_category_item);
         spinner.setAdapter(dataAdapter);
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case 0:
+                getImageFromGallery();
+                break;
+            case 1:
+
+                break;
+            case 2:
+                removeImage();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void removeImage() {
+        selectedImages.remove(selectedPosition);
+        imageList.remove(selectedPosition);
+        tmpImage.setVisibility(View.GONE);
     }
 }
