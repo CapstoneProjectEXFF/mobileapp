@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
@@ -22,7 +23,7 @@ import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_CREATE_ACTION;
 
-public class CreateDonationPostActivity extends AppCompatActivity {
+public class CreateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     private final int GALLERY_REQUEST = 2;
     private final int IMAGE_SIZE = 160;
@@ -84,7 +85,8 @@ public class CreateDonationPostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
@@ -164,7 +166,8 @@ public class CreateDonationPostActivity extends AppCompatActivity {
                 onClickFlag = CHANGE_IMAGE_FLAG;
                 tmpImage = imageView;
                 selectedPosition = imageList.indexOf(imageView);
-                getImageFromGallery();
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
 
@@ -194,5 +197,28 @@ public class CreateDonationPostActivity extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnConfirm);
         btnAdd.setText("Đăng bài");
         btnAddImage = findViewById(R.id.btnAddImage);
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case 0:
+                getImageFromGallery();
+                break;
+            case 1:
+
+                break;
+            case 2:
+                removeImage();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void removeImage() {
+        selectedImages.remove(selectedPosition);
+        imageList.remove(selectedPosition);
+        tmpImage.setVisibility(View.GONE);
     }
 }

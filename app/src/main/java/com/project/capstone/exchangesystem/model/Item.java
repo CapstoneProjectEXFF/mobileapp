@@ -55,6 +55,8 @@ public class Item implements Serializable {
     @Expose
     private List<Image> images;
 
+    private List<Integer> imageIds;
+
     public String getPrivacy() {
         return privacy;
     }
@@ -78,7 +80,6 @@ public class Item implements Serializable {
     public void setModifyTime(Timestamp modifyTime) {
         this.modifyTime = modifyTime;
     }
-
 
     public User getUser() {
         return user;
@@ -151,6 +152,14 @@ public class Item implements Serializable {
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public List<Integer> getImageIds() {
+        return imageIds;
+    }
+
+    public void setImageIds(List<Integer> imageIds) {
+        this.imageIds = imageIds;
     }
 
     public Item(int id, String name, String description, String address, String status, String privacy, Timestamp createTime, Timestamp modifyTime, Category category, User user, List<Image> images) {
