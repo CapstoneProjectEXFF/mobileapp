@@ -1,12 +1,17 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,21 +31,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_UPDATE_ACTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class UpdateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private static final int GALLERY_REQUEST = 2;
     private final String PRIVACY_PUBLIC = "Công khai";
     private final String PRIVACY_FRIENDS = "Bạn bè";
-    private final int IMAGE_SIZE = 160;
-    private final int IMAGE_MARGIN_TOP_RIGHT = 10;
-    private final int ADD_IMAGE_FLAG = 1;
-    private final int CHANGE_IMAGE_FLAG = 0;
-    TextView txtTitle, btnUpdate, txtError;
+
+    TextView txtTitle, btnUpdate, txtError, btnCancel;
     Spinner spCategory;
     RmaAPIService rmaAPIService;
     List<String> categoryList, privacyList, urlList;
@@ -51,10 +53,11 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     EditText edtItemName, edtItemDes, edtItemAddress;
     Spinner spPrivacy;
     Context context;
-    ArrayAdapter<String> dataAdapter;
+    ArrayAdapter<String> dataPrivacyAdapter, dataCategoryAdapter;
     String authorization;
     int itemId, onClickFlag = -1, selectedPosition;
     SharedPreferences sharedPreferences;
+    ProgressDialog progressDialog;
 
     List<Uri> selectedImages;
     GridLayout gridLayout;
@@ -66,8 +69,6 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         setContentView(R.layout.activity_update_item);
         context = this;
         getComponents();
-        getAllCategory();
-        getAllPrivacy();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -81,7 +82,9 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         firebaseImg = new FirebaseImg();
         Intent intent = getIntent();
         itemId = intent.getIntExtra("itemId", 0);
-        loadItem();
+
+        getAllCategory();
+        getAllPrivacy();
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +108,14 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OwnInventory.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setItemData(String itemName, String itemAddress, String itemDes) {
@@ -113,7 +124,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         item.setName(itemName);
         item.setAddress(itemAddress);
         item.setDescription(itemDes);
-        item.setPrivacy("" + spCategory.getSelectedItemPosition());
+        item.setPrivacy("" + spPrivacy.getSelectedItemPosition());
         item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
         item.setImageIds(removedImages);
 
@@ -148,12 +159,16 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
-        dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_category_item, dataArray);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_category_item);
+        ArrayAdapter dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, dataArray);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(dataAdapter);
     }
 
     private void getAllCategory() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("Đang tải dữ liệu...");
+        progressDialog.setMessage("Vui lòng chờ...");
+        progressDialog.show();
         Toast.makeText(getApplicationContext(), "getAllCategory", Toast.LENGTH_LONG).show();
         rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
             @Override
@@ -167,10 +182,10 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                             categoryList.add(result.get(i).getName());
                             System.out.println("Cate 1: " + categoryList.get(i));
                         }
-                        Toast.makeText(getApplicationContext(), "list size " + categoryList.size(), Toast.LENGTH_LONG).show();
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_category_item, categoryList);
-                        dataAdapter.setDropDownViewResource(R.layout.spinner_category_item);
-                        spCategory.setAdapter(dataAdapter);
+                        setDataForSpinner(spCategory, categoryList);
+                        if (categoryList.size() == result.size()){
+                            loadItem();
+                        }
                     } else {
                         System.out.println("httpstatus " + response.code());
                         Toast.makeText(getApplicationContext(), "body null", Toast.LENGTH_LONG).show();
@@ -204,28 +219,71 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
-            if (onClickFlag == ADD_IMAGE_FLAG) {
-                if (data.getClipData() != null) {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                        selectedImages.add(data.getClipData().getItemAt(i).getUri());
+        System.out.println("camera inside " + onClickFlag);
+        if (resultCode == RESULT_OK && data != null){
+            if (requestCode == GALLERY_REQUEST) {
+                if (onClickFlag == ADD_IMAGE_FLAG) {
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            selectedImages.add(data.getClipData().getItemAt(i).getUri());
+                            createImageView();
+                        }
+                    } else {
+                        selectedImages.add(data.getData());
                         createImageView();
                     }
+                } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
+                    if (data.getData() != null) {
+                        selectedImages.set(selectedPosition, data.getData());
+//                        removedImages.add(imageIdList.get(selectedPosition));
+//                        imageIdList.remove(selectedPosition);
+                        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
+                            removedImages.add(imageIdList.get(selectedPosition));
+                            imageIdList.set(selectedPosition, -1);
+                        }
+                        try {
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
+                            tmpImage.setImageBitmap(bmp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
-                if (data.getData() != null) {
-                    selectedImages.set(selectedPosition, data.getData());
-                    removedImages.add(imageIdList.get(selectedPosition));
-                    imageIdList.remove(selectedPosition);
-                    try {
-                        Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                        tmpImage.setImageBitmap(bmp);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            } else if (requestCode == CAMERA_REQUEST){
+                if (onClickFlag == ADD_IMAGE_FLAG) {
+                    if (data.getExtras() != null) {
+                        Uri uri = getUriFromCaptureImage(data);
+                        selectedImages.add(uri);
+                        createImageView();
+                    }
+                } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
+                    if (data.getExtras() != null) {
+                        Uri uri = getUriFromCaptureImage(data);
+                        selectedImages.set(selectedPosition, uri);
+//                        removedImages.add(imageIdList.get(selectedPosition));
+//                        imageIdList.remove(selectedPosition);
+                        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
+                            removedImages.add(imageIdList.get(selectedPosition));
+                            imageIdList.set(selectedPosition, -1);
+                        }
+                        try {
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
+                            tmpImage.setImageBitmap(bmp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
+    }
+
+    private Uri getUriFromCaptureImage(Intent data) {
+        Bitmap captureImg = (Bitmap)data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        captureImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), captureImg, "CaptureIMG", null);
+        return Uri.parse(path);
     }
 
     private void loadItem() {
@@ -246,6 +304,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                                 imageIdList.add(response.body().getImages().get(i).getId());
                                 createImageView();
                             }
+                            progressDialog.dismiss();
                         } else {
                             Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
                         }
@@ -278,6 +337,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         rmaAPIService = RmaAPIUtils.getAPIService();
         spCategory = findViewById(R.id.spCategory);
         spCategory.setPopupBackgroundResource(R.color.white);
+        btnCancel = findViewById(R.id.btnCancel);
     }
 
     private void createImageView() {
@@ -287,8 +347,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         //set image
         if (onClickFlag == -1) {
             Picasso.with(getApplicationContext()).load(urlList.get(urlList.size() - 1))
-                    .placeholder(R.drawable.no)
-                    .error(R.drawable.loadingimage)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
                     .into(imageView);
         } else {
             try {
@@ -334,7 +394,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                 getImageFromGallery();
                 break;
             case 1:
-
+                takePhoto();
                 break;
             case 2:
                 removeImage();
@@ -344,11 +404,57 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         }
     }
 
+    private void takePhoto() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+            } else {
+                setCameraPermission();
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                System.out.println("camera after " + onClickFlag);
+                startActivityForResult(intent, CAMERA_REQUEST);
+                System.out.println("camera after " + onClickFlag);
+            }
+        } else {
+            setCameraPermission();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            System.out.println("camera before 1: " + onClickFlag);
+            startActivityForResult(intent, CAMERA_REQUEST);
+            System.out.println("camera after 1: " + onClickFlag);
+        }
+    }
+
+    private void setCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST);
+            }
+        }
+        if(requestCode == EXTERNAL_STORAGE_REQUEST){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                setCameraPermission();
+            }
+        }
+    }
+
     private void removeImage() {
         selectedImages.remove(selectedPosition);
         imageList.remove(selectedPosition);
-        removedImages.add(imageIdList.get(selectedPosition));
-        imageIdList.remove(selectedPosition);
-        tmpImage.setVisibility(View.GONE);
+        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
+            removedImages.add(imageIdList.get(selectedPosition));
+            imageIdList.set(selectedPosition, -1);
+        }
+        gridLayout.removeView(tmpImage);
     }
 }
