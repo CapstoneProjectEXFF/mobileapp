@@ -107,9 +107,11 @@ public class TradeAdapter extends BaseAdapter {
             listItem = intent.getStringArrayListExtra("itemYouIdList");
             System.out.println("itemYouIdList" + listItem);
         }
-        for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).equals(String.valueOf(item.getId()))) {
-                viewHolder.checkBoxTrade.setChecked(true);
+        if (listItem != null) {
+            for (int i = 0; i < listItem.size(); i++) {
+                if (listItem.get(i).equals(String.valueOf(item.getId()))) {
+                    viewHolder.checkBoxTrade.setChecked(true);
+                }
             }
         }
         Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
