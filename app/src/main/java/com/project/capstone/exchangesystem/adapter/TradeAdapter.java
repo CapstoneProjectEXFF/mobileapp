@@ -113,8 +113,8 @@ public class TradeAdapter extends BaseAdapter {
             }
         }
         Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(viewHolder.imgTradeItem);
         return convertView;
     }

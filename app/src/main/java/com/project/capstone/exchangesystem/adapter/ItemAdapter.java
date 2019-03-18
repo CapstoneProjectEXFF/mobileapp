@@ -88,8 +88,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         public void bind(final Item item, final OnItemClickListener listener) {
             txtNameItem.setText(item.getName());
             Picasso.with(context).load("https://cdn.tgdd.vn/Products/Images/42/192001/samsung-galaxy-j6-plus-1-400x460.png")
-                    .placeholder(R.drawable.no)
-                    .error(R.drawable.loadingimage)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
                     .into(imgItem);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
