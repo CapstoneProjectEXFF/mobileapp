@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:background="@color/colorTransparent"
     android:orientation="vertical">
 
@@ -15,51 +15,56 @@
         android:layout_marginTop="@dimen/feed_item_margin"
         android:layout_marginRight="@dimen/feed_item_margin"
         android:layout_marginBottom="@dimen/feed_item_margin"
-        android:background="@color/colorWhite"
-        android:padding="0dp"
-        app:cardCornerRadius="5dp"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="4dp"
         app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp">
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/colorWhite">
 
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:padding="0dp">
+            android:layout_height="200dp">
 
             <ImageView
                 android:id="@+id/imgItem"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:id="@+id/infoItem"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_gradient_info_item"
                 android:orientation="vertical"
+                android:paddingHorizontal="5dp"
                 android:paddingTop="10dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imgItem"
-                app:layout_constraintEnd_toEndOf="@+id/imgItem"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/imgItem">
+                android:paddingBottom="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_gradient_info_item">
 
                 <TextView
                     android:id="@+id/txtNameItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:gravity="left"
+                    android:maxLines="1"
                     android:text="Name Item"
                     android:textColor="@color/colorWhite"
-                    android:textSize="24sp" />
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txtDateItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:text="Ngay dang"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14dp" />
             </LinearLayout>
-        </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

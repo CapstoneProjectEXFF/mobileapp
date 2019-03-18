@@ -39,8 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:contentInsetStart="0dp"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_collapseMode="pin">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -59,7 +58,7 @@
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/custom_input"
                         android:hint="Tên đồ dùng"
-                        android:inputType="phone"
+                        android:inputType="text"
                         android:textColor="@color/tranparentBlack"
                         android:textColorHint="@color/colorGrayDark"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -89,5 +88,6 @@
         android:id="@+id/mainRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorGrayWhite"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
 </android.support.design.widget.CoordinatorLayout>

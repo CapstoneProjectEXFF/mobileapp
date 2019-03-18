@@ -9,7 +9,9 @@
     <color name="colorPrimaryLighter">#0079b6</color>
     <color name="colorSecondary">#8b8b8b</color>
     <color name="colorPrimaryEditText">#1b313b</color>
-    <color name="colorGrayWhite">#eeeeee</color>
+    <color name="colorGrayWhite">#efefef</color>
+    <color name="colorBlackTransparent">#80000000</color>
+    <color name="colorBlackTransparenter">#59000000</color>
     <color name="colorTransparent">#00000000</color>
     <color name="white">#ffffff</color>
     <color name="feed_bg">#d3d6db</color>

@@ -66,7 +66,7 @@ public class MainCharityPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_charity_post, container, false);
-        btnAdd = view.findViewById(R.id.btnAdd);
+        btnAdd = view.findViewById(R.id.btnAddCharityPost);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

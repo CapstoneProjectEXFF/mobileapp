@@ -20,7 +20,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-            int userId = sharedPreferences.getInt("userId",-1);
+            int userId = -1;
+            try {
+                userId = sharedPreferences.getInt("userId",-1);
+            } catch (Exception e){
+            }
+
             if (userId == -1)
                 return false;
             else

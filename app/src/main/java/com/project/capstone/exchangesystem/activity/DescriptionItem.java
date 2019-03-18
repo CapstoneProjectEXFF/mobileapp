@@ -96,10 +96,16 @@ public class DescriptionItem extends AppCompatActivity {
     private void setItemInf(Item item) {
         txtNameDescriptionItem.setText(item.getName());
         txtViewDescriptionItem.setText(item.getDescription());
-        Picasso.with(getApplicationContext()).load(item.getImages().get(0).getUrl())
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
-                .into(imgDescriptionItem);
+        String url = "";
+        if (item.getImage().size() > 0) {
+            url = item.getImage().get(0).getUrl();
+            Picasso.with(getApplicationContext()).load(url)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imgDescriptionItem);
+        } else {
+            imgDescriptionItem.setImageResource(R.drawable.ic_no_image);
+        }
     }
 
     private void ActionToolbar() {
