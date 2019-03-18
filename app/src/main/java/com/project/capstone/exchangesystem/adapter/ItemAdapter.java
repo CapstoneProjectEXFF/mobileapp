@@ -20,6 +20,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     ArrayList<Item> itemArrayList;
     private final OnItemClickListener listener;
 
+    public ItemAdapter(Context context, ArrayList<Item> itemArrayList, OnItemClickListener listener) {
+        this.context = context;
+        this.itemArrayList = itemArrayList;
+        this.listener = listener;
+    }
 
     public interface OnItemClickListener {
         void onItemClick(Item item);
@@ -30,12 +35,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         itemArrayList.clear();
         itemArrayList.addAll(tempArray);
         notifyDataSetChanged();
-    }
-
-    public ItemAdapter(Context context, ArrayList<Item> itemArrayList, OnItemClickListener listener) {
-        this.context = context;
-        this.itemArrayList = itemArrayList;
-        this.listener = listener;
     }
 
     @NonNull
@@ -87,10 +86,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
 
         public void bind(final Item item, final OnItemClickListener listener) {
             txtNameItem.setText(item.getName());
-            Picasso.with(context).load("https://cdn.tgdd.vn/Products/Images/42/192001/samsung-galaxy-j6-plus-1-400x460.png")
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
-                    .into(imgItem);
+            String url = "";
+            if (item.getImage().size() > 0) {
+                url = item.getImage().get(0).getUrl();
+                Picasso.with(context).load(url)
+                        .placeholder(R.drawable.ic_no_image)
+                        .error(R.drawable.ic_no_image)
+                        .into(imgItem);
+            } else {
+                imgItem.setImageResource(R.drawable.ic_no_image);
+            }
+          
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,5 +104,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
                 }
             });
         }
+
     }
 }
