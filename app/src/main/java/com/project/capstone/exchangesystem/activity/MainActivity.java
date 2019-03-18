@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.fragment.NotificationFragment;
 import com.project.capstone.exchangesystem.fragment.UserProfileFragment;
 import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
 import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = MainCharityPostFragment.newInstance();
                         break;
                     case R.id.bottombaritem_notification:
-                        // TODO
-                        return true;
+                        selectedFragment = NotificationFragment.newInstance();
+                        break;
                     case R.id.bottombaritem_profile:
                         selectedFragment = UserProfileFragment.newInstance();
                         break;
