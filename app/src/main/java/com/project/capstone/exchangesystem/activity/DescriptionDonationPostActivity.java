@@ -139,13 +139,13 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         txtUserNameDonation.setText(donationPost.getUser().getFullName());
 
         Picasso.with(getApplicationContext()).load(donationPost.getImages().get(0).getUrl())
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(imgDescriptionDonationPost);
 
         Picasso.with(getApplicationContext()).load(donationPost.getUser().getAvatar())
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(imgUserDonation);
     }
 }

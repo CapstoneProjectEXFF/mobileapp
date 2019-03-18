@@ -97,8 +97,8 @@ public class DescriptionItem extends AppCompatActivity {
         txtNameDescriptionItem.setText(item.getName());
         txtViewDescriptionItem.setText(item.getDescription());
         Picasso.with(getApplicationContext()).load(item.getImages().get(0).getUrl())
-                .placeholder(R.drawable.no)
-                .error(R.drawable.loadingimage)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
                 .into(imgDescriptionItem);
     }
 

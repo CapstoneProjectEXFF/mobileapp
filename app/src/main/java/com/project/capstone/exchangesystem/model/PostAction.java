@@ -10,6 +10,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.project.capstone.exchangesystem.activity.MainActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.UpdateDonationPostActivity;
+import com.project.capstone.exchangesystem.activity.UpdateItemActivity;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
@@ -57,10 +58,8 @@ public class PostAction {
                             if (response.body() != null) {
                                 Log.i("PostAction", "item added");
                                 progressDialog.dismiss();
-                                //go to update screen
                                 Intent intent = new Intent(context, OwnInventory.class);
-//                                Intent intent = new Intent(context, UpdateItemActivity.class);
-//                                intent.putExtra("itemId", response.body().getId());
+                                intent.putExtra("itemId", response.body().getId());
                                 context.startActivity(intent);
                             } else {
                                 Log.i("PostAction", "item create null");
@@ -86,8 +85,6 @@ public class PostAction {
                             if (response.body() != null) {
                                 progressDialog.dismiss();
                                 Log.i("PostAction", "item updated");
-                                //go to main
-//                                Intent intent = new Intent(context, MainActivity.class);
                                 Intent intent = new Intent(context, OwnInventory.class);
                                 context.startActivity(intent);
                             } else {

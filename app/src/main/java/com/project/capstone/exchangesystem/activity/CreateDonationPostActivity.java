@@ -1,12 +1,16 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,35 +22,26 @@ import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_CREATE_ACTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private final int GALLERY_REQUEST = 2;
-    private final int IMAGE_SIZE = 160;
-    private final int IMAGE_MARGIN_TOP_RIGHT = 10;
-    private final int ADD_IMAGE_FLAG = 1;
-    private final int CHANGE_IMAGE_FLAG = 0;
-
     TextView txtTitle, btnAdd, txtError;
-    List<String> urlList;
     Button btnAddImage;
     ImageView tmpImage;
     EditText edtContent, edtAddress;
     Context context;
     String authorization;
     SharedPreferences sharedPreferences;
-
+    List<String> urlList;
     List<Uri> selectedImages;
-    int onClickFlag, selectedPosition;
-
     List<ImageView> imageList;
-
+    int onClickFlag, selectedPosition;
     GridLayout gridLayout;
-
     FirebaseImg firebaseImg;
 
     @Override
@@ -126,26 +121,58 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
-            if (onClickFlag == ADD_IMAGE_FLAG) {
-                if (data.getClipData() != null) {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                        selectedImages.add(data.getClipData().getItemAt(i).getUri());
+        if (resultCode == RESULT_OK && data != null){
+            if (requestCode == GALLERY_REQUEST) {
+                if (onClickFlag == ADD_IMAGE_FLAG) {
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            selectedImages.add(data.getClipData().getItemAt(i).getUri());
+                            createImageView();
+                        }
+                    } else {
+                        selectedImages.add(data.getData());
                         createImageView();
                     }
+                } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
+                    if (data.getData() != null) {
+                        selectedImages.set(selectedPosition, data.getData());
+                        try {
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
+                            tmpImage.setImageBitmap(bmp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
-                if (data.getData() != null) {
-                    selectedImages.set(selectedPosition, data.getData());
-                    try {
-                        Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                        tmpImage.setImageBitmap(bmp);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            } else if (requestCode == CAMERA_REQUEST) {
+                if (onClickFlag == ADD_IMAGE_FLAG) {
+                    if (data.getExtras() != null) {
+                        Uri uri = getUriFromCaptureImage(data);
+                        selectedImages.add(uri);
+                        createImageView();
+                    }
+                } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
+                    if (data.getExtras() != null) {
+                        Uri uri = getUriFromCaptureImage(data);
+                        selectedImages.set(selectedPosition, uri);
+                        try {
+                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
+                            tmpImage.setImageBitmap(bmp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
+    }
+
+    private Uri getUriFromCaptureImage(Intent data) {
+        Bitmap captureImg = (Bitmap)data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        captureImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), captureImg, "CaptureIMG", null);
+        return Uri.parse(path);
     }
 
     private void createImageView() {
@@ -206,7 +233,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
                 getImageFromGallery();
                 break;
             case 1:
-
+                takePhoto();
                 break;
             case 2:
                 removeImage();
@@ -216,9 +243,49 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         }
     }
 
+    private void takePhoto() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+            } else {
+                setCameraPermission();
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST);
+            }
+        } else {
+            setCameraPermission();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAMERA_REQUEST);
+        }
+    }
+
+    private void setCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST);
+            }
+        }
+        if (requestCode == EXTERNAL_STORAGE_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setCameraPermission();
+            }
+        }
+    }
+
     private void removeImage() {
         selectedImages.remove(selectedPosition);
         imageList.remove(selectedPosition);
-        tmpImage.setVisibility(View.GONE);
+        gridLayout.removeView(tmpImage);
     }
 }
