@@ -8,15 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
+import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
-import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
-import com.project.capstone.exchangesystem.adapter.TradeAdapter;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
-import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -74,7 +70,7 @@ public class NotificationFragment extends Fragment {
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
                         if (response.isSuccessful()) {
                             TransactionRequestWrapper temp = response.body();
-                            Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), TransactionConfirmActivity.class);
                             intent.putExtra("transactionDetail", temp);
                             startActivity(intent);
                         }
