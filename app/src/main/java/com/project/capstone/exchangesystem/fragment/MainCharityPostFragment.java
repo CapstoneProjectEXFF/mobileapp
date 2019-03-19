@@ -141,8 +141,6 @@ public class MainCharityPostFragment extends Fragment {
         });
     }
 
-
-
     public class mHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
