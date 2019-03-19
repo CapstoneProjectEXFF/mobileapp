@@ -12,6 +12,7 @@
     <color name="colorGrayWhite">#efefef</color>
     <color name="colorBlackTransparent">#80000000</color>
     <color name="colorBlackTransparenter">#59000000</color>
+    <color name="colorBlackTransparentest">#26000000</color>
     <color name="colorTransparent">#00000000</color>
     <color name="white">#ffffff</color>
     <color name="feed_bg">#d3d6db</color>

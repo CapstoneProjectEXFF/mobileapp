@@ -81,7 +81,7 @@ public class SearchActivity extends AppCompatActivity implements ViewTimKiem {
         ItemAdapter resultAdapter = new ItemAdapter(this, sanPhamList, new ItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-                Intent intent = new Intent(getApplicationContext(), DescriptionItem.class);
+                Intent intent = new Intent(getApplicationContext(), DescriptionItemActivity.class);
                 intent.putExtra("descriptionItem", item);
                 startActivity(intent);
             }

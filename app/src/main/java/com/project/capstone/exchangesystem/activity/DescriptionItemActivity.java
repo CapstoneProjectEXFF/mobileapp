@@ -19,15 +19,19 @@ import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.Item;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DescriptionItem extends AppCompatActivity {
+public class DescriptionItemActivity extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
     ImageView imgDescriptionItem;
-    TextView txtNameDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
-    Button btnTrade, btnShare;
+    TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
+    Button btnTrade;
+    ImageButton btnShare;
 
     //share facebook
     CallbackManager callbackManager;
@@ -67,7 +71,7 @@ public class DescriptionItem extends AppCompatActivity {
             sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
             authorization = sharedPreferences.getString("authorization", null);
             if (authorization != null) {
-                txtNameDescriptionItem.setText("test");
+                txtDateDescriptionItem.setText("");
                 rmaAPIService.getItemById(authorization, uriItemId).enqueue(new Callback<Item>() {
                     @Override
                     public void onResponse(Call<Item> call, Response<Item> response) {
@@ -94,7 +98,9 @@ public class DescriptionItem extends AppCompatActivity {
     }
 
     private void setItemInf(Item item) {
-        txtNameDescriptionItem.setText(item.getName());
+        toolbarDescriptionItem.setTitle(item.getName());
+        txtNameUserDescriotionItem.setText(item.getUser().getFullName());
+        txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
         txtViewDescriptionItem.setText(item.getDescription());
         String url = "";
         if (item.getImage().size() > 0) {
@@ -122,11 +128,11 @@ public class DescriptionItem extends AppCompatActivity {
     private void direct() {
         toolbarDescriptionItem = (Toolbar) findViewById(R.id.toolbarDescriptionItem);
         imgDescriptionItem = (ImageView) findViewById(R.id.imgDescriptionItem);
-        txtNameDescriptionItem = (TextView) findViewById(R.id.txtNameDescriptionItem);
+        txtDateDescriptionItem = (TextView) findViewById(R.id.txtDateDescriptionItem);
         txtNameUserDescriotionItem = (TextView) findViewById(R.id.txtNameUserDescriotionItem);
         txtViewDescriptionItem = (TextView) findViewById(R.id.txtViewDescriptionItem);
         btnTrade = (Button) findViewById(R.id.btnTrade);
-        btnShare = (Button) findViewById(R.id.btnShare);
+        btnShare = (ImageButton) findViewById(R.id.btnShare);
 
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
@@ -151,5 +157,15 @@ public class DescriptionItem extends AppCompatActivity {
         intent.putExtra("descriptionItem", item);
         startActivity(intent);
 
+    }
+
+    private String convertDatetime(Timestamp timestamp){
+        String date = "";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        try {
+            date = simpleDateFormat.format(timestamp);
+        } catch (Exception e){
+        }
+        return date;
     }
 }

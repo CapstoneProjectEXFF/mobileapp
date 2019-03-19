@@ -1,6 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
-import com.project.capstone.exchangesystem.activity.DescriptionItem;
+import com.project.capstone.exchangesystem.activity.DescriptionItemActivity;
 import com.project.capstone.exchangesystem.activity.SearchActivity;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
@@ -57,7 +57,7 @@ public class MainItemShowFragment extends Fragment {
             @Override
             public void onItemClick(Item item) {
                 Toast.makeText(view.getContext(), item.getDescription(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(view.getContext(), DescriptionItem.class);
+                Intent intent = new Intent(view.getContext(), DescriptionItemActivity.class);
                 intent.putExtra("descriptionItem", item);
                 startActivity(intent);
             }
