@@ -21,8 +21,10 @@ import retrofit2.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ENABLE;
+
 public class SignUpAcitivity extends AppCompatActivity {
-    EditText txtFullname, txtPhone, txtPassword, txtAddress;
+    EditText txtFullname, txtPhone, txtPassword, txtAddress, txtPasswordCheck;
     private Context context;
     TextView lbl_toolbar;
     boolean flag = true;
@@ -31,6 +33,8 @@ public class SignUpAcitivity extends AppCompatActivity {
     boolean flag3 = true;
     boolean flag4 = true;
     boolean flag5 = true;
+    boolean flag6 = true;
+    boolean flag7 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class SignUpAcitivity extends AppCompatActivity {
         txtPhone = findViewById(R.id.txtPhone);
         txtPassword = findViewById(R.id.txtPassword);
         txtAddress = findViewById(R.id.txtAddress);
+        txtPasswordCheck = findViewById(R.id.txtPasswordCheck);
 
     }
 
@@ -57,6 +62,7 @@ public class SignUpAcitivity extends AppCompatActivity {
         String fullname = txtFullname.getText().toString();
         String phone = txtPhone.getText().toString();
         String password = txtPassword.getText().toString();
+        String passwordCheck = txtPasswordCheck.getText().toString();
         String address = txtAddress.getText().toString();
 
         rmaAPIService.checkValidationLogin(phone).enqueue(new Callback<Object>() {
@@ -105,8 +111,24 @@ public class SignUpAcitivity extends AppCompatActivity {
             txtAddress.setBackgroundResource(R.drawable.signupedt);
         }
 
+        if (passwordCheck.length() < 1) {
+            flag6 = false;
+            txtPasswordCheck.setBackgroundResource(R.drawable.signuperror);
+        } else {
+            txtPasswordCheck.setBackgroundResource(R.drawable.signupedt);
+        }
 
-        if ((flag == true) && (flag2 == true) && (flag3 == true) && (flag4 == true)) {
+        if (!passwordCheck.equals(password) && password.length() == 0) {
+            flag7 = false;
+            txtPasswordCheck.setBackgroundResource(R.drawable.signuperror);
+            txtPassword.setBackgroundResource(R.drawable.signuperror);
+        } else {
+            txtPasswordCheck.setBackgroundResource(R.drawable.signupedt);
+            txtPassword.setBackgroundResource(R.drawable.signupedt);
+        }
+
+
+        if (flag && flag2 && flag3 && flag4 && flag5 && flag6 && flag7) {
 
 
             user.setFullName(fullname);
@@ -116,8 +138,8 @@ public class SignUpAcitivity extends AppCompatActivity {
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", phone);
             jsonBody.put("password", password);
-            jsonBody.put("fullname", fullname);
-            jsonBody.put("status", "1");
+            jsonBody.put("fullName", fullname);
+            jsonBody.put("status", USER_ENABLE);
 
 
             rmaAPIService.register(jsonBody).enqueue(new Callback<Object>() {
