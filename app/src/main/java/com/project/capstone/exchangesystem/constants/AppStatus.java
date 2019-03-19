@@ -9,8 +9,13 @@ public class AppStatus {
     public static final int EXTERNAL_STORAGE_REQUEST = 0;
     public static final int CAMERA_REQUEST = 1;
     public static final int GALLERY_REQUEST = 2;
-    public static final int IMAGE_SIZE = 160;
+    public static final int IMAGE_SIZE = 260;
     public static final int IMAGE_MARGIN_TOP_RIGHT = 10;
     public static final int ADD_IMAGE_FLAG = 1;
     public static final int CHANGE_IMAGE_FLAG = 0;
+    public static final String ITEM_ENABLE = "1";
+    public static final String ITEM_FRAGMENT_FLAG = "0";
+    public static final String DONATION_FRAGMENT_FLAG = "1";
+    public static final String NOTIFICATION_FRAGMENT_FLAG = "2";
+    public static final String PROFILE_FRAGMENT_FLAG = "3";
 }
