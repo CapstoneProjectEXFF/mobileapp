@@ -24,6 +24,8 @@ import com.project.capstone.exchangesystem.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ENABLE;
+
 public class SignInActivity extends AppCompatActivity {
     Context context;
     EditText txtPhone, txtPassword;
@@ -89,13 +91,13 @@ public class SignInActivity extends AppCompatActivity {
                             System.out.println(fullName);
 
                             String status = (String) userInfo.get("status");
-                            System.out.println("test "+status);
+                            System.out.println("test " + status);
 
                             String avatar = (String) userInfo.get("avatar");
                             System.out.println(avatar);
 
                             //TODO hardcode status
-                            if (status.equals("1")) {
+                            if (status.equals(USER_ENABLE)) {
                                 SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
                                 editor.putString("avatar", avatar);
                                 editor.putString("phoneNumberSignIn", phoneNumber);

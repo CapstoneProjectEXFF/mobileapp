@@ -78,7 +78,8 @@ public class SignUpAcitivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
             }
         });
 
