@@ -28,7 +28,6 @@ public class SignUpAcitivity extends AppCompatActivity {
     private Context context;
     TextView lbl_toolbar;
     boolean flag = true;
-
     boolean flag2 = true;
     boolean flag3 = true;
     boolean flag4 = true;
