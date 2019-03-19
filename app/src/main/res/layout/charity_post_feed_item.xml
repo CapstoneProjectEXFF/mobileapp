@@ -9,7 +9,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
         app:cardBackgroundColor="@color/colorWhite"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
@@ -23,7 +24,8 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp">
+                android:layout_height="56dp"
+                android:layout_marginTop="5dp">
 
                 <ImageView
                     android:id="@+id/imgProfileCharity"
@@ -33,8 +35,10 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
+                    app:layout_constraintCircleRadius="50dp"
                     android:contentDescription="@string/app_name"
                     android:scaleType="fitCenter"
+                    android:background="@drawable/img_circle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +82,9 @@
                 android:paddingTop="@dimen/feed_item_status_pad_top"
                 android:paddingRight="@dimen/feed_item_status_pad_left_right"
                 android:paddingBottom="5dp"
-                android:textColor="@color/colorGrayDark" />
+                android:textColor="@color/colorGrayDark"
+                android:ellipsize="end"
+                android:maxLines="2"/>
 
             <!--<TextView-->
                 <!--android:id="@+id/txtUrl"-->
