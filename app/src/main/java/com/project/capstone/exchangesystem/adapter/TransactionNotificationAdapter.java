@@ -70,7 +70,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 
         Date date = new Date();
         date.setTime(transactions.getCreateTime().getTime());
-        String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
         viewHolder.txtDateNoti.setText(formattedDate);
 
         Picasso.with(context).load(transactions.getSender().getAvatar())

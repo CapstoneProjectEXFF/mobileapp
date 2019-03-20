@@ -6,6 +6,15 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context=".activity.TransactionConfirmActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/transactionconfirmToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:title="Kho của bạn"
+        app:titleTextColor="@color/colorWhite">
+
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
             android:layout_width="fill_parent"
@@ -75,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2.5dp"
                 android:layout_weight="1"
-                android:text="Bach To Main"/>
+                android:text="Back To Main"/>
 
         <Button
                 android:id="@+id/btnConfirmTradeRequest"
