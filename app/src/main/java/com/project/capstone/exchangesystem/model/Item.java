@@ -57,6 +57,8 @@ public class Item implements Serializable {
 
     private List<Integer> imageIds;
 
+    private boolean seletedFlag;
+
     public String getPrivacy() {
         return privacy;
     }
@@ -160,6 +162,14 @@ public class Item implements Serializable {
 
     public void setImageIds(List<Integer> imageIds) {
         this.imageIds = imageIds;
+    }
+
+    public boolean isSeletedFlag() {
+        return seletedFlag;
+    }
+
+    public void setSeletedFlag(boolean seletedFlag) {
+        this.seletedFlag = seletedFlag;
     }
 
     public Item(int id, String name, String description, String address, String status, String privacy, Timestamp createTime, Timestamp modifyTime, Category category, User user, List<Image> images) {

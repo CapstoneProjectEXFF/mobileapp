@@ -11,14 +11,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.fragment.NotificationFragment;
 import com.project.capstone.exchangesystem.fragment.UserProfileFragment;
 import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
 import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
+
 public class MainActivity extends AppCompatActivity {
-    private final Fragment DEFAULT_FRAGMENT = MainItemShowFragment.newInstance();
+    private final Fragment ITEM_FRAGMENT = MainItemShowFragment.newInstance();
+    private final Fragment DONATION_FRAGMENT = MainCharityPostFragment.newInstance();
+    //    private final Fragment NOTIFICATION_FRAGMENT = ;
+    private final Fragment PROFILE_FRAGMENT = UserProfileFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
 
 
@@ -27,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initFragment(DEFAULT_FRAGMENT);
+        setFirstFragment();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,16 +42,16 @@ public class MainActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.bottombaritem_main:
-                        selectedFragment = MainItemShowFragment.newInstance();
+                        selectedFragment = ITEM_FRAGMENT;
                         break;
                     case R.id.bottombaritem_charity:
-                        selectedFragment = MainCharityPostFragment.newInstance();
+                        selectedFragment = DONATION_FRAGMENT;
                         break;
                     case R.id.bottombaritem_notification:
                         selectedFragment = NotificationFragment.newInstance();
                         break;
                     case R.id.bottombaritem_profile:
-                        selectedFragment = UserProfileFragment.newInstance();
+                        selectedFragment = PROFILE_FRAGMENT;
                         break;
                 }
                 initFragment(selectedFragment);
@@ -54,7 +60,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initFragment(Fragment selectedFragment){
+    private void setFirstFragment() {
+        String fragment = (String) getIntent().getSerializableExtra("fragment");
+
+        if (fragment != null) {
+            switch (fragment) {
+                case DONATION_FRAGMENT_FLAG:
+                    initFragment(DONATION_FRAGMENT);
+                    break;
+                case PROFILE_FRAGMENT_FLAG:
+                    initFragment(PROFILE_FRAGMENT);
+                    break;
+                case ITEM_FRAGMENT_FLAG:
+                    initFragment(ITEM_FRAGMENT);
+                    break;
+            }
+        } else {
+            initFragment(ITEM_FRAGMENT);
+        }
+    }
+
+    private void initFragment(Fragment selectedFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, selectedFragment);
         transaction.commit();
@@ -69,6 +95,4 @@ public class MainActivity extends AppCompatActivity {
         Intent iOwnInventory = new Intent(this, OwnInventory.class);
         startActivity(iOwnInventory);
     }
-
-
 }
