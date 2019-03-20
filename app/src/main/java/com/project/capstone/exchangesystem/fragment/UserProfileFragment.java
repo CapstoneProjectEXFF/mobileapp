@@ -15,7 +15,6 @@ import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.SignInActivity;
-import com.project.capstone.exchangesystem.activity.SplashScreenActivity;
 import com.squareup.picasso.Picasso;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -67,6 +66,7 @@ public class UserProfileFragment extends Fragment {
         Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
         startActivity(intent);
     }
+
 
     private void logout(){
         SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);

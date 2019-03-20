@@ -32,6 +32,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     ImageView imgUserDonation, imgDescriptionDonationPost;
     TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation;
     ImageButton btnShare;
+    Button btnDonate;
 
     //share facebook
     CallbackManager callbackManager;
@@ -42,6 +43,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     String authorization;
 
     DonationPost donationPost;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         txtUserNameDonation = findViewById(R.id.txtUserNameDonation);
         toolbar = findViewById(R.id.descriptionDonationToolbar);
         btnShare = findViewById(R.id.btnShare);
+        btnDonate = findViewById(R.id.btnDonate);
 
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
@@ -97,17 +100,25 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
             }
         });
 
+        btnDonate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DonateItemActivity.class);
+                intent.putExtra("donationPost", donationPost);
+                startActivity(intent);
+            }
+        });
+
         rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
     }
 
     private void GetInformation(int uriDonationPostId) {
-
         if (uriDonationPostId == -1) {
             donationPost = (DonationPost) getIntent().getSerializableExtra("descriptionDonationPost");
             setDonationPostInf(donationPost);
         } else {
-            sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-            authorization = sharedPreferences.getString("authorization", null);
             if (authorization != null) {
                 rmaAPIService.getDonationPostById(authorization, uriDonationPostId).enqueue(new Callback<DonationPost>() {
                     @Override
@@ -148,5 +159,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
                 .placeholder(R.drawable.ic_no_image)
                 .error(R.drawable.ic_no_image)
                 .into(imgUserDonation);
+        userId = sharedPreferences.getInt("userId", 0);
+        if (userId != donationPost.getUser().getId()){
+            btnDonate.setVisibility(View.VISIBLE);
+        }
     }
 }

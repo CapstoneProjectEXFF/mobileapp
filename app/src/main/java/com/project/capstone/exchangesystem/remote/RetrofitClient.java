@@ -1,5 +1,7 @@
 package com.project.capstone.exchangesystem.remote;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,9 +16,13 @@ public class RetrofitClient {
 
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
+
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit;
