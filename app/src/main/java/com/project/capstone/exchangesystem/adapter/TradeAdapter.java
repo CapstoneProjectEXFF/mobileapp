@@ -11,8 +11,10 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.CharityPostItem;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Item;
 import com.squareup.picasso.Picasso;
 
@@ -99,7 +101,7 @@ public class TradeAdapter extends BaseAdapter {
         viewHolder.txtNameTradeItem.setText(item.getName());
         viewHolder.txtTradeIDItem.setText(String.valueOf(item.getId()));
         Intent intent = ((Activity) context).getIntent();
-        ArrayList<String> listItem = new ArrayList<>();
+        ArrayList<String> listItem;
         if (intent.hasExtra("itemMeIdList")) {
             listItem = intent.getStringArrayListExtra("itemMeIdList");
             System.out.println("itemMeIdList" + listItem);
@@ -107,15 +109,24 @@ public class TradeAdapter extends BaseAdapter {
             listItem = intent.getStringArrayListExtra("itemYouIdList");
             System.out.println("itemYouIdList" + listItem);
         }
-        for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).equals(String.valueOf(item.getId()))) {
-                viewHolder.checkBoxTrade.setChecked(true);
+        //TODO check listItem null
+        if (listItem != null) {
+            for (int i = 0; i < listItem.size(); i++) {
+                if (listItem.get(i).equals(String.valueOf(item.getId()))) {
+                    viewHolder.checkBoxTrade.setChecked(true);
+                }
             }
         }
-        Picasso.with(context).load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSds7xM5V2GKMhmwIdQNAWProLwB1-cIZwnS7nYtnyMkcosV1b3IQ")
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
-                .into(viewHolder.imgTradeItem);
+        String url = "";
+        if (item.getImage().size() > 0) {
+            url = item.getImage().get(0).getUrl();
+            Picasso.with(context).load(url)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(viewHolder.imgTradeItem);
+        } else {
+            viewHolder.imgTradeItem.setImageResource(R.drawable.ic_no_image);
+        }
         return convertView;
     }
 }

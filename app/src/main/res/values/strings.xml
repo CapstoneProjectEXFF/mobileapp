@@ -12,6 +12,7 @@
 
     <string name="edituserprofile">Edit User Profile</string>
     <string name="changepass">Change Your Password</string>
+    <string name="logout">Log Out</string>
 
     <!--bottom nav bar-->
     <string name="nav_bar_home">Trang chủ</string>
@@ -22,6 +23,8 @@
     <!--Facebook-->
     <string name="facebook_app_id">293758374637458</string>
     <string name="facebook_login_protocol_schema">fb293758374637458</string>
-    <string name="asset_statements" translatable="false">[{ \"include\": \"https://exff-104b8.firebaseapp.com/.well-known/assetlinks.json\" }]</string>
+    <string name="asset_statements" translatable="false">[{ \"include\":
+        \"https://exff-104b8.firebaseapp.com/.well-known/assetlinks.json\" }]
+    </string>
 
 </resources>

@@ -18,4 +18,6 @@ public class AppStatus {
     public static final String DONATION_FRAGMENT_FLAG = "1";
     public static final String NOTIFICATION_FRAGMENT_FLAG = "2";
     public static final String PROFILE_FRAGMENT_FLAG = "3";
+    public static final String USER_DISABLE = "0";
+    public static final String USER_ENABLE = "1";
 }

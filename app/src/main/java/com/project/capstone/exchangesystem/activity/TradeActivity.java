@@ -154,69 +154,48 @@ public class TradeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         int idMe = sharedPreferences.getInt("userId", 0);
+        System.out.println("test id Me " + idMe);
         String authorization = sharedPreferences.getString("authorization", null);
+        System.out.println(authorization);
 
 
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
         int idYou = item.getUser().getId();
-
+        System.out.println("test id You " + idYou);
 
         GridView gridViewMyInventory = (GridView) findViewById(R.id.gridViewMyInventory);
 
         List<TransactionDetail> transactionDetailList = new ArrayList<>();
 
+        ArrayList<Item> idItemsMe = itemMeAdapter.getfilter();
+        ArrayList<Item> idItemsYou = itemYouAdapter.getfilter();
 
-        int countMe = gridViewMyInventory.getAdapter().getCount();
-        System.out.println(countMe);
-        for (int i = 0; i < countMe; i++) {
-            try {
-                LinearLayout itemLayout = (LinearLayout) gridViewMyInventory.getChildAt(i);
-                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
-                if (checkBox.isChecked()) {
-                    TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-                    TransactionDetail temp = new TransactionDetail();
-                    temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
-                    temp.setUserId(idMe);
-                    transactionDetailList.add(temp);
-                }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getCause());
-                System.out.println(ex.getLocalizedMessage());
-            }
+
+
+        for (int i = 0; i < idItemsMe.size(); i++) {
+            TransactionDetail temp = new TransactionDetail();
+            temp.setItemId(idItemsMe.get(i).getId());
+            temp.setUserId(idMe);
+            transactionDetailList.add(temp);
+
         }
 
-
-        GridView gridViewYourInventory = (GridView) findViewById(R.id.gridViewYourInventory);
-        int countYou = gridViewYourInventory.getAdapter().getCount();
-        System.out.println(countYou);
-        for (int i = 0; i < countYou; i++) {
-            try {
-                LinearLayout itemLayout = (LinearLayout) gridViewYourInventory.getChildAt(i);
-                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
-
-
-                if (checkBox.isChecked()) {
-                    TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-                    TransactionDetail temp = new TransactionDetail();
-                    temp.setItemId(Integer.parseInt(String.valueOf(tempView.getText())));
-                    temp.setUserId(idYou);
-                    transactionDetailList.add(temp);
-                }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getCause());
-                System.out.println(ex.getLocalizedMessage());
-            }
+        for (int i = 0; i < idItemsYou.size(); i++) {
+            TransactionDetail temp = new TransactionDetail();
+            temp.setItemId(idItemsYou.get(i).getId());
+            temp.setUserId(idYou);
+            transactionDetailList.add(temp);
         }
+
 
         Transaction transaction = new Transaction();
 
         transaction.setReceiverId(idYou);
-        transaction.setStatus("0");
-        transaction.setDonationPostId(-1);
+        transaction.setStatus("1");
+//        transaction.setDonationPostId(-1);
 
         final TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
+
 
         rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
             @Override
@@ -246,7 +225,9 @@ public class TradeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-
+                System.out.println("fail rooif");
+                System.out.println(t.getMessage());
+                System.out.println(t.getCause());
             }
         });
     }
@@ -269,6 +250,4 @@ public class TradeActivity extends AppCompatActivity {
         editor.putString(key, json);
         editor.apply();     // This line is IMPORTANT !!!
     }
-
-
 }

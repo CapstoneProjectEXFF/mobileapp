@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -89,6 +91,6 @@
     <ListView
         android:id="@+id/charityPostListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
 </android.support.design.widget.CoordinatorLayout>
