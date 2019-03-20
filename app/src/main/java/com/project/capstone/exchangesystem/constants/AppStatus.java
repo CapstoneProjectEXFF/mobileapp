@@ -13,4 +13,6 @@ public class AppStatus {
     public static final int IMAGE_MARGIN_TOP_RIGHT = 10;
     public static final int ADD_IMAGE_FLAG = 1;
     public static final int CHANGE_IMAGE_FLAG = 0;
+    public static final String USER_DISABLE = "0";
+    public static final String USER_ENABLE = "1";
 }

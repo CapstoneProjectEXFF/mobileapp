@@ -13,6 +13,7 @@ import com.project.capstone.exchangesystem.activity.EditUserProfileActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.SignInActivity;
 import com.squareup.picasso.Picasso;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -48,6 +49,9 @@ public class UserProfileFragment extends Fragment {
             case R.id.edituserprofile:
                 EditUserProfile();
                 return true;
+            case R.id.logout:
+                Logout();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -60,6 +64,14 @@ public class UserProfileFragment extends Fragment {
     private void EditUserProfile() {
         Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
         startActivity(intent);
+    }
+
+    private void Logout() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+        Intent intent = new Intent(getContext(), SignInActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

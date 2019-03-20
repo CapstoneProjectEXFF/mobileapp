@@ -12,6 +12,7 @@
 
     <string name="edituserprofile">Edit User Profile</string>
     <string name="changepass">Change Your Password</string>
+    <string name="logout">Log Out</string>
 
     <!--bottom nav bar-->
     <string name="nav_bar_home">Trang chủ</string>
