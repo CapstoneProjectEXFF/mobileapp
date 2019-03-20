@@ -132,17 +132,21 @@ public class TradeActivity extends AppCompatActivity {
         final int idYou = temp.getUser().getId();
         System.out.println("Test Your Id " + idYou);
         // check if the request code is same as what is passed  here it is 2
-        if (requestCode == 2) {
-            Bundle bundle = data.getExtras();
-            ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
-            int id = data.getIntExtra("tempID", 0);
-            System.out.println("Test tempID " + id);
-            if (id == idMe) {
-                System.out.println("test ID ME " + idMe);
-                itemMeAdapter.setfilter(idChoose);
-            } else if (id == idYou) {
-                System.out.println("test ID YOU " + idYou);
-                itemYouAdapter.setfilter(idChoose);
+        if (requestCode == 2 && data.getExtras() != null) {
+            try {
+                Bundle bundle = data.getExtras();
+                ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+                int id = data.getIntExtra("tempID", 0);
+                System.out.println("Test tempID " + id);
+                if (id == idMe) {
+                    System.out.println("test ID ME " + idMe);
+                    itemMeAdapter.setfilter(idChoose);
+                } else if (id == idYou) {
+                    System.out.println("test ID YOU " + idYou);
+                    itemYouAdapter.setfilter(idChoose);
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -169,7 +173,6 @@ public class TradeActivity extends AppCompatActivity {
 
         ArrayList<Item> idItemsMe = itemMeAdapter.getfilter();
         ArrayList<Item> idItemsYou = itemYouAdapter.getfilter();
-
 
 
         for (int i = 0; i < idItemsMe.size(); i++) {

@@ -12,7 +12,9 @@ import com.project.capstone.exchangesystem.R;
 import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.Item;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
 
@@ -78,17 +80,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
 
     public class ItemHolder extends RecyclerView.ViewHolder {
         public ImageView imgItem;
-        public TextView txtNameItem;
+        public TextView txtNameItem, txtDateItem;
 
 
         public ItemHolder(View itemView) {
             super(itemView);
             imgItem = itemView.findViewById(R.id.imgItem);
             txtNameItem = itemView.findViewById(R.id.txtNameItem);
+            txtDateItem = itemView.findViewById(R.id.txtDateItem);
         }
 
 
         public void bind(final Item item, final OnItemClickListener listener) {
+            Date date = new Date();
+            date.setTime(item.getCreateTime().getTime());
+            String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+            txtDateItem.setText(formattedDate);
             txtNameItem.setText(item.getName());
             String url = "";
             if (item.getImage().size() > 0) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.view.View;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
@@ -55,7 +56,6 @@ public class TransactionDetailActivity extends AppCompatActivity {
         itemsMe.setHasFixedSize(true);
         itemsMe.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
         itemsMe.setAdapter(itemMeAdapter);
-
 
 
         itemYouAdapter = new ItemAdapter(getApplicationContext(), inventoryYou, new ItemAdapter.OnItemClickListener() {
@@ -112,5 +112,10 @@ public class TransactionDetailActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void toMain(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }
