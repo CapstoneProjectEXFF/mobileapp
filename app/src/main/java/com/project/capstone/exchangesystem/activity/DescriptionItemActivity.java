@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import android.support.v7.widget.Toolbar;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class DescriptionItemActivity extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
-    ImageView imgDescriptionItem;
+    ImageView imgDescriptionItem, imgAvatar;
     TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
     Button btnTrade;
     ImageButton btnShare;
@@ -49,7 +49,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_description_item);
         direct();
-        ActionToolbar();
+        actionToolbar();
 //        EventButton();
 
         Intent appLinkIntent = getIntent();
@@ -112,9 +112,18 @@ public class DescriptionItemActivity extends AppCompatActivity {
         } else {
             imgDescriptionItem.setImageResource(R.drawable.ic_no_image);
         }
+        if (item.getUser() != null && item.getUser().getAvatar() != null) {
+            url = item.getUser().getAvatar();
+            Picasso.with(getApplicationContext()).load(url)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imgAvatar);
+        } else {
+            imgDescriptionItem.setImageResource(R.drawable.ic_no_image);
+        }
     }
 
-    private void ActionToolbar() {
+    private void actionToolbar() {
         setSupportActionBar(toolbarDescriptionItem);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarDescriptionItem.setNavigationOnClickListener(new View.OnClickListener() {
@@ -126,13 +135,14 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     private void direct() {
-        toolbarDescriptionItem = (Toolbar) findViewById(R.id.toolbarDescriptionItem);
-        imgDescriptionItem = (ImageView) findViewById(R.id.imgDescriptionItem);
-        txtDateDescriptionItem = (TextView) findViewById(R.id.txtDateDescriptionItem);
-        txtNameUserDescriotionItem = (TextView) findViewById(R.id.txtNameUserDescriotionItem);
-        txtViewDescriptionItem = (TextView) findViewById(R.id.txtViewDescriptionItem);
-        btnTrade = (Button) findViewById(R.id.btnTrade);
-        btnShare = (ImageButton) findViewById(R.id.btnShare);
+        toolbarDescriptionItem = findViewById(R.id.toolbarDescriptionItem);
+        imgDescriptionItem = findViewById(R.id.imgDescriptionItem);
+        imgAvatar = findViewById(R.id.imgUserAvatar);
+        txtDateDescriptionItem = findViewById(R.id.txtDateDescriptionItem);
+        txtNameUserDescriotionItem = findViewById(R.id.txtNameUserDescriotionItem);
+        txtViewDescriptionItem = findViewById(R.id.txtViewDescriptionItem);
+        btnTrade = findViewById(R.id.btnTrade);
+        btnShare = findViewById(R.id.btnShare);
 
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
@@ -159,12 +169,12 @@ public class DescriptionItemActivity extends AppCompatActivity {
 
     }
 
-    private String convertDatetime(Timestamp timestamp){
+    private String convertDatetime(Timestamp timestamp) {
         String date = "";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         try {
             date = simpleDateFormat.format(timestamp);
-        } catch (Exception e){
+        } catch (Exception e) {
         }
         return date;
     }

@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.project.capstone.exchangesystem.activity.EditUserProfileActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.SignInActivity;
+import com.project.capstone.exchangesystem.activity.SplashScreenActivity;
 import com.squareup.picasso.Picasso;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -43,22 +46,32 @@ public class UserProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.changepassword:
-                ChangePassword();
+                changePassword();
                 return true;
             case R.id.edituserprofile:
-                EditUserProfile();
+                editUserProfile();
+                return true;
+            case R.id.logout:
+                logout();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void ChangePassword() {
+    private void changePassword() {
         Intent intent = new Intent(getContext(), ChangePassword.class);
         startActivity(intent);
     }
 
-    private void EditUserProfile() {
+    private void editUserProfile() {
         Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void logout(){
+        SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);
+        settings.edit().clear().commit();
+        Intent intent = new Intent(getContext(), SignInActivity.class);
         startActivity(intent);
     }
 

@@ -9,4 +9,7 @@
     <item
         android:id="@+id/changepassword"
         android:title="@string/changepass" />
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout" />
 </menu>

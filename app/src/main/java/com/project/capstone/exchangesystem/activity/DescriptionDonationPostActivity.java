@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     Toolbar toolbar;
     ImageView imgUserDonation, imgDescriptionDonationPost;
     TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation;
-    Button btnShare;
+    ImageButton btnShare;
 
     //share facebook
     CallbackManager callbackManager;
@@ -80,7 +81,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         txtTimestampDonation = findViewById(R.id.txtTimestampDonation);
         txtUserNameDonation = findViewById(R.id.txtUserNameDonation);
         toolbar = findViewById(R.id.descriptionDonationToolbar);
-        btnShare = (Button) findViewById(R.id.btnShare);
+        btnShare = findViewById(R.id.btnShare);
 
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
