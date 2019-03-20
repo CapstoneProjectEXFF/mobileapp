@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setFirstFragment();
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -58,26 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    private void setFirstFragment() {
-        String fragment = (String) getIntent().getSerializableExtra("fragment");
-
-        if (fragment != null) {
-            switch (fragment) {
-                case DONATION_FRAGMENT_FLAG:
-                    initFragment(DONATION_FRAGMENT);
-                    break;
-                case PROFILE_FRAGMENT_FLAG:
-                    initFragment(PROFILE_FRAGMENT);
-                    break;
-                case ITEM_FRAGMENT_FLAG:
-                    initFragment(ITEM_FRAGMENT);
-                    break;
-            }
-        } else {
-            initFragment(ITEM_FRAGMENT);
-        }
+        bottomNavigationView.setSelectedItemId(R.id.bottombaritem_main);
     }
 
     private void initFragment(Fragment selectedFragment) {

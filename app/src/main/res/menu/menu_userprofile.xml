@@ -7,9 +7,9 @@
             android:id="@+id/edituserprofile"
             android:title="@string/edituserprofile"/>
     <item
-            android:id="@+id/changepassword"
-            android:title="@string/changepass"/>
+        android:id="@+id/changepassword"
+        android:title="@string/changepass" />
     <item
-            android:id="@+id/logout"
-            android:title="@string/logout"/>
+        android:id="@+id/logout"
+        android:title="@string/logout" />
 </menu>

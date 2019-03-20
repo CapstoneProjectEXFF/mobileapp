@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -44,34 +45,34 @@ public class UserProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.changepassword:
-                ChangePassword();
+                changePassword();
                 return true;
             case R.id.edituserprofile:
-                EditUserProfile();
+                editUserProfile();
                 return true;
             case R.id.logout:
-                Logout();
+                logout();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void ChangePassword() {
+    private void changePassword() {
         Intent intent = new Intent(getContext(), ChangePassword.class);
         startActivity(intent);
     }
 
-    private void EditUserProfile() {
+    private void editUserProfile() {
         Intent intent = new Intent(getContext(), EditUserProfileActivity.class);
         startActivity(intent);
     }
 
-    private void Logout() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        sharedPreferences.edit().clear().commit();
+
+    private void logout(){
+        SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);
+        settings.edit().clear().commit();
         Intent intent = new Intent(getContext(), SignInActivity.class);
         startActivity(intent);
-
     }
 
     @Override

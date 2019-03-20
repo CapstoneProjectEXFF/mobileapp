@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorGrayWhite"
     tools:context=".activity.ChooseItemActivity">
 
     <GridView
         android:id="@+id/grideviewChoose"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:numColumns="2">
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:numColumns="1">
 
     </GridView>
 
@@ -20,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:background="@drawable/custom_button"
         android:onClick="addItem"
         android:text="Add" />
 </LinearLayout>
