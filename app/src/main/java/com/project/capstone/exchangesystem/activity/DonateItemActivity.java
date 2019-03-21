@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
+import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
@@ -52,23 +53,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_FRAGMENT_FLAG;
 import static com.project.capstone.exchangesystem.constants.AppStatus.IMAGE_MARGIN_TOP_RIGHT;
 import static com.project.capstone.exchangesystem.constants.AppStatus.IMAGE_SIZE;
 import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
 
-public class DonateItemActivity extends AppCompatActivity {
+public class DonateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private final boolean IMAGE_UNCHECKED = false;
-    private final boolean IMAGE_CHECKED = true;
-
-    TextView btnCancel, btnConfirm, txtReceiverName, txtTitle;
-//    List<Item> itemList;
+    TextView txtReceiverName;
     ArrayList<Item> itemList;
     List<Integer> selectedItemIds;
     List<ImageView> itemImages;
     List<Boolean> checkedSelectedImages;
-    GridLayout gvItemList;
 
     DonationPost donationPost;
     SharedPreferences sharedPreferences;
@@ -83,67 +81,47 @@ public class DonateItemActivity extends AppCompatActivity {
     RecyclerView rvSelectedImages;
     ItemAdapter itemAdapter;
     ImageButton btnAddImages;
+    Item tmpItem;
+    TextView txtNoti;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donate_item);
+        itemList = new ArrayList<>();
         context = this;
         getComponent();
-//        getItemList();
         setToolbar();
 
-//        btnConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                createDonateTransaction();
-//            }
-//        });
-//
-//        btnCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), DescriptionDonationPostActivity.class);
-//                intent.putExtra("descriptionDonationPost", donationPost);
-//                startActivity(intent);
-//            }
-//        });
-
-        //new view
-        itemList = new ArrayList<>();
         itemAdapter = new ItemAdapter(getApplicationContext(), itemList, new ItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-
-                boolean check = itemList.get(itemList.indexOf(item)).isSeletedFlag();
-                if (!check) {
-                    itemList.get(itemList.indexOf(item)).setSeletedFlag(IMAGE_CHECKED);
-
-                } else {
-                    itemList.get(itemList.indexOf(item)).setSeletedFlag(IMAGE_UNCHECKED);
-
-                }
-                Toast.makeText(getApplicationContext(), "" + itemList.get(itemList.indexOf(item)).isSeletedFlag(), Toast.LENGTH_LONG).show();
+                tmpItem = item;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(DONATE_ACTIVITY_IMAGE_FLAG);
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
         rvSelectedImages.setHasFixedSize(true);
         rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 2));
-//        rvSelectedImages.setHasFixedSize(true);
         rvSelectedImages.setAdapter(itemAdapter);
-//        getItemList();
 
         btnAddImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ArrayList<String> itemList = getArrayList("itemMeIdList");
+                ArrayList<String> selectedItemIdsStr = new ArrayList<>();
+                for (int i = 0; i < itemList.size(); i++) {
+                   selectedItemIdsStr.add(String.valueOf(itemList.get(i).getId()));
+                }
                 Intent intent = new Intent(getApplicationContext(), ChooseItemActivity.class);
                 intent.putExtra("id", userId);
-                intent.putExtra("selectedItem", itemList);
-//                intent.putStringArrayListExtra("itemMeIdList", itemList);
+                intent.putExtra("itemMeIdList", selectedItemIdsStr);
                 startActivityForResult(intent, 2);
             }
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -154,20 +132,19 @@ public class DonateItemActivity extends AppCompatActivity {
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
             Bundle bundle = data.getExtras();
-            ArrayList<Item> itemIds = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
-            itemAdapter.setfilter(itemIds);
+            itemList = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+            itemAdapter.setfilter(itemList);
+            setNoti();
         }
     }
 
     private void createDonateTransaction() {
         List<TransactionDetail> transactionDetailList = new ArrayList<>();
-        for (int i = 0; i < itemList.size(); i++) {
-//            if (itemList.get(i).isSeletedFlag()) {
+        for (int i = 0; i < itemList.size(); i++) { //create transaction detail
                 TransactionDetail transactionDetail = new TransactionDetail();
                 transactionDetail.setUserId(itemList.get(i).getUser().getId());
                 transactionDetail.setItemId(itemList.get(i).getId());
                 transactionDetailList.add(transactionDetail);
-//            }
         }
         Transaction transaction = new Transaction();
         transaction.setSenderId(userId);
@@ -192,110 +169,7 @@ public class DonateItemActivity extends AppCompatActivity {
         }
     }
 
-    private void getItemList() {
-
-        if (authorization != null) {
-            rmaAPIService.getItemsByUserId(userId).enqueue(new Callback<List<Item>>() {
-                @Override
-                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-//                            itemList = new ArrayList<>();
-                            List<Item> tmpItemList = new ArrayList<>();
-                            itemImages = new ArrayList<>();
-                            checkedSelectedImages = new ArrayList<>();
-                            selectedItemIds = new ArrayList<>();
-                            for (int i = 0; i < response.body().size(); i++) {
-                                if (response.body().get(i).getStatus().equals(ITEM_ENABLE)) {
-                                    tmpItemList.add(response.body().get(i));
-                                    tmpItemList.get(i).setSeletedFlag(false);
-//                                    addItemToGridView(itemList.get(itemList.size() - 1));
-                                }
-                            }
-                            if (!tmpItemList.isEmpty()){
-                                itemList.addAll(tmpItemList);
-                                itemAdapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            Log.i("Donation", "null");
-                        }
-                    } else {
-                        Log.i("Donation", "cannot load donation post");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Item>> call, Throwable t) {
-                    Log.i("Donation", "failed");
-                }
-            });
-        }
-    }
-
-//    private void addItemToGridView(Item item) {
-//        gvItemList = findViewById(R.id.gvItemList);
-//
-//        //create LinearLayout
-//        LinearLayout linearLayout = new LinearLayout(context);
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//
-//        gvItemList.addView(linearLayout);
-//
-//        //create ImageView
-//        final ImageView imageView = new ImageView(context);
-//
-//        Picasso.with(getApplicationContext()).load(item.getImages().get(0).getUrl())
-//                .placeholder(R.drawable.ic_no_image)
-//                .error(R.drawable.ic_no_image)
-//                .into(imageView);
-////
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int selectedPosition = itemImages.indexOf(imageView);
-//                boolean check = itemList.get(selectedPosition).isSeletedFlag();
-//                if (!check) {
-//                    itemList.get(selectedPosition).setSeletedFlag(IMAGE_CHECKED);
-//                    imageView.setColorFilter(Color.rgb(142, 30, 32), PorterDuff.Mode.MULTIPLY);
-//                } else {
-//                    itemList.get(selectedPosition).setSeletedFlag(IMAGE_UNCHECKED);
-//                    imageView.clearColorFilter();
-//                }
-//            }
-//        });
-//        checkedSelectedImages.add(IMAGE_UNCHECKED);
-//        itemImages.add(imageView);
-//
-//        //create TextView itemName
-//        TextView txtItemName = new TextView(context);
-//
-//        linearLayout.addView(imageView);
-//        linearLayout.addView(txtItemName);
-//        txtItemName.setText(item.getName());
-//
-//        //setting LinearLayout
-//        ViewGroup.LayoutParams layoutParams = linearLayout.getLayoutParams();
-//        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//        linearLayout.setLayoutParams(layoutParams);
-//
-//        //image
-//        ViewGroup.LayoutParams ivLayoutParams;
-//        ivLayoutParams = imageView.getLayoutParams();
-//        ivLayoutParams.height = IMAGE_SIZE;
-//        ivLayoutParams.width = IMAGE_SIZE;
-//        imageView.setLayoutParams(ivLayoutParams);
-//
-//        //text
-//        txtItemName.setGravity(Gravity.CENTER);
-//        txtItemName.setTextColor(Color.BLACK);
-//    }
-
     private void getComponent() {
-//        txtTitle = findViewById(R.id.txtTitle);
-//        txtTitle.setText("Đóng góp đồ dùng");
-//        btnConfirm = findViewById(R.);
-//        btnConfirm.setText("Xác nhận");
-//        btnCancel = findViewById(R.id.btnCancel);
         donationPost = (DonationPost) getIntent().getSerializableExtra("donationPost");
         rmaAPIService = RmaAPIUtils.getAPIService();
         txtReceiverName = findViewById(R.id.txtReceiverName);
@@ -303,17 +177,27 @@ public class DonateItemActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.tbToolbar);
         rvSelectedImages = findViewById(R.id.rvSelectedImages);
         btnAddImages = findViewById(R.id.btnAddImages);
+        txtNoti = findViewById(R.id.txtNoti);
+        setNoti();
+
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         userId = sharedPreferences.getInt("userId", 0);
     }
 
+    private void setNoti() {
+        if (itemList.size() == 0){
+            txtNoti.setVisibility(View.VISIBLE);
+        } else {
+            txtNoti.setVisibility(View.GONE);
+        }
+    }
+
     private void setToolbar() {
+        //TODO SET DONATION POST TITLE
         toolbar.setTitle("Quyên góp");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,5 +222,16 @@ public class DonateItemActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    //when click on item of option dialog
+    @Override
+    public void onButtonClicked(int choice) {
+        if (choice == DELETE_IMAGE_OPTION){
+            itemList.remove(tmpItem);
+            itemAdapter.notifyDataSetChanged();
+            itemAdapter.setfilter(itemList);
+            setNoti();
+        }
     }
 }

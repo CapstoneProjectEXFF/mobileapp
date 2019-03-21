@@ -11,8 +11,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.project.capstone.exchangesystem.R;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.ADD_IMAGE_FLAG;
+import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.CAPTURE_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.CHANGE_IMAGE_FLAG;
+import static com.project.capstone.exchangesystem.constants.AppStatus.CHOOSE_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
+
 public class ImageOptionDialog extends BottomSheetDialogFragment {
     private ImageOptionListener imgListener;
+    private int actionFlag;
 
     @Nullable
     @Override
@@ -23,10 +32,21 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         Button btnDelete = v.findViewById(R.id.btnDelete);
         Button btnCancel = v.findViewById(R.id.btnCancel);
 
+        switch (actionFlag){
+            case ADD_IMAGE_FLAG:
+                btnDelete.setVisibility(View.GONE);
+                break;
+            case DONATE_ACTIVITY_IMAGE_FLAG:
+                btnDelete.setText("Bỏ chọn");
+                btnCapture.setVisibility(View.GONE);
+                btnChoose.setVisibility(View.GONE);
+                break;
+        }
+
         btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imgListener.onButtonClicked(0);
+                imgListener.onButtonClicked(CHOOSE_IMAGE_OPTION);
                 dismiss();
             }
         });
@@ -34,7 +54,7 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imgListener.onButtonClicked(1);
+                imgListener.onButtonClicked(CAPTURE_IMAGE_OPTION);
                 dismiss();
             }
         });
@@ -42,7 +62,7 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imgListener.onButtonClicked(2);
+                imgListener.onButtonClicked(DELETE_IMAGE_OPTION);
                 dismiss();
             }
         });
@@ -50,7 +70,7 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imgListener.onButtonClicked(3);
+                imgListener.onButtonClicked(CANCEL_IMAGE_OPTION);
                 dismiss();
             }
         });
@@ -70,5 +90,9 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString());
         }
+    }
+
+    public void setActivityFlag(int flag){
+        actionFlag = flag;
     }
 }

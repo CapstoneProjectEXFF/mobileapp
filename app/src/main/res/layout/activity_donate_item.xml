@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/txt_padding"
-            android:text="Danh sách đồ dùng "
+            android:text="Danh sách món đồ quyên góp"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/textSize" />
 
@@ -58,23 +58,15 @@
             android:background="@drawable/round_add_to_photos_black_36"/>
     </LinearLayout>
 
-
-
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<GridLayout-->
-            <!--android:id="@+id/gvItemList"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:columnCount="4"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:paddingLeft="@dimen/txt_padding">-->
-
-        <!--</GridLayout>-->
-
-    <!--</ScrollView>-->
+    <TextView
+        android:id="@+id/txtNoti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Bạn chưa có món đồ nào cả.\nHãy thêm vào nhé!"
+        android:textColor="@color/colorBlack"
+        android:textSize="18dp"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvSelectedImages"
