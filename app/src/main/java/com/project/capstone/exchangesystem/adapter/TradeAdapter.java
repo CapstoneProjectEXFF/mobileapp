@@ -104,10 +104,8 @@ public class TradeAdapter extends BaseAdapter {
         ArrayList<String> listItem;
         if (intent.hasExtra("itemMeIdList")) {
             listItem = intent.getStringArrayListExtra("itemMeIdList");
-            System.out.println("itemMeIdList" + listItem);
         } else {
             listItem = intent.getStringArrayListExtra("itemYouIdList");
-            System.out.println("itemYouIdList" + listItem);
         }
         //TODO check listItem null
         if (listItem != null) {

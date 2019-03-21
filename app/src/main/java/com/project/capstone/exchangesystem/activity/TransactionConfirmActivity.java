@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class TransactionConfirmActivity extends AppCompatActivity {
     ArrayList<Item> inventoryMe, inventoryYou;
     ItemAdapter itemMeAdapter, itemYouAdapter;
     Button btnConfirmTradeRequest;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,13 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transaction_confirm);
         direct();
         getData();
+        ActionToolbar();
 
     }
 
 
     private void direct() {
+        toolbar = findViewById(R.id.transactionconfirmToolbar);
 
         itemsMeConfirm = findViewById(R.id.itemsMeConfirm);
         itemsYouConfirm = findViewById(R.id.itemsYouConfirm);
@@ -134,5 +138,16 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void ActionToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

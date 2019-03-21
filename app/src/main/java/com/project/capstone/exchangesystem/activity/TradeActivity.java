@@ -98,8 +98,18 @@ public class TradeActivity extends AppCompatActivity {
                 ArrayList<String> itemList = getArrayList("itemMeIdList");
                 Intent intent = new Intent(TradeActivity.this, ChooseItemActivity.class);
                 intent.putExtra("id", idMe);
-                intent.putStringArrayListExtra("itemMeIdList", itemList);
+
+                ArrayList<Item> temp = itemMeAdapter.getfilter();
+                ArrayList<String> tempID = new ArrayList<>();
+                for (int i = 0; i < temp.size(); i++) {
+                    tempID.add(String.valueOf(temp.get(i).getId()));
+                }
+
+//                intent.putStringArrayListExtra("itemMeIdList", itemList);
+                intent.putStringArrayListExtra("itemMeIdList", tempID);
                 startActivityForResult(intent, 2);
+
+
             }
         });
 
@@ -109,7 +119,15 @@ public class TradeActivity extends AppCompatActivity {
                 ArrayList<String> itemList = getArrayList("itemYouIdList");
                 Intent intent = new Intent(TradeActivity.this, ChooseItemActivity.class);
                 intent.putExtra("id", idYou);
-                intent.putStringArrayListExtra("itemYouIdList", itemList);
+
+                ArrayList<Item> temp = itemYouAdapter.getfilter();
+                ArrayList<String> tempID = new ArrayList<>();
+                for (int i = 0; i < temp.size(); i++) {
+                    tempID.add(String.valueOf(temp.get(i).getId()));
+                }
+//                intent.putStringArrayListExtra("itemMeIdList", itemList);
+                intent.putStringArrayListExtra("itemYouIdList", tempID);
+//                intent.putStringArrayListExtra("itemYouIdList", itemList);
                 startActivityForResult(intent, 2);
             }
         });
@@ -133,16 +151,31 @@ public class TradeActivity extends AppCompatActivity {
         System.out.println("Test Your Id " + idYou);
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
-            Bundle bundle = data.getExtras();
-            ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
-            int id = data.getIntExtra("tempID", 0);
-            System.out.println("Test tempID " + id);
-            if (id == idMe) {
-                System.out.println("test ID ME " + idMe);
-                itemMeAdapter.setfilter(idChoose);
-            } else if (id == idYou) {
-                System.out.println("test ID YOU " + idYou);
-                itemYouAdapter.setfilter(idChoose);
+            try {
+
+                Bundle bundle = data.getExtras();
+                ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+                int id = data.getIntExtra("tempID", 0);
+                System.out.println("Test tempID " + id);
+                if (id == idMe) {
+                    System.out.println("test ID ME " + idMe);
+                    itemMeAdapter.setfilter(idChoose);
+                    itemIdsMe.clear();
+                    for (int i = 0; i < idChoose.size(); i++) {
+                        itemIdsMe.add(String.valueOf(idChoose.get(i).getId()));
+                    }
+                    saveArrayList(itemIdsMe, "itemMeIdList");
+                } else if (id == idYou) {
+                    System.out.println("test ID YOU " + idYou);
+                    itemYouAdapter.setfilter(idChoose);
+                    itemIdsYou.clear();
+                    for (int i = 0; i < idChoose.size(); i++) {
+                        itemIdsYou.add(String.valueOf(idChoose.get(i).getId()));
+                    }
+                    saveArrayList(itemIdsYou, "itemYouIdList");
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -169,7 +202,6 @@ public class TradeActivity extends AppCompatActivity {
 
         ArrayList<Item> idItemsMe = itemMeAdapter.getfilter();
         ArrayList<Item> idItemsYou = itemYouAdapter.getfilter();
-
 
 
         for (int i = 0; i < idItemsMe.size(); i++) {
