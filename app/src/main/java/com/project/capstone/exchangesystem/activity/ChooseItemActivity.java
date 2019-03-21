@@ -21,6 +21,8 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
+
 public class ChooseItemActivity extends AppCompatActivity {
     GridView grideviewChoose;
     TradeAdapter tradeAdapter;
@@ -69,8 +71,11 @@ public class ChooseItemActivity extends AppCompatActivity {
                     System.out.println("Done first step in get Item with User");
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
-                        chooseList.add(result.get(i));
-                        tradeAdapter.notifyDataSetChanged();
+                        System.out.println("status = " + result.get(i).getStatus());
+                        if (result.get(i).getStatus().equals(ITEM_ENABLE)){
+                            chooseList.add(result.get(i));
+                            tradeAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
 

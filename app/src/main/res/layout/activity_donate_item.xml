@@ -7,8 +7,15 @@
     android:orientation="vertical"
     tools:context=".activity.DonateItemActivity">
 
-    <include layout="@layout/confirm_toolbar" />
+    <!--<include layout="@layout/confirm_toolbar" />-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:title="Quyên góp">
 
+    </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -32,26 +39,51 @@
             android:textSize="@dimen/textSize" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/txt_padding"
-        android:text="Danh sách đồ dùng "
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/textSize" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <GridLayout
-            android:id="@+id/gvItemList"
-            android:layout_width="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/txt_padding">
+            android:padding="@dimen/txt_padding"
+            android:text="Danh sách đồ dùng "
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/textSize" />
 
-        </GridLayout>
-    </ScrollView>
+        <ImageButton
+            android:id="@+id/btnAddImages"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_add_to_photos_black_36"/>
+    </LinearLayout>
+
+
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<GridLayout-->
+            <!--android:id="@+id/gvItemList"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:columnCount="4"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="@dimen/txt_padding">-->
+
+        <!--</GridLayout>-->
+
+    <!--</ScrollView>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvSelectedImages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/colorGrayWhite"/>
 </LinearLayout>
