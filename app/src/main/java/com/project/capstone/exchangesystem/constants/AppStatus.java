@@ -11,8 +11,9 @@ public class AppStatus {
     public static final int GALLERY_REQUEST = 2;
     public static final int IMAGE_SIZE = 260;
     public static final int IMAGE_MARGIN_TOP_RIGHT = 10;
-    public static final int ADD_IMAGE_FLAG = 1;
     public static final int CHANGE_IMAGE_FLAG = 0;
+    public static final int ADD_IMAGE_FLAG = 1;
+    public static final int DONATE_ACTIVITY_IMAGE_FLAG = 2;
     public static final String ITEM_ENABLE = "1";
     public static final String ITEM_FRAGMENT_FLAG = "0";
     public static final String DONATION_FRAGMENT_FLAG = "1";
@@ -20,4 +21,8 @@ public class AppStatus {
     public static final String PROFILE_FRAGMENT_FLAG = "3";
     public static final String USER_DISABLE = "0";
     public static final String USER_ENABLE = "1";
+    public static final int CHOOSE_IMAGE_OPTION = 0;
+    public static final int CAPTURE_IMAGE_OPTION = 1;
+    public static final int DELETE_IMAGE_OPTION = 2;
+    public static final int CANCEL_IMAGE_OPTION = 3;
 }
