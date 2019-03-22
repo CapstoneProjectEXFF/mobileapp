@@ -161,7 +161,7 @@ public class MainCharityPostFragment extends Fragment {
 
     private void GetData(int page) {
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
         final int idMe = sharedPreferences.getInt("userId", 0);
 
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
@@ -175,7 +175,8 @@ public class MainCharityPostFragment extends Fragment {
 //                        donationPosts.addAll(donationPostList);
 //                        mainCharityPostAdapter.notifyDataSetChanged();
                         for (int i = 0; i < donationPostList.size(); i++) {
-                            if (donationPostList.get(i).getUserId() != idMe) {
+                            System.out.println(donationPostList.get(i).getUser().getId());
+                            if (donationPostList.get(i).getUser().getId() != idMe) {
                                 donationPosts.add(donationPostList.get(i));
                                 mainCharityPostAdapter.notifyDataSetChanged();
                             }
