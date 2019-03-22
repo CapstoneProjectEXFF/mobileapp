@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".activity.DonateItemActivity">
 
-    <!--<include layout="@layout/confirm_toolbar" />-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbToolbar"
         android:layout_width="match_parent"
