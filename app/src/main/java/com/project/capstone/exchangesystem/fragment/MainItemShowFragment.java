@@ -2,6 +2,7 @@ package com.project.capstone.exchangesystem.fragment;
 
 import com.project.capstone.exchangesystem.activity.DescriptionItemActivity;
 import com.project.capstone.exchangesystem.activity.SearchActivity;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import android.content.Intent;
@@ -82,7 +83,7 @@ public class MainItemShowFragment extends Fragment {
                     System.out.println("Done first step in Show Item");
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
-                        if (result.get(i).getUser().getId() != meID) {
+                        if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {
                             itemArrayList.add(result.get(i));
                             itemAdapter.notifyDataSetChanged();
                         }

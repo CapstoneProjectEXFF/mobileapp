@@ -25,4 +25,7 @@ public class AppStatus {
     public static final int CAPTURE_IMAGE_OPTION = 1;
     public static final int DELETE_IMAGE_OPTION = 2;
     public static final int CANCEL_IMAGE_OPTION = 3;
+    public static final String TRANSACTION_SEND = "1";
+    public static final String TRANSACTION_DONE = "2";
+    public static final String TRANSACTION_RESEND = "3";
 }

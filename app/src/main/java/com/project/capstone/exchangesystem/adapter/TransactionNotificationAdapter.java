@@ -1,6 +1,8 @@
 package com.project.capstone.exchangesystem.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
@@ -18,6 +21,8 @@ import com.project.capstone.exchangesystem.model.CharityPostItem;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class TransactionNotificationAdapter extends BaseAdapter {
     Context context;
@@ -50,6 +55,9 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
+        final int idMe = sharedPreferences.getInt("userId", 0);
+
         TransactionNotificationAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -64,7 +72,12 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             viewHolder = (TransactionNotificationAdapter.ViewHolder) convertView.getTag();
         }
         Transaction transactions = (Transaction) getItem(position);
-        String notification = transactions.getSender().getFullName() + " vừa gửi yêu cầu";
+        String notification = "";
+        if (transactions.getSenderId() == idMe && transactions.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
+            notification = transactions.getReceiver().getFullName() + "đã đồng ý yêu cầu của bạn";
+        } else if (transactions.getReceiverId() == idMe) {
+            notification = transactions.getSender().getFullName() + " vừa gửi yêu cầu";
+        }
 
         viewHolder.txtNotification.setText(notification);
 
