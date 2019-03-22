@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.model;
 
+import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class Transaction implements Serializable {
+public class Transaction implements Serializable, Comparable<Transaction> {
 
     @SerializedName("id")
     @Expose
@@ -131,5 +132,10 @@ public class Transaction implements Serializable {
 
     public Transaction() {
 
+    }
+
+    @Override
+    public int compareTo(@NonNull Transaction o) {
+        return this.getCreateTime().compareTo(getCreateTime());
     }
 }

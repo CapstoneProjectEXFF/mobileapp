@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
@@ -22,9 +23,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class NotificationFragment extends Fragment {
@@ -116,9 +119,34 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
                 System.out.println("Fail rồi");
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
 
             }
         });
+
+        rmaAPIService.getTransactionsTradedBySenderId(authorization).enqueue(new Callback<List<Transaction>>() {
+            @Override
+            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                System.out.println("Vào hàm response rồi");
+                System.out.println("test response " + response.isSuccessful());
+                System.out.println("test body" + response.body());
+                if (response.isSuccessful()) {
+                    List<Transaction> temp = new ArrayList<>();
+                    temp = response.body();
+                    transactions.addAll(temp);
+                    transactionNotificationAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                System.out.println("Fail rồi");
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Collections.sort(transactions);
+        transactionNotificationAdapter.notifyDataSetChanged();
 
 
     }

@@ -76,6 +76,9 @@ public interface RmaAPIService {
     @GET("/transaction")
     Call<List<Transaction>> getTransactionsByReceiverID(@Header("Authorization") String authorization);
 
+    @GET("/transaction/confirm")
+    Call<List<Transaction>> getTransactionsTradedBySenderId(@Header("Authorization") String authorization);
+
     @GET("/transaction/{transID}")
     Call<TransactionRequestWrapper> getTransactionByTransID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
