@@ -73,6 +73,7 @@ public class MainItemShowFragment extends Fragment {
     private void GetBrandNewItems() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
         String authorization = sharedPreferences.getString("authorization", null);
+        final int meID = sharedPreferences.getInt("userId", 0);
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
             rmaAPIService.getAllItems(authorization).enqueue(new Callback<List<Item>>() {
@@ -81,8 +82,10 @@ public class MainItemShowFragment extends Fragment {
                     System.out.println("Done first step in Show Item");
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
-                        itemArrayList.add(result.get(i));
-                        itemAdapter.notifyDataSetChanged();
+                        if (result.get(i).getUser().getId() != meID) {
+                            itemArrayList.add(result.get(i));
+                            itemAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
 

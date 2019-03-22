@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.AbsListView;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class MainCharityPostFragment extends Fragment {
@@ -159,6 +161,9 @@ public class MainCharityPostFragment extends Fragment {
 
     private void GetData(int page) {
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        final int idMe = sharedPreferences.getInt("userId", 0);
+
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getDonationPost(page, 3).enqueue(new Callback<List<DonationPost>>() {
             @Override
@@ -167,8 +172,14 @@ public class MainCharityPostFragment extends Fragment {
 
                     List<DonationPost> donationPostList = response.body();
                     if (!donationPostList.isEmpty()) {
-                        donationPosts.addAll(donationPostList);
-                        mainCharityPostAdapter.notifyDataSetChanged();
+//                        donationPosts.addAll(donationPostList);
+//                        mainCharityPostAdapter.notifyDataSetChanged();
+                        for (int i = 0; i < donationPostList.size(); i++) {
+                            if (donationPostList.get(i).getUserId() != idMe) {
+                                donationPosts.add(donationPostList.get(i));
+                                mainCharityPostAdapter.notifyDataSetChanged();
+                            }
+                        }
                         System.out.println("đã vào hàm response");
                     } else {
                         limitData = true;
