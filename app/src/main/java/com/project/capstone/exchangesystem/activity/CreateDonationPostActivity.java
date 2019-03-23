@@ -14,6 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -21,6 +24,7 @@ import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
+import com.project.capstone.exchangesystem.model.PostAction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +33,8 @@ import java.util.*;
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
+
+    private final String TITLE = "Tạo bài viết mới";
 
     TextView txtTitle, btnAdd, txtError;
     Button btnAddImage;
@@ -44,12 +50,15 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     GridLayout gridLayout;
     FirebaseImg firebaseImg;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_donation_post);
         context = this;
         getComponents();
+        setToolbar();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -61,21 +70,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
 
         firebaseImg = new FirebaseImg();
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String address = edtAddress.getText().toString();
-                String content = edtContent.getText().toString();
-                if (address.trim().length() == 0 || content.trim().length() < 100){
-                    notifyError(address.trim().length(), content.trim().length());
-                } else {
-                    if (firebaseImg.checkLoginFirebase()) {
-                        setDonationPostData(address, content);
-                    }
-                }
-            }
-        });
-
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,11 +80,48 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         });
     }
 
+    private void setToolbar() {
+        toolbar.setTitle(TITLE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String address = edtAddress.getText().toString();
+        String content = edtContent.getText().toString();
+        if (address.trim().length() == 0 || content.trim().length() == 0){
+            notifyError(address.trim().length(), content.trim().length());
+        } else {
+            if (firebaseImg.checkLoginFirebase()) {
+                setDonationPostData(address, content);
+            }
+        }
+        return true;
+    }
+
     private void setDonationPostData(String address, String content) {
         DonationPost newPost = new DonationPost();
         newPost.setAddress(address);
         newPost.setContent(content);
-        firebaseImg.uploadImagesToFireBase(context, selectedImages, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
+        if (selectedImages.size() != 0){
+            firebaseImg.uploadImagesToFireBase(context, selectedImages, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
+        } else {
+            new PostAction().manageDonation(newPost, null, authorization, context, DONATION_CREATE_ACTION);
+        }
+
     }
 
     private void notifyError(int addressLength, int contentLength) {
@@ -98,8 +129,8 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
             edtAddress.setHint("Vui lòng nhập địa chỉ");
             edtAddress.setHintTextColor(Color.RED);
         }
-        if (contentLength < 100){
-            txtError.setText("Nội dung còn thiếu " + (100 - contentLength) + " ký tự");
+        if (contentLength == 0){
+            txtError.setText("Bạn chưa nhập nội dung");
             txtError.setVisibility(View.VISIBLE);
         }
     }
@@ -216,14 +247,11 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void getComponents() {
-        txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText("Tạo bài viết mới");
         txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
-        btnAdd = findViewById(R.id.btnConfirm);
-        btnAdd.setText("Đăng bài");
         btnAddImage = findViewById(R.id.btnAddImage);
+        toolbar = findViewById(R.id.tbToolbar);
     }
 
     @Override

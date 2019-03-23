@@ -85,6 +85,7 @@ public interface RmaAPIService {
     @PUT("/transaction/{transID}")
     Call<Object> confirmTransaction(@Header("Authorization") String authorization, @Path("transID") int transID);
 
-
+    @GET("/donators/{donationPostId}")
+    Call<List<TransactionRequestWrapper>> getTransactionByDonationPostId(@Path("donationPostId") int donationPostId);
 }
 

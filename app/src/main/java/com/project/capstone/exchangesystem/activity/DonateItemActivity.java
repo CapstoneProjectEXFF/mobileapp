@@ -1,38 +1,21 @@
 package com.project.capstone.exchangesystem.activity;
 
-import android.app.ActionBar;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
@@ -43,9 +26,7 @@ import com.project.capstone.exchangesystem.model.TransactionDetail;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,18 +36,11 @@ import retrofit2.Response;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_FRAGMENT_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.IMAGE_MARGIN_TOP_RIGHT;
-import static com.project.capstone.exchangesystem.constants.AppStatus.IMAGE_SIZE;
-import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
 
 public class DonateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     TextView txtReceiverName;
     ArrayList<Item> itemList;
-    List<Integer> selectedItemIds;
-    List<ImageView> itemImages;
-    List<Boolean> checkedSelectedImages;
 
     DonationPost donationPost;
     SharedPreferences sharedPreferences;

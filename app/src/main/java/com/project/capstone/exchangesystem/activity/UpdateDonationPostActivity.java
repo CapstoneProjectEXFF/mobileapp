@@ -14,6 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -43,6 +46,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.GALLERY_RE
 public class UpdateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     private static final int GALLERY_REQUEST = 2;
+    private static final String TITLE = "Chỉnh sửa bài viết";
     private final int IMAGE_SIZE = 160;
     private final int IMAGE_MARGIN_TOP_RIGHT = 10;
     private final int ADD_IMAGE_FLAG = 1;
@@ -65,12 +69,15 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     GridLayout gridLayout;
     FirebaseImg firebaseImg;
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_donation_post);
         context = this;
         getComponents();
+        setToolbar();
 
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
@@ -89,21 +96,6 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
 
         firebaseImg = new FirebaseImg();
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String address = edtAddress.getText().toString();
-                String content = edtContent.getText().toString();
-                if (address.trim().length() == 0 || content.trim().length() < 100){
-                    notifyError(address.trim().length(), content.trim().length());
-                } else {
-                    if (firebaseImg.checkLoginFirebase()) {
-                        setDonationPostData(address, content);
-                    }
-                }
-            }
-        });
-
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +104,38 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
+    }
+
+    private void setToolbar() {
+        toolbar.setTitle(TITLE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String address = edtAddress.getText().toString();
+        String content = edtContent.getText().toString();
+        if (address.trim().length() == 0 || content.trim().length() == 0){
+            notifyError(address.trim().length(), content.trim().length());
+        } else {
+            if (firebaseImg.checkLoginFirebase()) {
+                setDonationPostData(address, content);
+            }
+        }
+        return true;
     }
 
     private void setDonationPostData(String address, String content) {
@@ -134,8 +158,8 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
             edtAddress.setHint("Vui lòng nhập địa chỉ");
             edtAddress.setHintTextColor(Color.RED);
         }
-        if (contentLength < 100){
-            txtError.setText("Nội dung còn thiếu " + (100 - contentLength) + " ký tự");
+        if (contentLength == 0){
+            txtError.setText("Bạn chưa nhập nội dung");
             txtError.setVisibility(View.VISIBLE);
         }
     }
@@ -302,15 +326,16 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void getComponents() {
-        txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText("Chỉnh sửa bài viết");
+//        txtTitle = findViewById(R.id.txtTitle);
+//        txtTitle.setText("Chỉnh sửa bài viết");
         txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
-        btnUpdate = findViewById(R.id.btnConfirm);
-        btnUpdate.setText("Lưu");
+//        btnUpdate = findViewById(R.id.btnConfirm);
+//        btnUpdate.setText("Lưu");
         btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
+        toolbar = findViewById(R.id.tbToolbar);
     }
 
     @Override
