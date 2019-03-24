@@ -68,7 +68,7 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-    private void logout(){
+    private void logout() {
         SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);
         settings.edit().clear().commit();
         Intent intent = new Intent(getContext(), SignInActivity.class);
@@ -90,7 +90,10 @@ public class UserProfileFragment extends Fragment {
 
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-        String avatar = sharedPreferences.getString("avatar", null);
+        String avatar = "";
+        if (sharedPreferences.contains("avatar")) {
+            avatar = avatar + sharedPreferences.getString("avatar", null);
+        }
         String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
         String userName = sharedPreferences.getString("username", null);
         String status = sharedPreferences.getString("status", null);

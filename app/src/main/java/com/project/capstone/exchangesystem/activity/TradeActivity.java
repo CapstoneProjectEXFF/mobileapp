@@ -12,6 +12,7 @@ import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.R;
@@ -203,65 +204,65 @@ public class TradeActivity extends AppCompatActivity {
         ArrayList<Item> idItemsMe = itemMeAdapter.getfilter();
         ArrayList<Item> idItemsYou = itemYouAdapter.getfilter();
 
+        if (idItemsMe.isEmpty() && idItemsYou.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Pick at lease 1 item", Toast.LENGTH_LONG).show();
+        } else {
 
-        for (int i = 0; i < idItemsMe.size(); i++) {
-            TransactionDetail temp = new TransactionDetail();
-            temp.setItemId(idItemsMe.get(i).getId());
-            temp.setUserId(idMe);
-            transactionDetailList.add(temp);
+            for (int i = 0; i < idItemsMe.size(); i++) {
+                TransactionDetail temp = new TransactionDetail();
+                temp.setItemId(idItemsMe.get(i).getId());
+                temp.setUserId(idMe);
+                transactionDetailList.add(temp);
 
-        }
+            }
 
-        for (int i = 0; i < idItemsYou.size(); i++) {
-            TransactionDetail temp = new TransactionDetail();
-            temp.setItemId(idItemsYou.get(i).getId());
-            temp.setUserId(idYou);
-            transactionDetailList.add(temp);
-        }
+            for (int i = 0; i < idItemsYou.size(); i++) {
+                TransactionDetail temp = new TransactionDetail();
+                temp.setItemId(idItemsYou.get(i).getId());
+                temp.setUserId(idYou);
+                transactionDetailList.add(temp);
+            }
 
-
-        Transaction transaction = new Transaction();
-
-        transaction.setReceiverId(idYou);
-        transaction.setStatus("1");
+            Transaction transaction = new Transaction();
+            transaction.setReceiverId(idYou);
+            transaction.setStatus(AppStatus.TRANSACTION_SEND);
 //        transaction.setDonationPostId(-1);
+            final TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
 
-        final TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
+            rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
 
-
-        rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-
-                System.out.println("test response " + response.isSuccessful());
-                System.out.println(response.body());
-                if (response.isSuccessful()) {
-                    try {
-                        LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
-                        if (responeBody.containsKey("message")) {
-                            String mess = (String) responeBody.get("message");
-                            if (mess.equals("Sended")) {
-                                Toast.makeText(getApplicationContext(), "Send Trade Request Successfully", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), TransactionDetailActivity.class);
-                                intent.putExtra("transactionDetail", transactionRequestWrapper);
-                                startActivity(intent);
+                    System.out.println("test response " + response.isSuccessful());
+                    System.out.println(response.body());
+                    if (response.isSuccessful()) {
+                        try {
+                            LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
+                            if (responeBody.containsKey("message")) {
+                                String mess = (String) responeBody.get("message");
+                                if (mess.equals("Sended")) {
+                                    Toast.makeText(getApplicationContext(), "Send Trade Request Successfully", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), TransactionDetailActivity.class);
+                                    intent.putExtra("transactionDetail", transactionRequestWrapper);
+                                    startActivity(intent);
+                                }
                             }
+                        } catch (Exception ex) {
+                            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    } catch (Exception ex) {
-                        Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
 
                 }
 
-            }
-
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                System.out.println("fail rooif");
-                System.out.println(t.getMessage());
-                System.out.println(t.getCause());
-            }
-        });
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    System.out.println("fail rooif");
+                    System.out.println(t.getMessage());
+                    System.out.println(t.getCause());
+                }
+            });
+        }
     }
 
     public ArrayList<String> getArrayList(String key) {
