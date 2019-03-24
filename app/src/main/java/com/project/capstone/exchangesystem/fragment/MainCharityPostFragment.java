@@ -172,15 +172,15 @@ public class MainCharityPostFragment extends Fragment {
 
                     List<DonationPost> donationPostList = response.body();
                     if (!donationPostList.isEmpty()) {
-//                        donationPosts.addAll(donationPostList);
-//                        mainCharityPostAdapter.notifyDataSetChanged();
-                        for (int i = 0; i < donationPostList.size(); i++) {
-                            System.out.println(donationPostList.get(i).getUser().getId());
-                            if (donationPostList.get(i).getUser().getId() != idMe) {
-                                donationPosts.add(donationPostList.get(i));
-                                mainCharityPostAdapter.notifyDataSetChanged();
-                            }
-                        }
+                        donationPosts.addAll(donationPostList);
+                        mainCharityPostAdapter.notifyDataSetChanged();
+//                        for (int i = 0; i < donationPostList.size(); i++) {
+//                            System.out.println(donationPostList.get(i).getUser().getId());
+//                            if (donationPostList.get(i).getUser().getId() != idMe) {
+//                                donationPosts.add(donationPostList.get(i));
+//                                mainCharityPostAdapter.notifyDataSetChanged();
+//                            }
+//                        }
                         System.out.println("đã vào hàm response");
                     } else {
                         limitData = true;

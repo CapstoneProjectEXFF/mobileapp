@@ -122,13 +122,11 @@ public class SignInActivity extends AppCompatActivity {
                                 String status = (String) userInfo.get("status");
                                 System.out.println("test " + status);
 
-                                String avatar = (String) userInfo.get("avatar");
-                                System.out.println(avatar);
+
 
                                 //TODO hardcode status
                                 if (status.equals(USER_ENABLE)) {
                                     SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-                                    editor.putString("avatar", avatar);
                                     editor.putString("phoneNumberSignIn", phoneNumber);
                                     editor.putInt("userId", id);
                                     editor.putString("username", fullName);

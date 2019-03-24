@@ -75,7 +75,9 @@ public class EditUserProfileActivity extends AppCompatActivity {
         userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         authorization = sharedPreferences.getString("authorization", null);
         name = sharedPreferences.getString("username", null);
-        avatar = sharedPreferences.getString("avatar", null);
+        if(sharedPreferences.contains("avatar")) {
+            avatar = sharedPreferences.getString("avatar", null);
+        }
         status = sharedPreferences.getString("status", null);
 
 
