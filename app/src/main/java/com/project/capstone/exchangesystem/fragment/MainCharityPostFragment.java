@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -33,16 +35,18 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class MainCharityPostFragment extends Fragment {
+    public int idMe;
     Toolbar toolbar;
     ListView listView;
     TextView btnAdd;
     MainCharityPostAdapter mainCharityPostAdapter;
     ArrayList<DonationPost> donationPosts;
     View footerView;
-    boolean isLoading = false;
-    boolean limitData = false;
-    int page = 0;
+    boolean isLoading;
+    boolean limitData;
+    int page;
     mHandler mHandler;
+
 
 
     public MainCharityPostFragment() {
@@ -59,7 +63,12 @@ public class MainCharityPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        idMe = sharedPreferences.getInt("userId", 0);
+        donationPosts = new ArrayList<>();
+        page = 0;
+        isLoading = false;
+        limitData = false;
     }
 
 
@@ -76,30 +85,31 @@ public class MainCharityPostFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        listView = (ListView) view.findViewById(R.id.charityPostListView);
+
+        listView = view.findViewById(R.id.charityPostListView);
         donationPosts = new ArrayList<>();
         mainCharityPostAdapter = new MainCharityPostAdapter(view.getContext(), donationPosts);
         listView.setAdapter(mainCharityPostAdapter);
-        listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
-                intent.putExtra("descriptionDonationPost", donationPosts.get(position));
-                startActivity(intent);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+//        listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(getContext(), "aaaa", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
+//                intent.putExtra("descriptionDonationPost", donationPosts.get(position));
+//                startActivity(intent);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         footerView = layoutInflater.inflate(R.layout.progressbar, null);
         mHandler = new mHandler();
-        GetData(page);
-        LoadMoreData();
+        getData(page);
+        loadMoreData();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,10 +121,17 @@ public class MainCharityPostFragment extends Fragment {
         return view;
     }
 
-    private void LoadMoreData() {
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    private void loadMoreData() {
         listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "aaaa", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
                 intent.putExtra("descriptionDonationPost", donationPosts.get(position));
                 startActivity(intent);
@@ -141,6 +158,7 @@ public class MainCharityPostFragment extends Fragment {
                 }
             }
         });
+
     }
 
     public class mHandler extends Handler {
@@ -151,7 +169,7 @@ public class MainCharityPostFragment extends Fragment {
                     listView.addFooterView(footerView);
                     break;
                 case 1:
-                    GetData(++page);
+                    getData(++page);
                     isLoading = false;
                     break;
             }
@@ -159,27 +177,17 @@ public class MainCharityPostFragment extends Fragment {
         }
     }
 
-    private void GetData(int page) {
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        final int idMe = sharedPreferences.getInt("userId", 0);
+    private void getData(int page) {
 
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getDonationPost(page, 3).enqueue(new Callback<List<DonationPost>>() {
             @Override
             public void onResponse(Call<List<DonationPost>> call, Response<List<DonationPost>> response) {
                 if (response.isSuccessful()) {
-
                     List<DonationPost> donationPostList = response.body();
                     if (!donationPostList.isEmpty()) {
-//                        donationPosts.addAll(donationPostList);
-//                        mainCharityPostAdapter.notifyDataSetChanged();
-                        for (int i = 0; i < donationPostList.size(); i++) {
-                            if (donationPostList.get(i).getUserId() != idMe) {
-                                donationPosts.add(donationPostList.get(i));
-                                mainCharityPostAdapter.notifyDataSetChanged();
-                            }
-                        }
+                        donationPosts.addAll(donationPostList);
+                        mainCharityPostAdapter.notifyDataSetChanged();
                         System.out.println("đã vào hàm response");
                     } else {
                         limitData = true;
@@ -211,5 +219,4 @@ public class MainCharityPostFragment extends Fragment {
             super.run();
         }
     }
-
 }

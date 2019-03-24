@@ -168,16 +168,6 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/btnDonators"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_gravity="right"
-                android:text="Danh sách quyên góp"
-                android:textSize="20sp"
-                android:textColor="@color/colorPrimary"/>
-
-            <TextView
                 android:id="@+id/txtDescriptionDonationContent"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -187,10 +177,40 @@
                 android:textColor="@color/colorBlack"
                 android:textSize="20dp" />
 
-            <android.support.v7.widget.RecyclerView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ></android.support.v7.widget.RecyclerView>
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Danh sách quyên góp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtNoDonators"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/no_donators"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvDonators"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

@@ -27,4 +27,23 @@
         \"https://exff-104b8.firebaseapp.com/.well-known/assetlinks.json\" }]
     </string>
 
+    <string name="title_create_donationPost">Tạo bài viết mới</string>
+    <string name="title_edit_donationPost">Chỉnh sửa bài viết</string>
+    <string name="title_create_item">Thêm đồ dùng mới</string>
+    <string name="title_edit_item">Cập nhật thông tin</string>
+    <string name="default_donation_title">Quyên góp</string>
+    <string name="error_input_address">Bạn chưa điền địa chỉ</string>
+    <string name="error_input_title">Bạn chưa điền tiêu đề</string>
+    <string name="error_input_content">Bạn chưa nhập nội dung</string>
+    <string name="error_input_itemName">Bạn chưa điền tên đồ dùng</string>
+    <string name="error_input_itemDesciption">Bạn chưa thêm mô tả đồ dùng</string>
+    <string name="error_input_image">Bạn cần chọn ít nhất 1 tấm hình.</string>
+    <string name="error_loading">Vui lòng thử lại sau.</string>
+    <string name="privacy_public">Công khai</string>
+    <string name="privacy_friends">Bạn bè</string>
+    <string name="data_loading_noti">Đang tải dữ liệu...</string>
+    <string name="waiting_noti">Vui lòng chờ...</string>
+    <string name="select_item_noti">Vui lòng chọn đồ dùng.</string>
+
+    <string name="no_donators">Chưa có ai quyên góp cho bài này</string>
 </resources>

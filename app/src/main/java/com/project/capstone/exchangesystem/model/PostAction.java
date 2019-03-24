@@ -62,15 +62,21 @@ public class PostAction {
                                 intent.putExtra("itemId", response.body().getId());
                                 context.startActivity(intent);
                             } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                                 Log.i("PostAction", "item create null");
                             }
                         } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                             Log.i("PostAction", "item create error " + response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Item> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         Log.i("PostAction", "item create failed");
                     }
                 });
@@ -88,15 +94,21 @@ public class PostAction {
                                 Intent intent = new Intent(context, OwnInventory.class);
                                 context.startActivity(intent);
                             } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                                 Log.i("PostAction", "item update null");
                             }
                         } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                             Log.i("PostAction", "item update error " + response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         Log.i("PostAction", "item update failed");
                     }
                 });
@@ -110,10 +122,12 @@ public class PostAction {
 
         String content = donationPost.getContent();
         String address = donationPost.getAddress();
+        String title = donationPost.getTitle();
         final Map<String, Object> jsonBody = new HashMap<String, Object>();
 
         jsonBody.put("content", content);
         jsonBody.put("address", address);
+        jsonBody.put("title", title);
 //        jsonBody.put("urls", urlList);
 
         if (authorization != null) {
@@ -126,21 +140,27 @@ public class PostAction {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 progressDialog.dismiss();
+                                Toast.makeText(context, "Đăng bài thành công.", Toast.LENGTH_LONG).show();
                                 Log.i("PostAction", "donation added");
-                                //go to update screen
-                                Intent intent = new Intent(context, UpdateDonationPostActivity.class);
-                                intent.putExtra("donationPostId", response.body().getId());
+                                //go to main screen
+                                Intent intent = new Intent(context, MainActivity.class);
                                 context.startActivity(intent);
                             } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                                 Log.i("PostAction", "donation create null");
                             }
                         } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                             Log.i("PostAction", "donation create error " + response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<DonationPost> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         Log.i("PostAction", "donation create failed");
                     }
                 });
@@ -155,18 +175,25 @@ public class PostAction {
                             if (response.body() != null) {
                                 Log.i("PostAction", "donation updated");
                                 //go to main
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(context, MainActivity.class);
                                 context.startActivity(intent);
                             } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                                 Log.i("PostAction", "donation update null");
                             }
                         } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                             Log.i("PostAction", "donation update error " + response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         Log.i("PostAction", "donation update failed");
                     }
                 });
@@ -178,6 +205,7 @@ public class PostAction {
         progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Đang tải dữ liệu...");
         progressDialog.setMessage("Vui lòng chờ...");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }
 
