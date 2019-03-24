@@ -23,6 +23,9 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class TransactionDetailActivity extends AppCompatActivity {
     RecyclerView itemsMe, itemsYou;
     ArrayList<Item> inventoryMe, inventoryYou;
@@ -117,5 +120,32 @@ public class TransactionDetailActivity extends AppCompatActivity {
     public void toMain(View view) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    private void toUpdateTransaction(View view) {
+        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        int idMeUpdate = sharedPreferences.getInt("userId", 0);
+        int idYouUpdate = 0;
+
+        Intent intent = this.getIntent();
+        final TransactionRequestWrapper transactionRequestWrapper = (TransactionRequestWrapper) intent.getSerializableExtra("transactionDetail");
+        Transaction informationTransaction = transactionRequestWrapper.getTransaction();
+        if (informationTransaction.getSender().getId() == idMeUpdate) {
+            idYouUpdate = informationTransaction.getReceiver().getId();
+        } else {
+            idYouUpdate = informationTransaction.getSender().getId();
+        }
+
+        ArrayList<Item> itemsMe = itemMeAdapter.getfilter();
+        ArrayList<Item> itemsYou = itemYouAdapter.getfilter();
+
+        intent = new Intent(this, UpdateTransactionActivity.class);
+        intent.putExtra("itemsMeUpdate", itemsMe);
+        intent.putExtra("itemsYouUpdate", itemsYou);
+        intent.putExtra("idMeUpdate", idMeUpdate);
+        intent.putExtra("idYouUpdate", idYouUpdate);
+
+        startActivity(intent);
+
     }
 }
