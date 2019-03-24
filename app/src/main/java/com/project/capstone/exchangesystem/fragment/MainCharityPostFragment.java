@@ -90,20 +90,6 @@ public class MainCharityPostFragment extends Fragment {
         donationPosts = new ArrayList<>();
         mainCharityPostAdapter = new MainCharityPostAdapter(view.getContext(), donationPosts);
         listView.setAdapter(mainCharityPostAdapter);
-//        listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(getContext(), "aaaa", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
-//                intent.putExtra("descriptionDonationPost", donationPosts.get(position));
-//                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
 
         LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         footerView = layoutInflater.inflate(R.layout.progressbar, null);
@@ -131,7 +117,6 @@ public class MainCharityPostFragment extends Fragment {
         listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "aaaa", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
                 intent.putExtra("descriptionDonationPost", donationPosts.get(position));
                 startActivity(intent);

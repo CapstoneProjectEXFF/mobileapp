@@ -126,12 +126,13 @@ public class TransactionConfirmActivity extends AppCompatActivity {
 
         List<TransactionDetail> itemTrade = transactionRequestWrapper.getDetails();
         for (int i = 0; i < itemTrade.size(); i++) {
-            if (itemTrade.get(i).getUserId() == youID) {
-                inventoryYou.add(itemTrade.get(i).getItem());
-                itemYouAdapter.notifyDataSetChanged();
-            } else {
+//            Integer.valueOf()
+            if (itemTrade.get(i).getUserId().toString().equals(Integer.valueOf(meID).toString())) {
                 inventoryMe.add(itemTrade.get(i).getItem());
                 itemMeAdapter.notifyDataSetChanged();
+            } else {
+                inventoryYou.add(itemTrade.get(i).getItem());
+                itemYouAdapter.notifyDataSetChanged();
             }
 
 

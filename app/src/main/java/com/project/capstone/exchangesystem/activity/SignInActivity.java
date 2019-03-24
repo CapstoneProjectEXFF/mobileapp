@@ -122,8 +122,11 @@ public class SignInActivity extends AppCompatActivity {
                                 String status = (String) userInfo.get("status");
                                 System.out.println("test " + status);
 
-                                String avatar = (String) userInfo.get("avatar");
-                                System.out.println(avatar);
+                                String avatar = "";
+                                if (userInfo.containsKey("avatar")) {
+                                    avatar = avatar + (String) userInfo.get("avatar");
+                                    System.out.println(avatar);
+                                }
 
                                 //TODO hardcode status
                                 if (status.equals(USER_ENABLE)) {
