@@ -1,5 +1,7 @@
 package com.project.capstone.exchangesystem.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,6 +23,8 @@ public class Image implements Serializable {
     @SerializedName("donationPostId")
     @Expose
     private Integer donationPostId;
+
+    private Uri uri;
 
     public int getId() {
         return id;
@@ -54,10 +58,20 @@ public class Image implements Serializable {
         this.donationPostId = donationPostId;
     }
 
+    public Uri getUri() {
+        return uri;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
     public Image(int id, String url, Integer itemId, Integer donationPostId) {
         this.id = id;
         this.url = url;
         this.itemId = itemId;
         this.donationPostId = donationPostId;
     }
+
+    public Image(){};
 }

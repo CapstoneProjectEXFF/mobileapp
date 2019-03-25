@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,14 +15,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.PostAction;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -36,40 +43,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static com.project.capstone.exchangesystem.constants.AppStatus.ADD_IMAGE_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.CAMERA_REQUEST;
-import static com.project.capstone.exchangesystem.constants.AppStatus.CHANGE_IMAGE_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.DONATION_UPDATE_ACTION;
-import static com.project.capstone.exchangesystem.constants.AppStatus.EXTERNAL_STORAGE_REQUEST;
-import static com.project.capstone.exchangesystem.constants.AppStatus.GALLERY_REQUEST;
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class UpdateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private static final int GALLERY_REQUEST = 2;
-    private static final String TITLE = "Chỉnh sửa bài viết";
-    private final int IMAGE_SIZE = 160;
-    private final int IMAGE_MARGIN_TOP_RIGHT = 10;
-    private final int ADD_IMAGE_FLAG = 1;
-    private final int CHANGE_IMAGE_FLAG = 0;
-    TextView txtTitle, btnUpdate, txtError;
+    TextView txtError;
     RmaAPIService rmaAPIService;
-    List<String> urlList;
-    List<Integer> imageIdList, removedImages;
-    List<ImageView> imageList;
-    Button btnAddImage;
-    ImageView tmpImage;
-    EditText edtContent, edtAddress;
+    List<Integer> removedImageIds;
+    LinearLayout btnAddImage;
+    EditText edtContent, edtAddress, edtTitle;
     Context context;
-    String authorization;
-    int donationPostId, onClickFlag = -1, selectedPosition;
+    String authorization, donationPostTitle;
+    int donationPostId, onClickFlag = -1;
     SharedPreferences sharedPreferences;
-
-    List<Uri> selectedImages;
-
-    GridLayout gridLayout;
     FirebaseImg firebaseImg;
-
+    ProgressDialog progressDialog;
     Toolbar toolbar;
+    ImageAdapter imageAdapter;
+    ArrayList<Image> imageList, tmpImageList;
+    Image tmpImage;
+    RecyclerView rvSelectedImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,36 +71,38 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
         context = this;
         getComponents();
         setToolbar();
-
-        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
-
-        imageList = new ArrayList<>();
-        urlList = new ArrayList<>();
-        imageIdList = new ArrayList<>();
-        removedImages = new ArrayList<>();
-        //list uri
-        selectedImages = new ArrayList<>();
-
-        Intent intent = getIntent();
-        donationPostId = intent.getIntExtra("donationPostId", 0);
-
+        setImageAdapter();
         loadDonationPost();
-
-        firebaseImg = new FirebaseImg();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
 
+    private void setImageAdapter() {
+        imageAdapter = new ImageAdapter(getApplicationContext(), imageList, new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Image image) {
+                tmpImage = image;
+                onClickFlag = CHANGE_IMAGE_FLAG;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(CHANGE_IMAGE_FLAG);
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+        rvSelectedImages.setHasFixedSize(true);
+        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 4));
+        rvSelectedImages.setAdapter(imageAdapter);
+    }
+
     private void setToolbar() {
-        toolbar.setTitle(TITLE);
+        toolbar.setTitle(R.string.title_edit_donationPost);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -141,106 +136,84 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     private void setDonationPostData(String address, String content) {
         DonationPost donationPost = new DonationPost();
         donationPost.setId(donationPostId);
+        donationPost.setTitle(donationPostTitle);
         donationPost.setContent(content);
         donationPost.setAddress(address);
-        donationPost.setImageIds(removedImages);
+        donationPost.setImageIds(removedImageIds);
 
-        selectedImages.removeAll(Collections.singleton(null));
-        if (selectedImages.size() != 0){
-            firebaseImg.uploadImagesToFireBase(context, selectedImages, null, donationPost, null, authorization, DONATION_UPDATE_ACTION, null);
+        List<Uri> listUri = new ArrayList<>();
+        for (int i = 0; i < imageList.size(); i++){
+            if (imageList.get(i).getUri() != null){
+                listUri.add(imageList.get(i).getUri());
+            }
+        }
+        if (listUri.size() != 0){
+            firebaseImg.uploadImagesToFireBase(context, listUri, null, donationPost, null, authorization, ITEM_UPDATE_ACTION, null);
         } else {
-            new PostAction().manageDonation(donationPost, null, authorization, context, DONATION_UPDATE_ACTION);
+            List<String> listUrl = new ArrayList<>();
+            new PostAction().manageDonation(donationPost, listUrl, authorization, context, DONATION_UPDATE_ACTION);
         }
     }
 
     private void notifyError(int addressLength, int contentLength) {
         if (addressLength == 0){
-            edtAddress.setHint("Vui lòng nhập địa chỉ");
+            edtAddress.setHint(R.string.error_input_address);
             edtAddress.setHintTextColor(Color.RED);
         }
         if (contentLength == 0){
-            txtError.setText("Bạn chưa nhập nội dung");
+            txtError.setText(R.string.error_input_content);
             txtError.setVisibility(View.VISIBLE);
         }
     }
 
     private void loadDonationPost() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
         if (authorization != null) {
             rmaAPIService.getDonationPostById(authorization, donationPostId).enqueue(new Callback<DonationPost>() {
                 @Override
                 public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
+                            edtTitle.setText(response.body().getTitle());
+                            donationPostTitle = response.body().getTitle();
+                            edtTitle.setEnabled(false);
                             edtContent.setText(response.body().getContent());
                             edtAddress.setText(response.body().getAddress());
-                            for (int i = 0; i < response.body().getImages().size(); i++){
-                                urlList.add(response.body().getImages().get(i).getUrl());
-                                selectedImages.add(null);
-                                imageIdList.add(response.body().getImages().get(i).getId());
-                                createImageView();
+                            for (int i = 0; i < response.body().getImages().size(); i++) {
+                                Image newImage = new Image();
+                                newImage.setUrl(response.body().getImages().get(i).getUrl());
+                                newImage.setId(response.body().getImages().get(i).getId());
+                                tmpImageList.add(newImage);
                             }
+                            imageAdapter.setfilter(tmpImageList);
+                            rvSelectedImages.setVisibility(View.VISIBLE);
+                            progressDialog.dismiss();
                         } else {
-                            Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
+                            notifyLoadingError("loadDonationPost", "httpstatus " + response.code());
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "" + response.code(), Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Failed 1", Toast.LENGTH_LONG).show();
+                        notifyLoadingError("loadDonationPost", "cannot load donation post");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<DonationPost> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Cannot load", Toast.LENGTH_LONG).show();
+                    notifyLoadingError("loadDonationPost", "failed on calling API");
                 }
             });
         }
     }
 
-    private void createImageView() {
-        gridLayout = (GridLayout) findViewById(R.id.imageGrid);
-        final ImageView imageView = new ImageView(this);
-
-        //set image
-        if (onClickFlag == -1) {
-            Picasso.with(getApplicationContext()).load(urlList.get(urlList.size() - 1))
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
-                    .into(imageView);
-        } else {
-            try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedImages.size() - 1));
-                imageView.setImageBitmap(bmp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickFlag = CHANGE_IMAGE_FLAG;
-                tmpImage = imageView;
-                selectedPosition = imageList.indexOf(imageView);
-                ImageOptionDialog optionDialog = new ImageOptionDialog();
-                optionDialog.show(getSupportFragmentManager(), "optionDialog");
-            }
-        });
-
-        imageList.add(imageView);
-        gridLayout.addView(imageList.get(imageList.size() - 1));
-
-        ViewGroup.LayoutParams layoutParams = imageList.get(imageList.size() - 1).getLayoutParams();
-        layoutParams.height = IMAGE_SIZE;
-        layoutParams.width = IMAGE_SIZE;
-
-        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(layoutParams);
-        marginLayoutParams.bottomMargin = IMAGE_MARGIN_TOP_RIGHT;
-        marginLayoutParams.rightMargin = IMAGE_MARGIN_TOP_RIGHT;
-        imageView.setLayoutParams(layoutParams);
-
-        if (imageList.size() == 10) {
-            btnAddImage.setEnabled(false);
-        }
+    private void notifyLoadingError(String tag, String msg) {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+        Log.i(tag, msg);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     private void getImageFromGallery() {
@@ -259,61 +232,59 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK && data != null){
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            selectedImages.add(data.getClipData().getItemAt(i).getUri());
-                            createImageView();
+                            Image newImage = new Image();
+                            newImage.setUri(data.getClipData().getItemAt(i).getUri());
+                            tmpImageList.add(newImage);
                         }
+                        imageAdapter.setfilter(tmpImageList);
                     } else {
-                        selectedImages.add(data.getData());
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getData() != null) {
-                        selectedImages.set(selectedPosition, data.getData());
-
-                        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
-                            removedImages.add(imageIdList.get(selectedPosition));
-                            imageIdList.set(selectedPosition, -1);
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        if (tmpImage.getUri() == null) {
+                            removedImageIds.add(tmpImage.getId());
+                            firebaseImg.deleteImageOnFirebase(tmpImage.getUrl());
                         }
-
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        int position = tmpImageList.indexOf(tmpImage);
+                        tmpImageList.set(position, newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.add(uri);
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.set(selectedPosition, uri);
-
-                        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
-                            removedImages.add(imageIdList.get(selectedPosition));
-                            imageIdList.set(selectedPosition, -1);
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        if (tmpImage.getUri() == null) {
+                            removedImageIds.add(tmpImage.getId());
+                            firebaseImg.deleteImageOnFirebase(tmpImage.getUrl());
                         }
-
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        int position = tmpImageList.indexOf(tmpImage);
+                        tmpImageList.set(position, newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             }
+            rvSelectedImages.setVisibility(View.VISIBLE);
         }
     }
 
@@ -326,16 +297,24 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void getComponents() {
-//        txtTitle = findViewById(R.id.txtTitle);
-//        txtTitle.setText("Chỉnh sửa bài viết");
         txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
-//        btnUpdate = findViewById(R.id.btnConfirm);
-//        btnUpdate.setText("Lưu");
-        btnAddImage = findViewById(R.id.btnAddImage);
         rmaAPIService = RmaAPIUtils.getAPIService();
         toolbar = findViewById(R.id.tbToolbar);
+        toolbar = findViewById(R.id.tbToolbar);
+        rvSelectedImages = findViewById(R.id.rvSelectedImages);
+        imageList = new ArrayList<>();
+        tmpImageList = new ArrayList<>();
+        removedImageIds = new ArrayList<>();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        firebaseImg = new FirebaseImg();
+        edtTitle = findViewById(R.id.edtTitle);
+        btnAddImage = findViewById(R.id.btnAddImage);
+
+        Intent intent = getIntent();
+        donationPostId = intent.getIntExtra("donationPostId", 0);
     }
 
     @Override
@@ -396,12 +375,12 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void removeImage() {
-        selectedImages.remove(selectedPosition);
-        imageList.remove(selectedPosition);
-        if (selectedPosition < imageIdList.size() && imageIdList.get(selectedPosition) != -1){
-            removedImages.add(imageIdList.get(selectedPosition));
-            imageIdList.set(selectedPosition, -1);
+        removedImageIds.add(tmpImage.getId());
+        firebaseImg.deleteImageOnFirebase(tmpImage.getUrl());
+        tmpImageList.remove(tmpImage);
+        imageAdapter.setfilter(tmpImageList);
+        if (imageList.size() == 0){
+            rvSelectedImages.setVisibility(View.GONE);
         }
-        gridLayout.removeView(tmpImage);
     }
 }

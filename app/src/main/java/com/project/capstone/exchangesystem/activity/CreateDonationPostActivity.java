@@ -14,43 +14,47 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
+
+import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
+import com.project.capstone.exchangesystem.model.Image;
+import com.project.capstone.exchangesystem.model.ImageHandler;
 import com.project.capstone.exchangesystem.model.PostAction;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private final String TITLE = "Tạo bài viết mới";
-
-    TextView txtTitle, btnAdd, txtError;
-    Button btnAddImage;
-    ImageView tmpImage;
-    EditText edtContent, edtAddress;
+    TextView txtError;
+    LinearLayout btnAddImage;
+    EditText edtContent, edtAddress, edtTitle;
     Context context;
     String authorization;
     SharedPreferences sharedPreferences;
-    List<String> urlList;
-    List<Uri> selectedImages;
-    List<ImageView> imageList;
-    int onClickFlag, selectedPosition;
-    GridLayout gridLayout;
+    int onClickFlag;
     FirebaseImg firebaseImg;
 
     Toolbar toolbar;
+    ImageAdapter imageAdapter;
+    ArrayList<Image> imageList, tmpImageList;
+    Image tmpImage;
+    RecyclerView rvSelectedImages;
+    List<Uri> listUri;
+
+//    ImageHandler imageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,29 +63,37 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         context = this;
         getComponents();
         setToolbar();
-
-        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
-
-        imageList = new ArrayList<>();
-        urlList = new ArrayList<>();
-        //list uri
-        selectedImages = new ArrayList<>();
-
-        firebaseImg = new FirebaseImg();
+        setImageAdapter();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
 
+    private void setImageAdapter() {
+        imageAdapter = new ImageAdapter(getApplicationContext(), imageList, new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Image image) {
+                tmpImage = image;
+                onClickFlag = CHANGE_IMAGE_FLAG;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(CHANGE_IMAGE_FLAG);
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+        rvSelectedImages.setHasFixedSize(true);
+        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 4));
+        rvSelectedImages.setAdapter(imageAdapter);
+    }
+
     private void setToolbar() {
-        toolbar.setTitle(TITLE);
+        toolbar.setTitle(R.string.title_create_donationPost);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -102,36 +114,46 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     public boolean onOptionsItemSelected(MenuItem item) {
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0){
-            notifyError(address.trim().length(), content.trim().length());
+        String title = edtTitle.getText().toString();
+        if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0){
+            notifyError(address.trim().length(), content.trim().length(), title.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
-                setDonationPostData(address, content);
+                setDonationPostData(address, content, title);
             }
         }
         return true;
     }
 
-    private void setDonationPostData(String address, String content) {
+    private void setDonationPostData(String address, String content, String title) {
         DonationPost newPost = new DonationPost();
         newPost.setAddress(address);
         newPost.setContent(content);
-        if (selectedImages.size() != 0){
-            firebaseImg.uploadImagesToFireBase(context, selectedImages, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
+        newPost.setTitle(title);
+        if (imageList.size() != 0){
+            listUri = new ArrayList<>();
+            for (int i = 0; i < imageList.size(); i++){
+                listUri.add(imageList.get(i).getUri());
+            }
+            firebaseImg.uploadImagesToFireBase(context, listUri, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
         } else {
-            new PostAction().manageDonation(newPost, null, authorization, context, DONATION_CREATE_ACTION);
+            List<String> listUrl = new ArrayList<>();
+            new PostAction().manageDonation(newPost, listUrl, authorization, context, DONATION_CREATE_ACTION);
         }
-
     }
 
-    private void notifyError(int addressLength, int contentLength) {
+    private void notifyError(int addressLength, int contentLength, int titleLength) {
         if (addressLength == 0){
-            edtAddress.setHint("Vui lòng nhập địa chỉ");
+            edtAddress.setHint(R.string.error_input_address);
             edtAddress.setHintTextColor(Color.RED);
         }
         if (contentLength == 0){
-            txtError.setText("Bạn chưa nhập nội dung");
+            txtError.setText(R.string.error_input_content);
             txtError.setVisibility(View.VISIBLE);
+        }
+        if (titleLength == 0){
+            edtTitle.setText(R.string.error_input_title);
+            edtTitle.setHintTextColor(Color.RED);
         }
     }
 
@@ -157,44 +179,43 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            selectedImages.add(data.getClipData().getItemAt(i).getUri());
-                            createImageView();
+                            Image newImage = new Image();
+                            newImage.setUri(data.getClipData().getItemAt(i).getUri());
+                            tmpImageList.add(newImage);
                         }
+                        imageAdapter.setfilter(tmpImageList);
                     } else {
-                        selectedImages.add(data.getData());
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getData() != null) {
-                        selectedImages.set(selectedPosition, data.getData());
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        tmpImageList.set(tmpImageList.indexOf(tmpImage), newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.add(uri);
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.set(selectedPosition, uri);
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        tmpImageList.set(tmpImageList.indexOf(tmpImage), newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             }
+            rvSelectedImages.setVisibility(View.VISIBLE);
         }
     }
 
@@ -206,52 +227,20 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         return Uri.parse(path);
     }
 
-    private void createImageView() {
-        gridLayout = (GridLayout) findViewById(R.id.imageGrid);
-        final ImageView imageView = new ImageView(this);
-
-        //set image
-        try {
-            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedImages.size() - 1));
-            imageView.setImageBitmap(bmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickFlag = CHANGE_IMAGE_FLAG;
-                tmpImage = imageView;
-                selectedPosition = imageList.indexOf(imageView);
-                ImageOptionDialog optionDialog = new ImageOptionDialog();
-                optionDialog.show(getSupportFragmentManager(), "optionDialog");
-            }
-        });
-
-        imageList.add(imageView);
-        gridLayout.addView(imageList.get(imageList.size() - 1));
-
-        ViewGroup.LayoutParams layoutParams = imageList.get(imageList.size() - 1).getLayoutParams();
-        layoutParams.height = IMAGE_SIZE;
-        layoutParams.width = IMAGE_SIZE;
-
-        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(layoutParams);
-        marginLayoutParams.bottomMargin = IMAGE_MARGIN_TOP_RIGHT;
-        marginLayoutParams.rightMargin = IMAGE_MARGIN_TOP_RIGHT;
-        imageView.setLayoutParams(layoutParams);
-
-        if (imageList.size() == 10) {
-            btnAddImage.setEnabled(false);
-        }
-    }
-
     private void getComponents() {
         txtError = findViewById(R.id.txtError);
         edtContent = findViewById(R.id.edtContent);
         edtAddress = findViewById(R.id.edtAddress);
         btnAddImage = findViewById(R.id.btnAddImage);
         toolbar = findViewById(R.id.tbToolbar);
+        rvSelectedImages = findViewById(R.id.rvSelectedImages);
+        imageList = new ArrayList<>();
+        tmpImageList = new ArrayList<>();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        firebaseImg = new FirebaseImg();
+        edtTitle = findViewById(R.id.edtTitle);
+        //        imageHandler = new ImageHandler();
     }
 
     @Override
@@ -259,9 +248,19 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         switch (choice) {
             case 0:
                 getImageFromGallery();
+//                imageHandler.getImageFromGallery(onClickFlag, tmpImageList, imageAdapter, tmpImage);
+//                tmpImageList = imageAdapter.getfilter();
+//                if (tmpImageList.size() > 0){
+//                    rvSelectedImages.setVisibility(View.VISIBLE);
+//                }
                 break;
             case 1:
                 takePhoto();
+//                imageHandler.takePhoto(getApplicationContext());
+//                tmpImageList = imageAdapter.getfilter();
+//                if (tmpImageList.size() > 0){
+//                    rvSelectedImages.setVisibility(View.VISIBLE);
+//                }
                 break;
             case 2:
                 removeImage();
@@ -312,8 +311,10 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void removeImage() {
-        selectedImages.remove(selectedPosition);
-        imageList.remove(selectedPosition);
-        gridLayout.removeView(tmpImage);
+        tmpImageList.remove(tmpImage);
+        imageAdapter.setfilter(tmpImageList);
+        if (imageList.size() == 0){
+            rvSelectedImages.setVisibility(View.GONE);
+        }
     }
 }

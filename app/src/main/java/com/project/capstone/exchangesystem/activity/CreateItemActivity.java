@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,15 +15,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.Category;
 import com.project.capstone.exchangesystem.model.Item;
@@ -39,27 +46,24 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    private final String PRIVACY_PUBLIC = "Công khai";
-    private final String PRIVACY_FRIENDS = "Bạn bè";
-    private final String TITLE = "Thêm món đồ mới";
-
-    TextView txtTitle, btnAdd, txtError, btnCancel;
+    TextView txtError;
     Spinner spCategory;
-    Button btnAddImage;
-    ImageView tmpImage;
+    LinearLayout btnAddImage;
     EditText edtItemName, edtItemDes, edtItemAddress;
     Spinner spPrivacy;
     Context context;
     String authorization;
     SharedPreferences sharedPreferences;
-    List<String> categoryList, privacyList, urlList;
-    List<Uri> selectedImages;
-    List<ImageView> imageList;
-    int onClickFlag, selectedPosition;
-    GridLayout gridLayout;
+    List<String> categoryList, privacyList;
+    int onClickFlag;
     FirebaseImg firebaseImg;
     RmaAPIService rmaAPIService;
+    ProgressDialog progressDialog;
     Toolbar toolbar;
+    ImageAdapter imageAdapter;
+    ArrayList<Image> imageList, tmpImageList;
+    Image tmpImage;
+    RecyclerView rvSelectedImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,32 +72,41 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         context = this;
         getComponents();
         setToolbar();
-
-        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
-
-        imageList = new ArrayList<>();
-        urlList = new ArrayList<>();
-        //list uri
-        selectedImages = new ArrayList<>();
-
+        setImageAdapter();
         getAllCategory();
         getAllPrivacy();
 
-        firebaseImg = new FirebaseImg();
+
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClickFlag = ADD_IMAGE_FLAG;
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
             }
         });
     }
 
+    private void setImageAdapter() {
+        imageAdapter = new ImageAdapter(getApplicationContext(), imageList, new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Image image) {
+                tmpImage = image;
+                onClickFlag = CHANGE_IMAGE_FLAG;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(CHANGE_IMAGE_FLAG);
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+        rvSelectedImages.setHasFixedSize(true);
+        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 4));
+        rvSelectedImages.setAdapter(imageAdapter);
+    }
+
     private void setToolbar() {
-        toolbar.setTitle(TITLE);
+        toolbar.setTitle(R.string.title_create_item);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -115,7 +128,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         String itemName = edtItemName.getText().toString();
         String itemAddress = edtItemAddress.getText().toString();
         String itemDes = edtItemDes.getText().toString();
-        if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() == 0) {
+        if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() == 0 || imageList.size() == 0) {
             notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -132,21 +145,28 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         item.setDescription(itemDes);
         item.setPrivacy("" + spPrivacy.getSelectedItemPosition());
         item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
-        firebaseImg.uploadImagesToFireBase(context, selectedImages, item, null, null, authorization, ITEM_CREATE_ACTION, null);
+        List<Uri> listUri = new ArrayList<>();
+        for (int i = 0; i < imageList.size(); i++){
+            listUri.add(imageList.get(i).getUri());
+        }
+        firebaseImg.uploadImagesToFireBase(context, listUri, item, null, null, authorization, ITEM_CREATE_ACTION, null);
     }
 
     private void notifyError(int nameLength, int addressLength, int desLength) {
         if (nameLength == 0) {
-            edtItemName.setHint("Bạn chưa điền tên đồ dùng");
+            edtItemName.setHint(R.string.error_input_itemName);
             edtItemName.setHintTextColor(Color.RED);
         }
         if (addressLength == 0) {
-            edtItemAddress.setHint("Bạn chưa điền địa chỉ");
+            edtItemAddress.setHint(R.string.error_input_address);
             edtItemAddress.setHintTextColor(Color.RED);
         }
         if (desLength == 0) {
-            txtError.setText("Bạn chưa thêm mô tả đồ dùng");
+            txtError.setText(R.string.error_input_itemDesciption);
             txtError.setVisibility(View.VISIBLE);
+        }
+        if (imageList.size() == 0){
+            Toast.makeText(getApplicationContext(), R.string.error_input_image, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -172,44 +192,43 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            selectedImages.add(data.getClipData().getItemAt(i).getUri());
-                            createImageView();
+                            Image newImage = new Image();
+                            newImage.setUri(data.getClipData().getItemAt(i).getUri());
+                            tmpImageList.add(newImage);
                         }
+                        imageAdapter.setfilter(tmpImageList);
                     } else {
-                        selectedImages.add(data.getData());
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getData() != null) {
-                        selectedImages.set(selectedPosition, data.getData());
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Image newImage = new Image();
+                        newImage.setUri(data.getData());
+                        tmpImageList.set(tmpImageList.indexOf(tmpImage), newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.add(uri);
-                        createImageView();
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        tmpImageList.add(newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 } else if (onClickFlag == CHANGE_IMAGE_FLAG) {
                     if (data.getExtras() != null) {
-                        Uri uri = getUriFromCaptureImage(data);
-                        selectedImages.set(selectedPosition, uri);
-                        try {
-                            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedPosition));
-                            tmpImage.setImageBitmap(bmp);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Image newImage = new Image();
+                        newImage.setUri(getUriFromCaptureImage(data));
+                        tmpImageList.set(tmpImageList.indexOf(tmpImage), newImage);
+                        imageAdapter.setfilter(tmpImageList);
                     }
                 }
             }
+            rvSelectedImages.setVisibility(View.VISIBLE);
         }
     }
 
@@ -222,46 +241,50 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void getAllCategory() {
-        Toast.makeText(getApplicationContext(), "getAllCategory", Toast.LENGTH_LONG).show();
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
         rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                Toast.makeText(getApplicationContext(), "Test category!!!!!", Toast.LENGTH_LONG).show();
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         List<Category> result = response.body();
                         categoryList = new ArrayList<>();
                         for (int i = 0; i < result.size(); i++) {
                             categoryList.add(result.get(i).getName());
-                            System.out.println("Cate 1: " + categoryList.get(i));
                         }
-                        Toast.makeText(getApplicationContext(), "list size " + categoryList.size(), Toast.LENGTH_LONG).show();
                         setDataForSpinner(spCategory, categoryList);
+                        progressDialog.dismiss();
                     } else {
-                        System.out.println("httpstatus " + response.code());
-                        Toast.makeText(getApplicationContext(), "body null", Toast.LENGTH_LONG).show();
+                        notifyLoadingError("loadCategory", "httpstatus" + response.code());
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Failed category", Toast.LENGTH_LONG).show();
+                    notifyLoadingError("loadCategory", "cannot load category");
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                System.out.println("Fail");
-                Toast.makeText(getApplicationContext(), "AAAAAAAAAAA", Toast.LENGTH_LONG).show();
+                notifyLoadingError("loadCategory", "failed on calling API");
             }
         });
 
 
     }
 
+    private void notifyLoadingError(String tag, String msg) {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+        Log.i(tag, msg);
+        Intent intent = new Intent(getApplicationContext(), OwnInventory.class);
+        startActivity(intent);
+    }
+
     private void getComponents() {
-//        txtTitle = findViewById(R.id.txtTitle);
-//        txtTitle.setText("Thêm món đồ mới");
         txtError = findViewById(R.id.txtError);
-//        btnAdd = findViewById(R.id.btnConfirm);
-//        btnAdd.setText("Hoàn thành");
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
@@ -271,56 +294,19 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         rmaAPIService = RmaAPIUtils.getAPIService();
         spCategory = findViewById(R.id.spCategory);
         spCategory.setPopupBackgroundResource(R.color.white);
-//        btnCancel = findViewById(R.id.btnCancel);
-
         toolbar = findViewById(R.id.tbToolbar);
-    }
-
-    private void createImageView() {
-
-        gridLayout = (GridLayout) findViewById(R.id.imageGrid);
-        final ImageView imageView = new ImageView(this);
-
-        //set image
-        try {
-            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImages.get(selectedImages.size() - 1));
-            imageView.setImageBitmap(bmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickFlag = CHANGE_IMAGE_FLAG;
-                tmpImage = imageView;
-                selectedPosition = imageList.indexOf(imageView);
-                ImageOptionDialog optionDialog = new ImageOptionDialog();
-                optionDialog.show(getSupportFragmentManager(), "optionDialog");
-            }
-        });
-
-        imageList.add(imageView);
-        gridLayout.addView(imageList.get(imageList.size() - 1));
-
-        ViewGroup.LayoutParams layoutParams = imageList.get(imageList.size() - 1).getLayoutParams();
-        layoutParams.height = IMAGE_SIZE;
-        layoutParams.width = IMAGE_SIZE;
-
-        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(layoutParams);
-        marginLayoutParams.bottomMargin = IMAGE_MARGIN_TOP_RIGHT;
-        marginLayoutParams.rightMargin = IMAGE_MARGIN_TOP_RIGHT;
-        imageView.setLayoutParams(layoutParams);
-
-        if (imageList.size() == 10) {
-            btnAddImage.setEnabled(false);
-        }
+        rvSelectedImages = findViewById(R.id.rvSelectedImages);
+        imageList = new ArrayList<>();
+        tmpImageList = new ArrayList<>();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        firebaseImg = new FirebaseImg();
     }
 
     private void getAllPrivacy() {
         privacyList = new ArrayList<>();
-        privacyList.add(PRIVACY_PUBLIC);
-        privacyList.add(PRIVACY_FRIENDS);
+        privacyList.add(getString(R.string.privacy_public));
+        privacyList.add(getString(R.string.privacy_friends));
         setDataForSpinner(spPrivacy, privacyList);
     }
 
@@ -388,8 +374,10 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void removeImage() {
-        selectedImages.remove(selectedPosition);
-        imageList.remove(selectedPosition);
-        gridLayout.removeView(tmpImage);
+        tmpImageList.remove(tmpImage);
+        imageAdapter.setfilter(tmpImageList);
+        if (imageList.size() == 0){
+            rvSelectedImages.setVisibility(View.GONE);
+        }
     }
 }
