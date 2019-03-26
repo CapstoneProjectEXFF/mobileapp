@@ -32,16 +32,25 @@ public class UpdateTransactionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
+        direct();
     }
 
     private void direct() {
         recyclerviewMe = findViewById(R.id.recyclerviewMe);
         recyclerviewYou = findViewById(R.id.recyclerviewYou);
 
+        choosedMe = new ArrayList<>();
+        choosedYou = new ArrayList<>();
+
+        itemIdsMe = new ArrayList<>();
+        itemIdsYou = new ArrayList<>();
+
         choosedMe = (ArrayList<Item>) getIntent().getSerializableExtra("itemsMeUpdate");
         for (int i = 0; i < choosedMe.size(); i++) {
             itemIdsMe.add(String.valueOf(choosedMe.get(i).getId()));
         }
+
+        System.out.println("test size" + choosedMe.size());
 //        saveArrayList(itemIdsMe, "itemMeIdList");
 
 
@@ -49,10 +58,14 @@ public class UpdateTransactionActivity extends AppCompatActivity {
         for (int i = 0; i < choosedYou.size(); i++) {
             itemIdsYou.add(String.valueOf(choosedYou.get(i).getId()));
         }
-        saveArrayList(itemIdsYou, "itemYouIdList");
+
+        System.out.println("test size choose you" + choosedYou.size());
+//        saveArrayList(itemIdsYou, "itemYouIdList");
 
         idMe = getIntent().getIntExtra("idMeUpdate", 0);
+        System.out.println("test id me in update transaction " + idMe);
         idYou = getIntent().getIntExtra("idYouUpdate", 0);
+        System.out.println("test id you in update transaction " + idYou);
 
 
         itemMeAdapter = new ItemAdapter(getApplicationContext(), choosedMe, new ItemAdapter.OnItemClickListener() {
@@ -110,6 +123,41 @@ public class UpdateTransactionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        idMe = getIntent().getIntExtra("idMeUpdate", 0);
+        System.out.println("test id me in update transaction " + idMe);
+        idYou = getIntent().getIntExtra("idYouUpdate", 0);
+        System.out.println("test id you in update transaction " + idYou);
+
+        if (requestCode == 3) {
+            try {
+
+                Bundle bundle = data.getExtras();
+                ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+                int id = data.getIntExtra("tempID", 0);
+                System.out.println("Test tempID " + id);
+                if (id == idMe) {
+                    System.out.println("test ID ME " + idMe);
+                    itemMeAdapter.setfilter(idChoose);
+                    itemIdsMe.clear();
+                    for (int i = 0; i < idChoose.size(); i++) {
+                        itemIdsMe.add(String.valueOf(idChoose.get(i).getId()));
+                    }
+                    saveArrayList(itemIdsMe, "itemMeIdList");
+                } else if (id == idYou) {
+                    System.out.println("test ID YOU " + idYou);
+                    itemYouAdapter.setfilter(idChoose);
+                    itemIdsYou.clear();
+                    for (int i = 0; i < idChoose.size(); i++) {
+                        itemIdsYou.add(String.valueOf(idChoose.get(i).getId()));
+                    }
+                    saveArrayList(itemIdsYou, "itemYouIdList");
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+
     }
 
     public ArrayList<String> getArrayList(String key) {
