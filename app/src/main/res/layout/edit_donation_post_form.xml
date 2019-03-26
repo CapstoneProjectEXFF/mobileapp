@@ -30,10 +30,22 @@
                 tools:layout_editor_absoluteX="8dp" />
 
             <EditText
-                android:id="@+id/edtAddress"
+                android:id="@+id/edtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/txt_nor_height"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/edt_whitebg"
+                android:hint="Tiêu đề"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="9dp"
+                android:textColor="#000000"
+                android:textColorHint="#808080"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/edtAddress"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/txt_nor_height"
                 android:background="@drawable/edt_whitebg"
                 android:hint="Địa chỉ"
                 android:paddingHorizontal="15dp"
@@ -58,7 +70,7 @@
             <EditText
                 android:id="@+id/edtContent"
                 android:layout_width="match_parent"
-                android:layout_height="498dp"
+                android:layout_height="550dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="top"
                 android:hint="Mô tả chi tiết"

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -101,5 +104,20 @@ public class FirebaseImg {
             });
         }
         return result[0];
+    }
+
+    public void deleteImageOnFirebase(String url){
+        StorageReference reference = firebaseStorage.getReferenceFromUrl(url);
+        reference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("deleteURLFirebase", "delete url on Firebase successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("deleteURLFirebase", "delete url on Firebase failed");
+            }
+        });
     }
 }

@@ -13,6 +13,10 @@ public class DonationPost implements Serializable {
     @Expose
     private int id;
 
+    @SerializedName("title")
+    @Expose
+    private String title;
+
     @SerializedName("content")
     @Expose
     private String content;
@@ -53,6 +57,14 @@ public class DonationPost implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {

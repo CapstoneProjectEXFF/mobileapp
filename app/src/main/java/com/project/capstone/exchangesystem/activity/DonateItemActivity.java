@@ -66,19 +66,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         context = this;
         getComponent();
         setToolbar();
-
-        itemAdapter = new ItemAdapter(getApplicationContext(), itemList, new ItemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Item item) {
-                tmpItem = item;
-                ImageOptionDialog optionDialog = new ImageOptionDialog();
-                optionDialog.setActivityFlag(DONATE_ACTIVITY_IMAGE_FLAG);
-                optionDialog.show(getSupportFragmentManager(), "optionDialog");
-            }
-        });
-        rvSelectedImages.setHasFixedSize(true);
-        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 2));
-        rvSelectedImages.setAdapter(itemAdapter);
+        setItemAdapter();
 
         btnAddImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +83,20 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         });
     }
 
+    private void setItemAdapter() {
+        itemAdapter = new ItemAdapter(getApplicationContext(), itemList, new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+                tmpItem = item;
+                ImageOptionDialog optionDialog = new ImageOptionDialog();
+                optionDialog.setActivityFlag(DONATE_ACTIVITY_IMAGE_FLAG);
+                optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+        rvSelectedImages.setHasFixedSize(true);
+        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 2));
+        rvSelectedImages.setAdapter(itemAdapter);
+    }
 
 
     @Override
@@ -137,7 +139,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Xảy ra lỗi! Vui lòng thử lại!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -162,14 +164,15 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     private void setNoti() {
         if (itemList.size() == 0){
             txtNoti.setVisibility(View.VISIBLE);
+            rvSelectedImages.setVisibility(View.GONE);
         } else {
             txtNoti.setVisibility(View.GONE);
+            rvSelectedImages.setVisibility(View.VISIBLE);
         }
     }
 
     private void setToolbar() {
-        //TODO SET DONATION POST TITLE
-        toolbar.setTitle("Quyên góp");
+        toolbar.setTitle(donationPost.getTitle());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -190,7 +193,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.btnConfirm) {
             if (itemList.size() == 0){
-                Toast.makeText(getApplicationContext(), "Vui lòng chọn đồ dùng", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.select_item_noti, Toast.LENGTH_LONG).show();
             } else {
                 createDonateTransaction();
             }

@@ -12,6 +12,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -42,10 +44,9 @@ import retrofit2.Response;
 public class DescriptionDonationPostActivity extends AppCompatActivity {
     Toolbar toolbar;
     ImageView imgUserDonation, imgDescriptionDonationPost;
-    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, btnDonators;
+    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators;
     ImageButton btnShare;
     Button btnDonate;
-    Dialog donatorsDialog;
 
     //share facebook
     CallbackManager callbackManager;
@@ -57,8 +58,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
 
     DonationPost donationPost;
     int userId;
-    ArrayList<Donator> donators;
+    ArrayList<Donator> donators, tmpDonators;
     DonatorAdapter donatorAdapter;
+    RecyclerView rvDonators;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_description_donation_post);
         direct();
-        ActionToolbar();
 
         Intent appLinkIntent = getIntent();
         Uri appLinkData = appLinkIntent.getData();
@@ -77,17 +78,42 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
             int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/donation-post.html?id=", ""));
             GetInformation(uriDonationPostId);
         }
+        showDonators();
+        ActionToolbar();
     }
 
     private void ActionToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle(donationPost.getTitle());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (userId == donationPost.getUser().getId()){
+            getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
+            menu.getItem(0).setTitle("Sửa bài viết");
+            menu.getItem(1).setTitle("Khóa bài viết");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.editpost) {
+            Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
+            intent.putExtra("donationPostId", donationPost.getId());
+            startActivity(intent);
+        }
+        return true;
     }
 
     private void direct() {
@@ -100,8 +126,13 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.descriptionDonationToolbar);
         btnShare = findViewById(R.id.btnShare);
         btnDonate = findViewById(R.id.btnDonate);
-        btnDonators = findViewById(R.id.btnDonators);
-        donatorsDialog = new Dialog(this);
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        userId = sharedPreferences.getInt("userId", 0);
+        txtNoDonators = findViewById(R.id.txtNoDonators);
+        rvDonators = findViewById(R.id.rvDonators);
+        tmpDonators = new ArrayList<>();
 
         //share facebook
         callbackManager = CallbackManager.Factory.create();
@@ -126,47 +157,22 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        btnDonators.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDonators();
-            }
-        });
-
-        rmaAPIService = RmaAPIUtils.getAPIService();
-        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
     }
 
     private void showDonators() {
-        ImageButton btnPopUpClose;
-        RecyclerView rvDonators;
-        donatorsDialog.setContentView(R.layout.donators_popup);
-        btnPopUpClose = donatorsDialog.findViewById(R.id.btnPopUpClose);
-        rvDonators = donatorsDialog.findViewById(R.id.rvDonators);
+        rvDonators = findViewById(R.id.rvDonators);
         donators = new ArrayList<>();
-        donatorAdapter = new DonatorAdapter(donatorsDialog.getContext(), donators, new DonatorAdapter.OnItemClickListener() {
+        donatorAdapter = new DonatorAdapter(getApplicationContext(), donators, new DonatorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Donator donator) {
                 //TODO VIEW USER'S PROFILE
-                Toast.makeText(donatorsDialog.getContext(), "" + donator.getDonatorName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "" + donator.getDonatorName(), Toast.LENGTH_LONG).show();
             }
         });
         rvDonators.setHasFixedSize(true);
         rvDonators.setLayoutManager(new GridLayoutManager(this, 1));
         rvDonators.setAdapter(donatorAdapter);
         loadDonators();
-
-        btnPopUpClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                donatorsDialog.dismiss();
-            }
-        });
-
-        donatorsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        donatorsDialog.show();
     }
 
     private void loadDonators() {
@@ -174,16 +180,15 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
             rmaAPIService.getTransactionByDonationPostId(donationPost.getId()).enqueue(new Callback<List<TransactionRequestWrapper>>() {
                 @Override
                 public void onResponse(Call<List<TransactionRequestWrapper>> call, Response<List<TransactionRequestWrapper>> response) {
-                    if (response != null){
-                        List<Donator> tmpDonators = new ArrayList<>();
-                        for (int i = 0; i < response.body().size(); i++){
+                    if (response.body() != null) {
+                        for (int i = 0; i < response.body().size(); i++) {
                             List<TransactionRequestWrapper> transactionList = response.body();
                             Donator donator = new Donator();
                             donator.setId(transactionList.get(i).getTransaction().getSenderId());
                             donator.setDonatorName(transactionList.get(i).getTransaction().getSender().getFullName());
                             donator.setAvatarUrl(transactionList.get(i).getTransaction().getSender().getAvatar());
                             List<String> itemNames = new ArrayList<>();
-                            for (int j = 0; j < transactionList.get(i).getDetails().size(); j++){
+                            for (int j = 0; j < transactionList.get(i).getDetails().size(); j++) {
                                 itemNames.add(transactionList.get(i).getDetails().get(j).getItem().getName());
                             }
                             donator.setItemNames(itemNames);
@@ -192,6 +197,10 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
                         donators.clear();
                         donators.addAll(tmpDonators);
                         donatorAdapter.notifyDataSetChanged();
+                        if (donators.size() > 0) {
+                            rvDonators.setVisibility(View.VISIBLE);
+                            txtNoDonators.setVisibility(View.GONE);
+                        }
                     }
                 }
 
@@ -239,18 +248,20 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         txtTimestampDonation.setText(donationPost.getCreateTime().toString());
         txtUserNameDonation.setText(donationPost.getUser().getFullName());
 
-        Picasso.with(getApplicationContext()).load(donationPost.getImages().get(0).getUrl())
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
-                .into(imgDescriptionDonationPost);
+        if (donationPost.getImages().size() > 0) {
+            Picasso.with(getApplicationContext()).load(donationPost.getImages().get(0).getUrl())
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imgDescriptionDonationPost);
+        }
 
         Picasso.with(getApplicationContext()).load(donationPost.getUser().getAvatar())
                 .placeholder(R.drawable.ic_no_image)
                 .error(R.drawable.ic_no_image)
                 .into(imgUserDonation);
-        userId = sharedPreferences.getInt("userId", 0);
-        if (userId != donationPost.getUser().getId()){
-            btnDonate.setVisibility(View.VISIBLE);
+
+        if (userId == donationPost.getUser().getId()){
+            btnDonate.setVisibility(View.GONE);
         }
     }
 }
