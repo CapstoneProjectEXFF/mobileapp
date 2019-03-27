@@ -175,6 +175,7 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         intent.putExtra("itemsYouUpdate", itemsYou);
         intent.putExtra("idMeUpdate", idMeUpdate);
         intent.putExtra("idYouUpdate", idYouUpdate);
+        intent.putExtra("transactionDetail", transactionRequestWrapper);
 
         startActivity(intent);
 

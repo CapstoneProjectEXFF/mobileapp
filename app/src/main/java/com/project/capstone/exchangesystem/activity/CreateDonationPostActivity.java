@@ -28,7 +28,7 @@ import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.model.ImageHandler;
+//import com.project.capstone.exchangesystem.model.ImageHandler;
 import com.project.capstone.exchangesystem.model.PostAction;
 
 import java.io.ByteArrayOutputStream;

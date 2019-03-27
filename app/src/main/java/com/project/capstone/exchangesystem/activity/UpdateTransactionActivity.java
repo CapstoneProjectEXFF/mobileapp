@@ -10,14 +10,28 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
+import com.project.capstone.exchangesystem.model.Transaction;
+import com.project.capstone.exchangesystem.model.TransactionDetail;
+import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class UpdateTransactionActivity extends AppCompatActivity {
     RecyclerView recyclerviewMe, recyclerviewYou;
@@ -177,6 +191,109 @@ public class UpdateTransactionActivity extends AppCompatActivity {
         String json = gson.toJson(list);
         editor.putString(key, json);
         editor.apply();     // This line is IMPORTANT !!!
+    }
+
+    public void sendTradeRequest(View view) {
+        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        String authorization = sharedPreferences.getString("authorization", null);
+
+        Set<Integer> itemsIDAfterUpdate = new HashSet<Integer>();
+        Set<Integer> itemsIDBeforeUpdate = new HashSet<Integer>();
+        Intent intent = this.getIntent();
+        final TransactionRequestWrapper transactionRequestWrapper = (TransactionRequestWrapper) intent.getSerializableExtra("transactionDetail");
+        if (transactionRequestWrapper == null) {
+            Toast.makeText(getApplicationContext(), "Transaction bị rỗng", Toast.LENGTH_LONG).show();
+        }
+        List<TransactionDetail> transactionDetailBefore = transactionRequestWrapper.getDetails();
+        for (int i = 0; i < transactionDetailBefore.size(); i++) {
+            itemsIDBeforeUpdate.add(transactionDetailBefore.get(i).getItemId());
+
+        }
+        ArrayList<Item> itemsMeAfterUpdate = itemMeAdapter.getfilter();
+        ArrayList<Item> itemsYouAfterUpdate = itemYouAdapter.getfilter();
+        for (int i = 0; i < itemsMeAfterUpdate.size(); i++) {
+            itemsIDAfterUpdate.add(itemsMeAfterUpdate.get(i).getId());
+        }
+        for (int i = 0; i < itemsYouAfterUpdate.size(); i++) {
+            itemsIDAfterUpdate.add(itemsYouAfterUpdate.get(i).getId());
+        }
+
+
+        Set<Integer> itemsKeep = new HashSet<Integer>(itemsIDAfterUpdate);
+        itemsKeep.retainAll(itemsIDBeforeUpdate);
+        List<Integer> itemsKeepList = new ArrayList<Integer>(itemsKeep);
+
+        Set<Integer> itemsEliminate = new HashSet<Integer>(itemsIDBeforeUpdate);
+        itemsEliminate.removeAll(itemsIDAfterUpdate);
+        List<Integer> itemsEliminateList = new ArrayList<Integer>(itemsEliminate);
+
+        Set<Integer> itemsAdd = new HashSet<Integer>(itemsIDAfterUpdate);
+        itemsAdd.removeAll(itemsIDBeforeUpdate);
+        List<Integer> itemsAddList = new ArrayList<Integer>(itemsAdd);
+
+        List<TransactionDetail> transactionDetailsAfterUpdate = new ArrayList<>();
+        for (int i = 0; i < itemsKeepList.size(); i++) {
+            TransactionDetail temp = new TransactionDetail();
+            temp.setItemId(itemsKeepList.get(i));
+
+            for (int j = 0; j < transactionDetailBefore.size(); j++) {
+                if (transactionDetailBefore.get(j).getItemId() == itemsKeepList.get(i)) {
+                    temp.setId(transactionDetailBefore.get(j).getId());
+                }
+            }
+            temp.setTransactionId(transactionRequestWrapper.getTransaction().getId());
+
+            transactionDetailsAfterUpdate.add(temp);
+        }
+
+        for (int i = 0; i < itemsEliminateList.size(); i++) {
+            TransactionDetail temp = new TransactionDetail();
+            temp.setItemId(itemsEliminateList.get(i));
+
+            for (int j = 0; j < transactionDetailBefore.size(); j++) {
+                if (transactionDetailBefore.get(j).getItemId() == itemsEliminateList.get(i)) {
+                    temp.setId(transactionDetailBefore.get(j).getId());
+                }
+            }
+            transactionDetailsAfterUpdate.add(temp);
+        }
+
+        for (int i = 0; i < itemsAddList.size(); i++) {
+            TransactionDetail temp = new TransactionDetail();
+            temp.setItemId(itemsAddList.get(i));
+            temp.setTransactionId(transactionRequestWrapper.getTransaction().getId());
+            transactionDetailsAfterUpdate.add(temp);
+        }
+
+        Transaction transactionAfterUpdate = new Transaction();
+        transactionAfterUpdate.setId(transactionRequestWrapper.getTransaction().getId());
+        transactionAfterUpdate.setSenderId(transactionRequestWrapper.getTransaction().getSenderId());
+        transactionAfterUpdate.setReceiverId(transactionRequestWrapper.getTransaction().getReceiverId());
+
+        TransactionRequestWrapper transactionRequestWrapperAfterUpdate = new TransactionRequestWrapper(transactionAfterUpdate, transactionDetailsAfterUpdate);
+
+        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+        rmaAPIService.updateTransaction(authorization, transactionRequestWrapperAfterUpdate).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    System.out.println("Update Thành Công ");
+                    Toast.makeText(getApplicationContext(), "Update Thành Công", Toast.LENGTH_LONG).show();
+                } else {
+                    System.out.println("Fail rồi nhé");
+                    Toast.makeText(getApplicationContext(), "Fail rồi nhé", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                System.out.println("Sao Thế này");
+                Toast.makeText(getApplicationContext(), "Sao Thế này", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
     }
 
 }
