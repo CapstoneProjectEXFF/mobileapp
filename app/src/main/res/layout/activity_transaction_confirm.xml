@@ -78,21 +78,26 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:weightSum="2">
+        android:weightSum="3">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Decline" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="2.5dp"
             android:layout_weight="1"
             android:onClick="toUpdateTransaction"
             android:text="Update Request" />
+
 
         <Button
             android:id="@+id/btnConfirmTradeRequest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2.5dp"
+
             android:layout_weight="1"
             android:text="Confirm" />
 

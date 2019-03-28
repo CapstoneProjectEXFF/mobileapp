@@ -243,7 +243,20 @@ public class UpdateTransactionActivity extends AppCompatActivity {
             }
             temp.setTransactionId(transactionRequestWrapper.getTransaction().getId());
 
+
+            for (int k = 0; k < itemsMeAfterUpdate.size(); k++) {
+                if (itemsMeAfterUpdate.get(k).getId() == itemsKeepList.get(i)) {
+                    temp.setUserId(idMe);
+                }
+            }
+            for (int k = 0; k < itemsYouAfterUpdate.size(); k++) {
+                if (itemsYouAfterUpdate.get(k).getId() == itemsKeepList.get(i)) {
+                    temp.setUserId(idYou);
+                }
+            }
+
             transactionDetailsAfterUpdate.add(temp);
+            System.out.println("Test user id transaction detail " + temp.getUserId());
         }
 
         for (int i = 0; i < itemsEliminateList.size(); i++) {
@@ -255,7 +268,19 @@ public class UpdateTransactionActivity extends AppCompatActivity {
                     temp.setId(transactionDetailBefore.get(j).getId());
                 }
             }
+            for (int k = 0; k < itemsMeAfterUpdate.size(); k++) {
+                if (itemsMeAfterUpdate.get(k).getId() == itemsEliminateList.get(i)) {
+                    temp.setUserId(idMe);
+                }
+            }
+            for (int k = 0; k < itemsYouAfterUpdate.size(); k++) {
+                if (itemsYouAfterUpdate.get(k).getId() == itemsEliminateList.get(i)) {
+                    temp.setUserId(idYou);
+
+                }
+            }
             transactionDetailsAfterUpdate.add(temp);
+            System.out.println("Test user id transaction detail " + temp.getUserId());
         }
 
         for (int i = 0; i < itemsAddList.size(); i++) {

@@ -66,11 +66,13 @@ public class NotificationFragment extends Fragment {
         listView.setAdapter(transactionNotificationAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
                 rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
+
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
+                        System.out.println("Test update "+transactions.get(position).getId());
                         if (response.isSuccessful()) {
                             TransactionRequestWrapper temp = response.body();
                             Intent intent = new Intent(getActivity(), TransactionConfirmActivity.class);

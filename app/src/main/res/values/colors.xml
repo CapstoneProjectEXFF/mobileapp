@@ -43,6 +43,7 @@
     <color name="circleBorder">#50FFFFFF</color>
     <color name="followersBg">#65DCE5</color>
     <color name="followingBg">#49BEFF</color>
+    <color name="transnum">#de8b4c</color>
     <color name="grey">#E5E5E5</color>
 
 </resources>
