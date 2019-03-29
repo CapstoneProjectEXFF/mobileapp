@@ -107,6 +107,9 @@ public class UserProfileFragment extends Fragment {
                 .error(R.drawable.ic_no_image)
                 .into(imageView);
 
+
+
+
         return view;
     }
 

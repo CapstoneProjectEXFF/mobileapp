@@ -27,19 +27,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Sender"
+                android:id="@+id/btnSender"
                 android:clickable="false" />
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="toUpdateTransaction"
+
                 android:src="@drawable/arrow"
                 android:text="Update Request" />
 
 
             <Button
-                android:id="@+id/btnConfirmTradeRequest"
+                android:id="@+id/btnReceiver"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -60,6 +60,7 @@ public class NotificationFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         final String authorization = sharedPreferences.getString("authorization", null);
+
         listView = (ListView) view.findViewById(R.id.notificationListview);
         transactions = new ArrayList<>();
         transactionNotificationAdapter = new TransactionNotificationAdapter(view.getContext(), transactions);
@@ -149,6 +150,8 @@ public class NotificationFragment extends Fragment {
 
         Collections.sort(transactions);
         transactionNotificationAdapter.notifyDataSetChanged();
+
+
 
 
     }

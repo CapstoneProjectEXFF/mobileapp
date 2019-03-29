@@ -15,5 +15,13 @@
         app:title="Transaction">
 
     </android.support.v7.widget.Toolbar>
+    <ListView
+        android:id="@+id/transactionHistoryListview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </ListView>
+
 
 </LinearLayout>
