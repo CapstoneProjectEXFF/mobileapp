@@ -2,18 +2,25 @@ package com.project.capstone.exchangesystem.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.OwnTransaction;
+import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.Transaction;
+import com.project.capstone.exchangesystem.model.TransactionDetail;
+import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,8 +58,11 @@ public class TransactionHistoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+
         SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", null);
         final int idMe = sharedPreferences.getInt("userId", 0);
         TransactionHistoryAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
@@ -68,7 +78,7 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         } else {
             viewHolder = (TransactionHistoryAdapter.ViewHolder) convertView.getTag();
         }
-        Transaction transactions = (Transaction) getItem(position);
+        final Transaction transactions = (Transaction) getItem(position);
         String status = "";
         if (transactions.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
             status = status + "Giao dịch thành công";
@@ -82,6 +92,31 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         date.setTime(transactions.getCreateTime().getTime());
         String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
         viewHolder.txtDateTrans.setText(formattedDate);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rmaAPIService.getTransactionByTransID(authorization, transactions.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
+                    @Override
+                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
+                        System.out.println("vào được");
+                        if (response.isSuccessful()) {
+                            TransactionRequestWrapper temp = response.body();
+                            Intent intent = new Intent(context, TransactionDetailActivity.class);
+                            intent.putExtra("transactionDetail", temp);
+                            context.startActivity(intent);
+                        } else {
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
+                        System.out.println("fail in daa");
+                    }
+                });
+
+            }
+        });
         return convertView;
     }
 }

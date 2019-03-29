@@ -152,6 +152,8 @@ public class NotificationFragment extends Fragment {
         transactionNotificationAdapter.notifyDataSetChanged();
 
 
+
+
     }
 
 
