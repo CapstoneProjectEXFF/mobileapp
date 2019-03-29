@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.project.capstone.exchangesystem.activity.OwnTransaction;
 import com.project.capstone.exchangesystem.activity.EditUserProfileActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.ChangePassword;
@@ -112,6 +113,11 @@ public class UserProfileFragment extends Fragment {
     public void toOwnInventory(View view) {
         Intent iOwnInventory = new Intent(getContext(), OwnInventory.class);
         startActivity(iOwnInventory);
+    }
+
+    public void toOwnTransaction(View view) {
+        Intent iOwnTransaction = new Intent(getContext(), OwnTransaction.class);
+        startActivity(iOwnTransaction);
     }
 
 

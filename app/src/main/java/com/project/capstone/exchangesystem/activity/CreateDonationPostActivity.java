@@ -28,7 +28,6 @@ import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.model.ImageHandler;
 import com.project.capstone.exchangesystem.model.PostAction;
 
 import java.io.ByteArrayOutputStream;
@@ -53,8 +52,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     Image tmpImage;
     RecyclerView rvSelectedImages;
     List<Uri> listUri;
-
-//    ImageHandler imageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,7 +237,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         authorization = sharedPreferences.getString("authorization", null);
         firebaseImg = new FirebaseImg();
         edtTitle = findViewById(R.id.edtTitle);
-        //        imageHandler = new ImageHandler();
     }
 
     @Override
@@ -248,19 +244,9 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         switch (choice) {
             case 0:
                 getImageFromGallery();
-//                imageHandler.getImageFromGallery(onClickFlag, tmpImageList, imageAdapter, tmpImage);
-//                tmpImageList = imageAdapter.getfilter();
-//                if (tmpImageList.size() > 0){
-//                    rvSelectedImages.setVisibility(View.VISIBLE);
-//                }
                 break;
             case 1:
                 takePhoto();
-//                imageHandler.takePhoto(getApplicationContext());
-//                tmpImageList = imageAdapter.getfilter();
-//                if (tmpImageList.size() > 0){
-//                    rvSelectedImages.setVisibility(View.VISIBLE);
-//                }
                 break;
             case 2:
                 removeImage();

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;
@@ -90,6 +91,7 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         Transaction informationTransaction = transactionRequestWrapper.getTransaction();
         final int youID = informationTransaction.getSenderId();
         int meID = sharedPreferences.getInt("userId", 0);
+        System.out.println("test thử transaction status " + informationTransaction.getStatus());
 
         if (informationTransaction.getStatus().equals("1")) {
 
@@ -122,11 +124,44 @@ public class TransactionConfirmActivity extends AppCompatActivity {
             btnConfirmTradeRequest.setText("Traded");
             btnConfirmTradeRequest.setClickable(false);
 
+        } else if (informationTransaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
+            System.out.println("vào");
+            btnConfirmTradeRequest.setText("Confirm");
+            btnConfirmTradeRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+                    rmaAPIService.confirmTransaction(authorization, transactionRequestWrapper.getTransaction().getId()).enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, Response<Object> response) {
+                            if (response.isSuccessful()) {
+                                System.out.println("Thành công rồi nghỉ thôi");
+                                btnConfirmTradeRequest.setText("Traded");
+                                btnConfirmTradeRequest.setClickable(false);
+                                Toast.makeText(getApplicationContext(), "Traded Successfully", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            System.out.println("Vẫn chưa được, thử lại nào");
+                        }
+                    });
+
+                }
+            });
+
+
         }
 
 
         List<TransactionDetail> itemTrade = transactionRequestWrapper.getDetails();
+        System.out.println("test rỗng " + itemTrade.size());
+        System.out.println("test rỗng " + transactionRequestWrapper == null);
         for (int i = 0; i < itemTrade.size(); i++) {
+            System.out.println("test final " + itemTrade.get(i).getUserId());
+            System.out.println("Test final " + meID);
 //            Integer.valueOf()
             if (itemTrade.get(i).getUserId().toString().equals(Integer.valueOf(meID).toString())) {
                 inventoryMe.add(itemTrade.get(i).getItem());
@@ -175,6 +210,7 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         intent.putExtra("itemsYouUpdate", itemsYou);
         intent.putExtra("idMeUpdate", idMeUpdate);
         intent.putExtra("idYouUpdate", idYouUpdate);
+        intent.putExtra("transactionDetail", transactionRequestWrapper);
 
         startActivity(intent);
 

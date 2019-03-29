@@ -74,4 +74,9 @@ public class MainActivity extends AppCompatActivity {
         Intent iOwnInventory = new Intent(this, OwnInventory.class);
         startActivity(iOwnInventory);
     }
+
+    public void toOwnTransaction(View view) {
+        Intent iOwnTransaction = new Intent(this, OwnTransaction.class);
+        startActivity(iOwnTransaction);
+    }
 }

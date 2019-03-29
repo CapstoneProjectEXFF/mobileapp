@@ -75,8 +75,14 @@ public class TransactionNotificationAdapter extends BaseAdapter {
         String notification = "";
         if (transactions.getSenderId() == idMe && transactions.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
             notification = transactions.getReceiver().getFullName() + "đã đồng ý yêu cầu của bạn";
-        } else if (transactions.getReceiverId() == idMe) {
+        } else if (transactions.getReceiverId() == idMe && transactions.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
             notification = transactions.getSender().getFullName() + " vừa gửi yêu cầu";
+        } else if (transactions.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
+            if (transactions.getReceiverId() == idMe) {
+                notification = transactions.getSender().getFullName() + " vừa cập nhật yêu cầu";
+            } else {
+                notification = transactions.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
+            }
         }
 
         viewHolder.txtNotification.setText(notification);
