@@ -90,5 +90,8 @@ public interface RmaAPIService {
 
     @GET("/donators/{donationPostId}")
     Call<List<TransactionRequestWrapper>> getTransactionByDonationPostId(@Path("donationPostId") int donationPostId);
+
+    @GET("/")
+    Call<List<Transaction>> getAllTransactionByUserID(@Header("Authorization") String authorization);
 }
 
