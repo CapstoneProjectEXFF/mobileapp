@@ -68,10 +68,9 @@ public class ChooseItemActivity extends AppCompatActivity {
             rmaAPIService.getItemsByUserId(id).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    System.out.println("Done first step in get Item with User");
+
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
-                        System.out.println("status = " + result.get(i).getStatus());
                         if (result.get(i).getStatus().equals(ITEM_ENABLE)){
                             chooseList.add(result.get(i));
                             tradeAdapter.notifyDataSetChanged();
@@ -94,7 +93,6 @@ public class ChooseItemActivity extends AppCompatActivity {
         Intent intent1 = this.getIntent();
         int id = (int) intent1.getIntExtra("id", 0);
         int countMe = grideviewChoose.getAdapter().getCount();
-        System.out.println(countMe);
         ArrayList<Item> idItemList = new ArrayList<>();
         for (int i = 0; i < countMe; i++) {
             try {
@@ -117,7 +115,6 @@ public class ChooseItemActivity extends AppCompatActivity {
         bundle.putSerializable("LISTCHOOSE", idItemList);
         intent.putExtras(bundle);
         intent.putExtra("tempID", id);
-        System.out.println("test lúc add " + id);
         setResult(1, intent);
         finish();
     }

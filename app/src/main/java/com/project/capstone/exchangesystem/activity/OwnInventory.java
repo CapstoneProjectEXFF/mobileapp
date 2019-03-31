@@ -71,7 +71,6 @@ public class OwnInventory extends AppCompatActivity {
             rmaAPIService.getItemsByUserId(userID).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    System.out.println("Done first step in get Item with User");
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
                         itemArrayList.add(result.get(i));

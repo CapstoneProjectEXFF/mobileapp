@@ -92,40 +92,27 @@ public class SignInActivity extends AppCompatActivity {
                 public void onResponse(Call<Object> call, Response<Object> response) {
                     progressDialog.cancel();
                     Toast.makeText(getApplicationContext(), "Vào rồi", Toast.LENGTH_LONG).show();
-                    System.out.println("successfull: " + response.isSuccessful());
-                    System.out.println("body " + response.body());
                     if (response.isSuccessful()) {
-                        System.out.println(response.body().toString());
                         progressDialog.cancel();
-
-
                         if (response.body() != null) {
-
                             try {
 
                                 LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
 
                                 String authorization = (String) responeBody.get("Authorization");
-                                System.out.println(authorization);
-
                                 LinkedTreeMap<String, Object> userInfo = (LinkedTreeMap<String, Object>) responeBody.get("User");
 
                                 int id = (int) Math.round((Double) userInfo.get("id"));
-                                System.out.println(id);
 
                                 String phoneNumber = (String) userInfo.get("phoneNumber");
-                                System.out.println(phoneNumber);
 
                                 String fullName = (String) userInfo.get("fullName");
-                                System.out.println(fullName);
 
                                 String status = (String) userInfo.get("status");
-                                System.out.println("test " + status);
 
                                 String avatar = "";
                                 if (userInfo.containsKey("avatar")) {
                                     avatar = avatar + (String) userInfo.get("avatar");
-                                    System.out.println(avatar);
                                 }
 
                                 //TODO hardcode status

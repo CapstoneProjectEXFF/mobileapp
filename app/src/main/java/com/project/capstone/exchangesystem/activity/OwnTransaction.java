@@ -58,7 +58,6 @@ public class OwnTransaction extends AppCompatActivity {
                 rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        System.out.println("vào được");
                         if (response.isSuccessful()) {
                             TransactionRequestWrapper temp = response.body();
                             Intent intent = new Intent(OwnTransaction.this, TransactionDetailActivity.class);
