@@ -107,11 +107,8 @@ public class ChangePassword extends AppCompatActivity {
 
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", userPhoneNumber);
-            System.out.println(userPhoneNumber);
             jsonBody.put("oldPassword", oldPass);
-            System.out.println(oldPass);
             jsonBody.put("newPassword", newPass);
-            System.out.println(newPass);
 
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
             rmaAPIService.changePassword(jsonBody, authorization).enqueue(new Callback<Object>() {
@@ -120,24 +117,19 @@ public class ChangePassword extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
 
-                    System.out.println(response.isSuccessful());
-//                    System.out.println(response.body().toString());
                     if (response.isSuccessful()) {
 
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("Authorization")) {
-                            System.out.println("Vào rồi");
                             Toast.makeText(getApplicationContext(), "Change Password Succesfully", Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
                             editor.putString("avatar", responeBody.get("Authorization").toString());
                             editor.commit();
-                            System.out.println(responeBody.get("Authorization").toString());
                         }
                     } else {
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("message")) {
                             Toast.makeText(getApplicationContext(), responeBody.get("message").toString(), Toast.LENGTH_SHORT).show();
-                            System.out.println(responeBody.get("message").toString());
                         }
                     }
                 }

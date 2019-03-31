@@ -16,12 +16,20 @@ import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.SignInActivity;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
+import org.w3c.dom.Text;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
 public class UserProfileFragment extends Fragment {
+    String temp;
+//    TextView txtNumberTransaction;
 
 
     public static UserProfileFragment newInstance() {
@@ -82,10 +90,11 @@ public class UserProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+
         ImageView imageView = view.findViewById(R.id.imgUserProfile);
         TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
         TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
-
+        final TextView txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -99,6 +108,7 @@ public class UserProfileFragment extends Fragment {
         String userName = sharedPreferences.getString("username", null);
         String status = sharedPreferences.getString("status", null);
         int id = sharedPreferences.getInt("userId", 0);
+        String authorization = sharedPreferences.getString("authorization", null);
 
         txtNameUserProfile.setText(userName);
         txtPhoneNumberProfile.setText(phoneNumber);
@@ -106,8 +116,23 @@ public class UserProfileFragment extends Fragment {
                 .placeholder(R.drawable.ic_no_image)
                 .error(R.drawable.ic_no_image)
                 .into(imageView);
+        temp = "";
+        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+        rmaAPIService.countAllTransactionByUserId(authorization).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    temp = response.body().toString();
+                    txtNumberTransaction.setText(temp);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
 
+            }
+        });
+        txtNumberTransaction.setText(temp);
 
 
         return view;

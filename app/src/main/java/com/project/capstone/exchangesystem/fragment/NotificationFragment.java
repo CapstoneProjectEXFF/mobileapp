@@ -73,7 +73,6 @@ public class NotificationFragment extends Fragment {
 
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        System.out.println("Test update "+transactions.get(position).getId());
                         if (response.isSuccessful()) {
                             TransactionRequestWrapper temp = response.body();
                             Intent intent = new Intent(getActivity(), TransactionConfirmActivity.class);
@@ -108,9 +107,7 @@ public class NotificationFragment extends Fragment {
         rmaAPIService.getTransactionsByReceiverID(authorization).enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
-                System.out.println("Vào hàm response rồi");
-                System.out.println("test response " + response.isSuccessful());
-                System.out.println("test body" + response.body());
+
                 if (response.isSuccessful()) {
                     List<Transaction> temp = new ArrayList<>();
                     temp = response.body();
@@ -130,9 +127,6 @@ public class NotificationFragment extends Fragment {
         rmaAPIService.getTransactionsTradedBySenderId(authorization).enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
-                System.out.println("Vào hàm response rồi");
-                System.out.println("test response " + response.isSuccessful());
-                System.out.println("test body" + response.body());
                 if (response.isSuccessful()) {
                     List<Transaction> temp = new ArrayList<>();
                     temp = response.body();

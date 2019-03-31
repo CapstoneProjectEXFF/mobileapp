@@ -99,7 +99,6 @@ public class TransactionHistoryAdapter extends BaseAdapter {
                 rmaAPIService.getTransactionByTransID(authorization, transactions.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        System.out.println("vào được");
                         if (response.isSuccessful()) {
                             TransactionRequestWrapper temp = response.body();
                             Intent intent = new Intent(context, TransactionDetailActivity.class);

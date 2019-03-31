@@ -92,19 +92,18 @@ public class TransactionDetailActivity extends AppCompatActivity {
             rmaAPIService.getItemById(tempTradeItemID).enqueue(new Callback<Item>() {
                 @Override
                 public void onResponse(Call<Item> call, Response<Item> response) {
-                    System.out.println("vào response rồi");
+
                     if (response.isSuccessful()) {
-                        System.out.println("vào suscess rồi");
+
                         Item item = response.body();
 
                         if (item.getUser().getId() == youID) {
-                            System.out.println("đã được add vào You");
+
                             inventoryYou.add(item);
                             itemYouAdapter.notifyDataSetChanged();
                         } else {
                             inventoryMe.add(item);
                             itemMeAdapter.notifyDataSetChanged();
-                            System.out.println("đã được add vào Me");
                         }
                     }
                 }

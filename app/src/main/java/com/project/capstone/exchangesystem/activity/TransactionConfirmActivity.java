@@ -27,11 +27,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class TransactionConfirmActivity extends AppCompatActivity {
     RecyclerView itemsMeConfirm, itemsYouConfirm;
     ArrayList<Item> inventoryMe, inventoryYou;
     ItemAdapter itemMeAdapter, itemYouAdapter;
-    Button btnConfirmTradeRequest;
+    Button btnConfirmTradeRequest, btnDeclineTransaction, btnUpdateRequest;
     Toolbar toolbar;
 
     @Override
@@ -55,6 +57,8 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         inventoryMe = new ArrayList<>();
 
         btnConfirmTradeRequest = findViewById(R.id.btnConfirmTradeRequest);
+        btnDeclineTransaction = findViewById(R.id.btnDeclineTransaction);
+        btnUpdateRequest = findViewById(R.id.btnUpdateRequest);
 
 
         itemMeAdapter = new ItemAdapter(getApplicationContext(), inventoryMe, new ItemAdapter.OnItemClickListener() {
@@ -79,6 +83,8 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         itemsYouConfirm.setHasFixedSize(true);
         itemsYouConfirm.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
         itemsYouConfirm.setAdapter(itemYouAdapter);
+
+
     }
 
 
@@ -91,7 +97,29 @@ public class TransactionConfirmActivity extends AppCompatActivity {
         Transaction informationTransaction = transactionRequestWrapper.getTransaction();
         final int youID = informationTransaction.getSenderId();
         int meID = sharedPreferences.getInt("userId", 0);
-        System.out.println("test thử transaction status " + informationTransaction.getStatus());
+
+        btnDeclineTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+                rmaAPIService.cancelTransactionByID(authorization, transactionRequestWrapper.getTransaction().getId()).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), response.body().toString(), Toast.LENGTH_LONG).show();
+                            Intent mainActivity = new Intent(getApplicationContext(), OwnInventory.class);
+                            startActivity(mainActivity);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Can't not cancel transaction now", Toast.LENGTH_LONG).show();
+                        System.out.println("Error Cancle Transaction " + t.getMessage());
+                    }
+                });
+            }
+        });
 
         if (informationTransaction.getStatus().equals("1")) {
 
@@ -104,10 +132,18 @@ public class TransactionConfirmActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
                             if (response.isSuccessful()) {
-                                System.out.println("Thành công rồi nghỉ thôi");
                                 btnConfirmTradeRequest.setText("Traded");
                                 btnConfirmTradeRequest.setClickable(false);
+                                btnDeclineTransaction.setClickable(false);
                                 Toast.makeText(getApplicationContext(), "Traded Successfully", Toast.LENGTH_SHORT).show();
+                                btnUpdateRequest.setText("Back To Main");
+                                btnUpdateRequest.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(mainActivity);
+                                    }
+                                });
 
                             }
                         }
@@ -125,7 +161,6 @@ public class TransactionConfirmActivity extends AppCompatActivity {
             btnConfirmTradeRequest.setClickable(false);
 
         } else if (informationTransaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
-            System.out.println("vào");
             btnConfirmTradeRequest.setText("Confirm");
             btnConfirmTradeRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -135,11 +170,18 @@ public class TransactionConfirmActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
                             if (response.isSuccessful()) {
-                                System.out.println("Thành công rồi nghỉ thôi");
+
                                 btnConfirmTradeRequest.setText("Traded");
                                 btnConfirmTradeRequest.setClickable(false);
+                                btnDeclineTransaction.setClickable(false);
                                 Toast.makeText(getApplicationContext(), "Traded Successfully", Toast.LENGTH_SHORT).show();
-
+                                btnUpdateRequest.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(mainActivity);
+                                    }
+                                });
                             }
                         }
 
@@ -157,11 +199,9 @@ public class TransactionConfirmActivity extends AppCompatActivity {
 
 
         List<TransactionDetail> itemTrade = transactionRequestWrapper.getDetails();
-        System.out.println("test rỗng " + itemTrade.size());
-        System.out.println("test rỗng " + transactionRequestWrapper == null);
+
         for (int i = 0; i < itemTrade.size(); i++) {
-            System.out.println("test final " + itemTrade.get(i).getUserId());
-            System.out.println("Test final " + meID);
+
 //            Integer.valueOf()
             if (itemTrade.get(i).getUserId().toString().equals(Integer.valueOf(meID).toString())) {
                 inventoryMe.add(itemTrade.get(i).getItem());

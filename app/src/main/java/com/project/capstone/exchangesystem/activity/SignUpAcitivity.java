@@ -68,7 +68,7 @@ public class SignUpAcitivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful()) {
-                    System.out.println("test body of check login " + response.body());
+
                     if (response.body().toString().equals("no")) {
                         txtPhone.setBackgroundResource(R.drawable.signupedt);
                     } else {
@@ -148,7 +148,6 @@ public class SignUpAcitivity extends AppCompatActivity {
             rmaAPIService.register(jsonBody).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-                    System.out.println(response.body());
                     if (response.body() != null) {
                         Intent intent = new Intent(context, CreateSuccessActivity.class);
                         startActivity(intent);
