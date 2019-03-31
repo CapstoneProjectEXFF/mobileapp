@@ -96,5 +96,12 @@ public interface RmaAPIService {
 
     @GET("/transaction/history/count")
     Call<Integer> countAllTransactionByUserId(@Header("Authorization") String authorization);
+
+//    @HTTP(method = "DELETE", path = "/transaction/{transID}", hasBody = true)
+//    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
+
+
+    @DELETE("/transaction/{transID}")
+    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
 }
 

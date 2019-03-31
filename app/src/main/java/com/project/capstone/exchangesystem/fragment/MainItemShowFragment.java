@@ -80,7 +80,6 @@ public class MainItemShowFragment extends Fragment {
             rmaAPIService.getAllItems(authorization).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    System.out.println("Done first step in Show Item");
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
                         if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {

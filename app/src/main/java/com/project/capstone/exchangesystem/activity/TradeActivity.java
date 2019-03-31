@@ -76,12 +76,9 @@ public class TradeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         final int idMe = sharedPreferences.getInt("userId", 0);
-        System.out.println("Test My Id " + idMe);
-
         Intent intent = this.getIntent();
         Item temp = (Item) intent.getSerializableExtra("descriptionItem");
         final int idYou = temp.getUser().getId();
-        System.out.println("Test Your Id " + idYou);
 
 
         choosedYou.add(temp);
@@ -143,12 +140,10 @@ public class TradeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         final int idMe = sharedPreferences.getInt("userId", 0);
-        System.out.println("Test My Id " + idMe);
 
         Intent intent = this.getIntent();
         Item temp = (Item) intent.getSerializableExtra("descriptionItem");
         final int idYou = temp.getUser().getId();
-        System.out.println("Test Your Id " + idYou);
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
             try {
@@ -156,9 +151,7 @@ public class TradeActivity extends AppCompatActivity {
                 Bundle bundle = data.getExtras();
                 ArrayList<Item> idChoose = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
                 int id = data.getIntExtra("tempID", 0);
-                System.out.println("Test tempID " + id);
                 if (id == idMe) {
-                    System.out.println("test ID ME " + idMe);
                     itemMeAdapter.setfilter(idChoose);
                     itemIdsMe.clear();
                     for (int i = 0; i < idChoose.size(); i++) {
@@ -166,7 +159,6 @@ public class TradeActivity extends AppCompatActivity {
                     }
                     saveArrayList(itemIdsMe, "itemMeIdList");
                 } else if (id == idYou) {
-                    System.out.println("test ID YOU " + idYou);
                     itemYouAdapter.setfilter(idChoose);
                     itemIdsYou.clear();
                     for (int i = 0; i < idChoose.size(); i++) {
@@ -187,14 +179,11 @@ public class TradeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         int idMe = sharedPreferences.getInt("userId", 0);
-        System.out.println("test id Me " + idMe);
         String authorization = sharedPreferences.getString("authorization", null);
-        System.out.println(authorization);
 
 
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
         int idYou = item.getUser().getId();
-        System.out.println("test id You " + idYou);
 
         GridView gridViewMyInventory = (GridView) findViewById(R.id.gridViewMyInventory);
 
@@ -232,8 +221,6 @@ public class TradeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
 
-                    System.out.println("test response " + response.isSuccessful());
-                    System.out.println(response.body());
                     if (response.isSuccessful()) {
                         try {
                             LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
@@ -256,7 +243,7 @@ public class TradeActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
-                    System.out.println("fail rooif");
+                    Toast.makeText(getApplicationContext(), "Request is denied", Toast.LENGTH_LONG).show();
                     System.out.println(t.getMessage());
                     System.out.println(t.getCause());
                 }
@@ -281,5 +268,9 @@ public class TradeActivity extends AppCompatActivity {
         String json = gson.toJson(list);
         editor.putString(key, json);
         editor.apply();     // This line is IMPORTANT !!!
+    }
+
+    public void toCancelTransaction(View view) {
+        finish();
     }
 }

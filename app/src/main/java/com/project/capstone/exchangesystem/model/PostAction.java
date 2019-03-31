@@ -223,7 +223,6 @@ public class PostAction {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
 
-                    System.out.println(response.isSuccessful());
 
                     if (response.isSuccessful()) {
 
@@ -236,12 +235,9 @@ public class PostAction {
                             progressDialog.dismiss();
                         }
                     } else {
-                        System.out.println(response.body());
                         LinkedTreeMap<String, String> responeBody = (LinkedTreeMap<String, String>) response.body();
                         if (responeBody.containsKey("message")) {
                             Toast.makeText(context, responeBody.get("message").toString(), Toast.LENGTH_SHORT).show();
-                            System.out.println(responeBody.get("message").toString());
-                            System.out.println(responeBody.get("message").toString());
                         }
                         progressDialog.dismiss();
                     }

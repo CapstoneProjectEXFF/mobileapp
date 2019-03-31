@@ -14,8 +14,7 @@
         android:background="@color/colorPrimary"
         app:title="Kho của bạn"
         app:titleTextColor="@color/colorWhite"
-        tools:ignore="MissingConstraints">
-    </android.support.v7.widget.Toolbar>
+        tools:ignore="MissingConstraints"></android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -82,12 +81,14 @@
                 tools:layout_editor_absoluteX="0dp">
 
                 <Button
+                    android:id="@+id/btnDeclineTransaction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Decline" />
 
                 <Button
+                    android:id="@+id/btnUpdateRequest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

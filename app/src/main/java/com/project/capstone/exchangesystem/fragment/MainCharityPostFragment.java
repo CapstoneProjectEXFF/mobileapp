@@ -173,7 +173,6 @@ public class MainCharityPostFragment extends Fragment {
                     if (!donationPostList.isEmpty()) {
                         donationPosts.addAll(donationPostList);
                         mainCharityPostAdapter.notifyDataSetChanged();
-                        System.out.println("đã vào hàm response");
                     } else {
                         limitData = true;
                     }
