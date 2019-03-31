@@ -24,6 +24,7 @@ import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
+import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 
@@ -73,7 +74,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
             public void onClick(View v) {
                 ArrayList<String> selectedItemIdsStr = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
-                   selectedItemIdsStr.add(String.valueOf(itemList.get(i).getId()));
+                    selectedItemIdsStr.add(String.valueOf(itemList.get(i).getId()));
                 }
                 Intent intent = new Intent(getApplicationContext(), ChooseItemActivity.class);
                 intent.putExtra("id", userId);
@@ -117,32 +118,23 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     private void createDonateTransaction() {
         List<TransactionDetail> transactionDetailList = new ArrayList<>();
         for (int i = 0; i < itemList.size(); i++) { //create transaction detail
-                TransactionDetail transactionDetail = new TransactionDetail();
-                transactionDetail.setUserId(itemList.get(i).getUser().getId());
-                transactionDetail.setItemId(itemList.get(i).getId());
-                transactionDetailList.add(transactionDetail);
+            TransactionDetail transactionDetail = new TransactionDetail();
+            transactionDetail.setUserId(itemList.get(i).getUser().getId());
+            transactionDetail.setItemId(itemList.get(i).getId());
+            transactionDetailList.add(transactionDetail);
         }
+
         Transaction transaction = new Transaction();
         transaction.setSenderId(userId);
         transaction.setReceiverId(donationPost.getUser().getId());
         transaction.setDonationPostId(donationPost.getId());
         TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
 
-        if (authorization != null) {
-            rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
-                @Override
-                public void onResponse(Call<Object> call, Response<Object> response) {
-                    Intent intent = new Intent(getApplicationContext(), CreateSuccessActivity.class);
-                    intent.putExtra("donationPost", donationPost);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Call<Object> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+        Intent intent = new Intent(getApplicationContext(), InformationConfirmActivity.class);
+        intent.putExtra("transaction", transactionRequestWrapper);
+        intent.putExtra("senderAddress", itemList.get(0).getAddress());
+        intent.putExtra("donationPost", donationPost);
+        startActivity(intent);
     }
 
     private void getComponent() {
@@ -162,7 +154,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void setNoti() {
-        if (itemList.size() == 0){
+        if (itemList.size() == 0) {
             txtNoti.setVisibility(View.VISIBLE);
             rvSelectedImages.setVisibility(View.GONE);
         } else {
@@ -192,7 +184,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.btnConfirm) {
-            if (itemList.size() == 0){
+            if (itemList.size() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.select_item_noti, Toast.LENGTH_LONG).show();
             } else {
                 createDonateTransaction();
@@ -204,7 +196,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     //when click on item of option dialog
     @Override
     public void onButtonClicked(int choice) {
-        if (choice == DELETE_IMAGE_OPTION){
+        if (choice == DELETE_IMAGE_OPTION) {
             itemList.remove(tmpItem);
             itemAdapter.notifyDataSetChanged();
             itemAdapter.setfilter(itemList);

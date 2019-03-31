@@ -95,35 +95,22 @@ public class TransactionConfirmActivity extends AppCompatActivity {
 
         if (informationTransaction.getStatus().equals("1")) {
 
+
             btnConfirmTradeRequest.setText("Confirm");
             btnConfirmTradeRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-                    rmaAPIService.confirmTransaction(authorization, transactionRequestWrapper.getTransaction().getId()).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            if (response.isSuccessful()) {
-                                System.out.println("Thành công rồi nghỉ thôi");
-                                btnConfirmTradeRequest.setText("Traded");
-                                btnConfirmTradeRequest.setClickable(false);
-                                Toast.makeText(getApplicationContext(), "Traded Successfully", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
-                            System.out.println("Vẫn chưa được, thử lại nào");
-                        }
-                    });
-
+                    //go to confirm information and delivery
+                    Intent confirmInf = new Intent(getApplicationContext(), InformationConfirmActivity.class);
+                    confirmInf.putExtra("transaction", transactionRequestWrapper);
+                    startActivity(confirmInf);
                 }
             });
         } else if (informationTransaction.getStatus().equals("2")) {
-            btnConfirmTradeRequest.setText("Traded");
-            btnConfirmTradeRequest.setClickable(false);
-
+            //go to confirm information and delivery
+            Intent confirmInf = new Intent(getApplicationContext(), InformationConfirmActivity.class);
+            confirmInf.putExtra("transaction", transactionRequestWrapper);
+            startActivity(confirmInf);
         } else if (informationTransaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
             System.out.println("vào");
             btnConfirmTradeRequest.setText("Confirm");

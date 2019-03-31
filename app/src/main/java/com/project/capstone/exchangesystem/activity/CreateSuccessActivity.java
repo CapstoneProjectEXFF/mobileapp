@@ -1,6 +1,8 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,22 +16,17 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateSuccessActivity extends AppCompatActivity {
 
-    private final String TITLE = "Đóng góp thành công";
-    private final String MSG1 = "Bạn thật đáng yêu ♥.♥";
-    private final String MSG2 = "Xin cảm ơn!";
-    private final String BTN_CONTENT = "Tiếp tục";
-
-    DonationPost donationPost;
-    TextView txtTitle, txtMessage1, txtMessage2;
+    TextView txtTitle, txtMessage, txtDirection;
     Button btnConfirm;
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_success);
 
-        donationPost = (DonationPost) getIntent().getSerializableExtra("donationPost");
-        if (donationPost != null){
+        address = (String) getIntent().getSerializableExtra("address");
+        if (address != null) {
             setView();
         } else {
             btnConfirm = findViewById(R.id.btnXacNhan);
@@ -44,14 +41,26 @@ public class CreateSuccessActivity extends AppCompatActivity {
     }
 
     private void setView() {
+        txtDirection = findViewById(R.id.txtDirection);
+        txtDirection.setText(R.string.view_map);
+        txtDirection.setTextColor(Color.BLUE);
         txtTitle = findViewById(R.id.lbl_toolbar);
-        txtTitle.setText(TITLE);
-        txtMessage1 = findViewById(R.id.txtMessage1);
-        txtMessage1.setText(MSG1);
-        txtMessage2 = findViewById(R.id.txtMessage2);
-        txtMessage2.setText(MSG2);
+
+        txtTitle.setText(R.string.confirm_information_success);
+        txtMessage = findViewById(R.id.txtMessage);
+        txtMessage.setText(R.string.confirm_information_message);
+        txtDirection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+
         btnConfirm = findViewById(R.id.btnXacNhan);
-        btnConfirm.setText(BTN_CONTENT);
+        btnConfirm.setText(R.string.continuous);
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,9 +70,4 @@ public class CreateSuccessActivity extends AppCompatActivity {
             }
         });
     }
-
-//    public void onConfirmClick(View view) {
-//        Intent intent = new Intent(this, SignInActivity.class);
-//        startActivity(intent);
-//    }
 }
