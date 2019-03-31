@@ -103,14 +103,17 @@ public class OwnTransaction extends AppCompatActivity {
                     temp = response.body();
                     transactions.addAll(temp);
                     transactionHistoryAdapter.notifyDataSetChanged();
+                    if (temp.size() == 0) {
+                        Toast.makeText(getApplicationContext(), "Your Own Transaction is Empty", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
                 System.out.println("Fail rồi");
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
             }
         });
     }

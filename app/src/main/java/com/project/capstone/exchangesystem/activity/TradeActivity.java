@@ -76,8 +76,6 @@ public class TradeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         final int idMe = sharedPreferences.getInt("userId", 0);
-        System.out.println("Test My Id " + idMe);
-
         Intent intent = this.getIntent();
         Item temp = (Item) intent.getSerializableExtra("descriptionItem");
         final int idYou = temp.getUser().getId();
