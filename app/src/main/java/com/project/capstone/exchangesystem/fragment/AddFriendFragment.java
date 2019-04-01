@@ -1,6 +1,5 @@
 package com.project.capstone.exchangesystem.fragment;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,13 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
-import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.FriendFeedAdapter;
-import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
 import com.project.capstone.exchangesystem.constants.AppStatus;
-import com.project.capstone.exchangesystem.model.Transaction;
-import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
+import com.project.capstone.exchangesystem.model.ExffMessage;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -34,6 +29,7 @@ public class AddFriendFragment extends Fragment {
     ListView listView;
     FriendFeedAdapter friendFeedAdapter;
     ArrayList<User> userList;
+    String temp;
 
     public AddFriendFragment() {
     }
@@ -74,21 +70,37 @@ public class AddFriendFragment extends Fragment {
     private void getData() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-        String authorization = sharedPreferences.getString("authorization", null);
+        final String authorization = sharedPreferences.getString("authorization", null);
         final int userID = sharedPreferences.getInt("userId", 0);
 
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getAllUser(authorization).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
-                    List<User> temp = response.body();
+                    final List<User> temp = response.body();
                     for (int i = 0; i < temp.size(); i++) {
                         if (temp.get(i).getId() != userID && !temp.get(i).getStatus().equals(AppStatus.USER_DISABLE)) {
-                            userList.add(temp.get(i));
+                            final int finalI = i;
+                            rmaAPIService.checkRelationship(authorization, temp.get(i).getId()).enqueue(new Callback<ExffMessage>() {
+                                @Override
+                                public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
+                                    if (response.isSuccessful()) {
+                                        ExffMessage relationshipStatus = response.body();
+                                        if (relationshipStatus.getMessage().equals("Not Friend")) {
+                                            userList.add(temp.get(finalI));
+                                            friendFeedAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ExffMessage> call, Throwable t) {
+
+                                }
+                            });
                         }
                     }
-                    friendFeedAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -96,8 +108,5 @@ public class AddFriendFragment extends Fragment {
             public void onFailure(Call<List<User>> call, Throwable t) {
             }
         });
-
     }
-
-
 }

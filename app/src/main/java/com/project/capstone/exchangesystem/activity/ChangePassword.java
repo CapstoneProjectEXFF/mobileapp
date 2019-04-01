@@ -2,7 +2,7 @@ package com.project.capstone.exchangesystem.activity;
 
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.appcompat
+//import android.support.v7.appcompat.
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;

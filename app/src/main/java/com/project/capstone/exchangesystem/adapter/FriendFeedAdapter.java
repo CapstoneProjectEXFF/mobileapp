@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -16,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,11 +110,6 @@ public class FriendFeedAdapter extends BaseAdapter {
                 });
             }
         });
-        System.out.println("Test Sent " + isSent);
-
-
         return convertView;
     }
-
-
 }

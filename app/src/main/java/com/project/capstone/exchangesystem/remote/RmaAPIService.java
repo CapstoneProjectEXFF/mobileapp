@@ -110,5 +110,8 @@ public interface RmaAPIService {
 
     @POST("/relationship")
     Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/relationship/{userId}")
+    Call<ExffMessage> checkRelationship(@Header("Authorization") String authorization, @Path("userId") int userId);
 }
 
