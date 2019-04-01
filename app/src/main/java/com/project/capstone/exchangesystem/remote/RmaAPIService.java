@@ -113,5 +113,9 @@ public interface RmaAPIService {
 
     @GET("/relationship/{userId}")
     Call<ExffMessage> checkRelationship(@Header("Authorization") String authorization, @Path("userId") int userId);
+
+
+    @GET("/relationship")
+    Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
 }
 

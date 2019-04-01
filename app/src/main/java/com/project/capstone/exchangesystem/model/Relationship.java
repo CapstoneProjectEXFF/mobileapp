@@ -3,7 +3,9 @@ package com.project.capstone.exchangesystem.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Relationship {
+import java.io.Serializable;
+
+public class Relationship implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -23,12 +25,12 @@ public class Relationship {
     @Expose
     private String status;
 
-    @SerializedName("senderId")
+    @SerializedName("sender")
     @Expose
     private User sender;
 
 
-    @SerializedName("receiverId")
+    @SerializedName("receiver")
     @Expose
     private User receiver;
 
