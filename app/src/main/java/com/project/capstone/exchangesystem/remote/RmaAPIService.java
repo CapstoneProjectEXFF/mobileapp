@@ -107,5 +107,8 @@ public interface RmaAPIService {
 
     @GET("/user")
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
+
+    @POST("/relationship")
+    Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 }
 

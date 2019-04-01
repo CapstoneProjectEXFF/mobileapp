@@ -14,6 +14,7 @@ import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.FriendFeedAdapter;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.model.User;
@@ -74,6 +75,7 @@ public class AddFriendFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         String authorization = sharedPreferences.getString("authorization", null);
+        final int userID = sharedPreferences.getInt("userId", 0);
 
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getAllUser(authorization).enqueue(new Callback<List<User>>() {
@@ -81,7 +83,11 @@ public class AddFriendFragment extends Fragment {
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
                     List<User> temp = response.body();
-                    userList.addAll(temp);
+                    for (int i = 0; i < temp.size(); i++) {
+                        if (temp.get(i).getId() != userID && !temp.get(i).getStatus().equals(AppStatus.USER_DISABLE)) {
+                            userList.add(temp.get(i));
+                        }
+                    }
                     friendFeedAdapter.notifyDataSetChanged();
                 }
             }
