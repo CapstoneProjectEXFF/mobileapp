@@ -14,6 +14,7 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
+import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -23,7 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -33,7 +33,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class NotificationFragment extends Fragment {
     ListView listView;
     TransactionNotificationAdapter transactionNotificationAdapter;
-    ArrayList<Transaction> transactions;
+    ArrayList<Object> transactions;
 
 
     public NotificationFragment() {
@@ -69,7 +69,8 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
-                rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
+                Transaction tempTrans = (Transaction) transactions.get(position);
+                rmaAPIService.getTransactionByTransID(authorization, tempTrans.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
 
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
@@ -90,12 +91,13 @@ public class NotificationFragment extends Fragment {
 
             }
         });
-        GetData();
+        getDataFromTransaction();
+        getDataFromRelationship();
         return view;
 
     }
 
-    private void GetData() {
+    private void getDataFromTransaction() {
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
@@ -140,10 +142,33 @@ public class NotificationFragment extends Fragment {
             }
         });
 
-        Collections.sort(transactions);
         transactionNotificationAdapter.notifyDataSetChanged();
 
 
+    }
+
+    private void getDataFromRelationship() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
+        String authorization = sharedPreferences.getString("authorization", null);
+        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+        rmaAPIService.getFriendRequest(authorization, 0, 10).enqueue(new Callback<List<Relationship>>() {
+            @Override
+            public void onResponse(Call<List<Relationship>> call, Response<List<Relationship>> response) {
+                if (response.isSuccessful()) {
+                    System.out.println("vào successfull roofi ");
+                    List<Relationship> temp = new ArrayList<>();
+                    temp = response.body();
+                    transactions.addAll(temp);
+                    transactionNotificationAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Relationship>> call, Throwable t) {
+
+            }
+        });
 
 
     }
