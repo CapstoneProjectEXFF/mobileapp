@@ -19,6 +19,7 @@
     <string name="nav_bar_charity">Từ thiện</string>
     <string name="nav_bar_notif">Thông báo</string>
     <string name="nav_bar_profile">Người dùng</string>
+    <string name="nav_bar_addfriend">Kết bạn</string>
 
     <!--Facebook-->
     <string name="facebook_app_id">293758374637458</string>
