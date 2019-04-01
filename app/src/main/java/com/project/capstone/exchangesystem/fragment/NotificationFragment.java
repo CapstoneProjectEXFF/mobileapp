@@ -91,8 +91,6 @@ public class NotificationFragment extends Fragment {
             }
         });
         GetData();
-
-
         return view;
 
     }

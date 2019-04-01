@@ -85,7 +85,6 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainRecyclerView"
         android:layout_width="match_parent"

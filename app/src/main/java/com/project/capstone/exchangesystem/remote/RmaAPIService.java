@@ -102,6 +102,10 @@ public interface RmaAPIService {
 
 
     @DELETE("/transaction/{transID}")
-    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
+    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
+
+
+    @GET("/user")
+    Call<List<User>> getAllUser(@Header("Authorization") String authorization);
 }
 

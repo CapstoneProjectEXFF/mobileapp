@@ -12,19 +12,19 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.project.capstone.exchangesystem.fragment.AddFriendFragment;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.fragment.NotificationFragment;
 import com.project.capstone.exchangesystem.fragment.UserProfileFragment;
 import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
 import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
 
-import static com.project.capstone.exchangesystem.constants.AppStatus.*;
-
 public class MainActivity extends AppCompatActivity {
     private final Fragment ITEM_FRAGMENT = MainItemShowFragment.newInstance();
     private final Fragment DONATION_FRAGMENT = MainCharityPostFragment.newInstance();
     //    private final Fragment NOTIFICATION_FRAGMENT = ;
     private final Fragment PROFILE_FRAGMENT = UserProfileFragment.newInstance();
+    private final Fragment ADDFRIEND_FRAGMENT = AddFriendFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
 
 
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.bottombaritem_profile:
                         selectedFragment = PROFILE_FRAGMENT;
+                        break;
+                    case R.id.bottombaritem_addfriend:
+                        selectedFragment = ADDFRIEND_FRAGMENT;
                         break;
                 }
                 initFragment(selectedFragment);
