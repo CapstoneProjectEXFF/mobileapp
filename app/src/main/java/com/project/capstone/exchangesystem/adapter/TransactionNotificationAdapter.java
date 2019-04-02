@@ -6,21 +6,27 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.constants.AppStatus;
+import com.project.capstone.exchangesystem.model.ExffMessage;
 import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.Transaction;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TransactionNotificationAdapter extends BaseAdapter {
     Context context;
@@ -112,10 +118,13 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 //    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
 
         SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
         final int idMe = sharedPreferences.getInt("userId", 0);
+        final String authorization = sharedPreferences.getString("authorization", null);
+
         View view = convertView;
         int type = getItemViewType(position);
         if (view == null) {
@@ -162,13 +171,59 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .into(imgSender);
 
         } else if (c.getClass() == Relationship.class) {
-            Relationship relationship = (Relationship) c;
+            final Relationship relationship = (Relationship) c;
             ImageView imgProfileUser = (ImageView) view.findViewById(R.id.imgProfileUser);
             TextView txtNameUser = (TextView) view.findViewById(R.id.txtNameUser);
             TextView txtAddressUser = (TextView) view.findViewById(R.id.txtAddressUser);
             Button btnAcceptFriend = (Button) view.findViewById(R.id.btnAcceptFriend);
             Button btnDeclineFriend = (Button) view.findViewById(R.id.btnDeclineFriend);
+            btnAcceptFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String, String> bodyAccept = new HashMap<String, String>();
+                    bodyAccept.put("id", String.valueOf(relationship.getId()));
+                    rmaAPIService.acceptFriend(authorization, bodyAccept).enqueue(new Callback<ExffMessage>() {
+                        @Override
+                        public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
+                            if (response.isSuccessful()) {
+                                ExffMessage message = response.body();
+                                notifications.remove(position);
+                                notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(), message.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<ExffMessage> call, Throwable t) {
+
+                        }
+                    });
+                }
+            });
+
+            btnDeclineFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rmaAPIService.cancelFriendRequest(authorization, relationship.getId()).enqueue(new Callback<ExffMessage>() {
+                        @Override
+                        public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
+                            if (response.isSuccessful()) {
+                                ExffMessage message = response.body();
+                                notifications.remove(position);
+                                notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(), message.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ExffMessage> call, Throwable t) {
+
+                            Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            });
 
             txtNameUser.setText(relationship.getSender().getFullName());
             txtAddressUser.setText("");
