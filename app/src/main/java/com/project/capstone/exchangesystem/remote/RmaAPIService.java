@@ -104,6 +104,8 @@ public interface RmaAPIService {
     @DELETE("/transaction/{transID}")
     Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
+    @DELETE("/relationship/{id}")
+    Call<ExffMessage> cancelFriendRequest(@Header("Authorization") String authorization, @Path("id") int id);
 
     @GET("/user")
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
@@ -117,5 +119,9 @@ public interface RmaAPIService {
 
     @GET("/relationship")
     Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
+
+    @PUT("/relationship")
+    Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
 }
 
