@@ -69,7 +69,7 @@ public class YourInventoryFragment extends Fragment {
         String authorization = sharedPreferences.getString("authorization", null);
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserId(yourID).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, yourID).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     List<Item> result = response.body();

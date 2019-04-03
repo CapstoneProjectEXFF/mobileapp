@@ -27,8 +27,14 @@ public interface RmaAPIService {
     @GET("/item")
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
+    @GET("/item/privacy")
+    Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization);
+
     @GET("/user/{id}/item")
     Call<List<Item>> getItemsByUserId(@Path("id") int userID);
+
+    @GET("/user/{id}/item/privacy")
+    Call<List<Item>> getItemsByUserIdWithPrivacy(@Header("Authorization") String authorization, @Path("id") int userID);
 
     @GET("/itemSearch")
     Call<List<Item>> findItems(@Query("name") String name);

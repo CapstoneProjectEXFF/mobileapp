@@ -65,7 +65,7 @@ public class ChooseItemActivity extends AppCompatActivity {
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserId(id).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, id).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
 
