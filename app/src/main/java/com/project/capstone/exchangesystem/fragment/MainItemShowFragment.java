@@ -77,7 +77,7 @@ public class MainItemShowFragment extends Fragment {
         final int meID = sharedPreferences.getInt("userId", 0);
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getAllItems(authorization).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getAllItemsWithPrivacy(authorization).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     List<Item> result = response.body();

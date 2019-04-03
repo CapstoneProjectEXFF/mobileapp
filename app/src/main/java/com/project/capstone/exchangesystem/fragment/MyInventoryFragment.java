@@ -74,7 +74,7 @@ public class MyInventoryFragment extends Fragment {
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserId(userID).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, userID).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     List<Item> result = response.body();
