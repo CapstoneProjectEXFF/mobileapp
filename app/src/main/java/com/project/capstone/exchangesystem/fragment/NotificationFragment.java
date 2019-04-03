@@ -156,7 +156,6 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Relationship>> call, Response<List<Relationship>> response) {
                 if (response.isSuccessful()) {
-                    System.out.println("vào successfull roofi ");
                     List<Relationship> temp = new ArrayList<>();
                     temp = response.body();
                     transactions.addAll(temp);

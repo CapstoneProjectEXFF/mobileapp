@@ -1,21 +1,26 @@
 package com.project.capstone.exchangesystem.fragment;
 
-import com.project.capstone.exchangesystem.activity.DescriptionItemActivity;
-import com.project.capstone.exchangesystem.activity.SearchActivity;
-import com.project.capstone.exchangesystem.constants.AppStatus;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.DescriptionItemActivity;
+import com.project.capstone.exchangesystem.activity.SearchActivity;
+import com.project.capstone.exchangesystem.adapter.ItemAdapter;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class MainItemShowFragment extends Fragment {
@@ -31,6 +37,8 @@ public class MainItemShowFragment extends Fragment {
     ArrayList<Item> itemArrayList;
     ItemAdapter itemAdapter;
     Menu menu;
+    EditText txtSearch;
+    ImageButton btnSearch;
 
 
     public MainItemShowFragment() {
@@ -49,9 +57,37 @@ public class MainItemShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", null);
+        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         final View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
+        txtSearch = view.findViewById(R.id.txtSearch);
+        btnSearch = view.findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String keyword = txtSearch.getText().toString();
+                rmaAPIService.findItemsByNameAndCategoryWithPrivacy(authorization, keyword, 0).enqueue(new Callback<ArrayList<Item>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
+                        if (response.isSuccessful()) {
+                            ArrayList<Item> result = response.body();
+                            Intent intent = new Intent(getActivity(), SearchActivity.class);
+                            intent.putExtra("resultList", result);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        });
         mainRecyclerView = (RecyclerView) view.findViewById(R.id.mainRecyclerView);
         itemArrayList = new ArrayList<>();
         itemAdapter = new ItemAdapter(view.getContext(), itemArrayList, new ItemAdapter.OnItemClickListener() {
