@@ -117,6 +117,9 @@ public interface RmaAPIService {
     @DELETE("/relationship/{id}")
     Call<ExffMessage> cancelFriendRequest(@Header("Authorization") String authorization, @Path("id") int id);
 
+    @HTTP(method = "DELETE", path = "/relationship", hasBody = true)
+    Call<ExffMessage> unfriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
     @GET("/user")
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
 
@@ -132,6 +135,12 @@ public interface RmaAPIService {
 
     @PUT("/relationship")
     Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/relationship/friend")
+    Call<List<User>> getFriendListByUserId(@Header("Authorization") String authorization);
+
+    @GET("/relationship/friend/count")
+    Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);
 
 }
 
