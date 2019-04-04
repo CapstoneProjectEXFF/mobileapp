@@ -2,12 +2,14 @@ package com.project.capstone.exchangesystem.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.FriendInventoryActivity;
 import com.project.capstone.exchangesystem.model.ExffMessage;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -38,8 +40,6 @@ public class FriendListAdapter extends BaseAdapter {
         public TextView txtNameFriend, txtPhoneNumber;
         public Button btnUnfriend;
     }
-
-
     @Override
     public int getCount() {
         return userArrayList.size();
@@ -77,6 +77,7 @@ public class FriendListAdapter extends BaseAdapter {
         }
         final User userItem = (User) getItem(position);
 
+
         viewHolder.txtNameFriend.setText(userItem.getFullName());
         viewHolder.txtPhoneNumber.setText(userItem.getPhone());
         viewHolder.btnUnfriend.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +95,6 @@ public class FriendListAdapter extends BaseAdapter {
                             userArrayList.remove(position);
                             notifyDataSetChanged();
                         }
-
                     }
 
                     @Override
@@ -108,6 +108,14 @@ public class FriendListAdapter extends BaseAdapter {
                 .placeholder(R.drawable.ic_profile)
                 .error(R.drawable.ic_profile)
                 .into(viewHolder.imgUser);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FriendInventoryActivity.class);
+                intent.putExtra("friendDetail", userItem);
+                context.startActivity(intent);
+            }
+        });
         return convertView;
     }
 }
