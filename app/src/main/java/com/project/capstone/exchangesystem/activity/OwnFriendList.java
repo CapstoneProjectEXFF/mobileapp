@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +49,10 @@ public class OwnFriendList extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
+                User friendDetail = friendList.get(position);
+                Intent intent = new Intent(OwnFriendList.this, FriendInventoryActivity.class);
+                intent.putExtra("friendDetail", friendDetail);
+                startActivity(intent);
             }
         });
     }
