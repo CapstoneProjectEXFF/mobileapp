@@ -4,6 +4,7 @@ import com.project.capstone.exchangesystem.model.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,10 @@ public interface RmaAPIService {
     Call<List<Item>> getItemsByUserIdWithPrivacy(@Header("Authorization") String authorization, @Path("id") int userID);
 
     @GET("/itemSearch")
-    Call<List<Item>> findItems(@Query("name") String name);
+    Call<ArrayList<Item>> findItems(@Query("name") String name);
+
+    @GET("/item/search/privacy")
+    Call<ArrayList<Item>> findItemsByNameAndCategoryWithPrivacy(@Header("Authorization") String authorization, @Query("name") String name, @Query("categoryId") int categoryId);
 
     @GET("/category")
     Call<List<Category>> getAllCategory();
@@ -113,6 +117,9 @@ public interface RmaAPIService {
     @DELETE("/relationship/{id}")
     Call<ExffMessage> cancelFriendRequest(@Header("Authorization") String authorization, @Path("id") int id);
 
+    @HTTP(method = "DELETE", path = "/relationship", hasBody = true)
+    Call<ExffMessage> unfriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
     @GET("/user")
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
 
@@ -128,6 +135,12 @@ public interface RmaAPIService {
 
     @PUT("/relationship")
     Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/relationship/friend")
+    Call<List<User>> getFriendListByUserId(@Header("Authorization") String authorization);
+
+    @GET("/relationship/friend/count")
+    Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);
 
 }
 

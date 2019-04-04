@@ -35,6 +35,16 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/bg_gradient</item>
     </style>
+    <style name="MooTheme" parent="android:Theme">
+        <item name="android:spinnerItemStyle">@style/MooSpinnerItem</item>
+    </style>
 
+    <style name="MooSpinnerItem" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/MooTextAppearanceSpinnerItem</item>
+    </style>
+
+    <style name="MooTextAppearanceSpinnerItem" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textSize">5sp</item>
+    </style>
 
 </resources>

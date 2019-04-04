@@ -3,21 +3,16 @@ package com.project.capstone.exchangesystem.activity;
 //import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.project.capstone.exchangesystem.fragment.AddFriendFragment;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.fragment.NotificationFragment;
-import com.project.capstone.exchangesystem.fragment.UserProfileFragment;
-import com.project.capstone.exchangesystem.fragment.MainCharityPostFragment;
-import com.project.capstone.exchangesystem.fragment.MainItemShowFragment;
+import com.project.capstone.exchangesystem.fragment.*;
 
 public class MainActivity extends AppCompatActivity {
     private final Fragment ITEM_FRAGMENT = MainItemShowFragment.newInstance();
@@ -81,5 +76,10 @@ public class MainActivity extends AppCompatActivity {
     public void toOwnTransaction(View view) {
         Intent iOwnTransaction = new Intent(this, OwnTransaction.class);
         startActivity(iOwnTransaction);
+    }
+
+    public void toOwnFriendList(View view) {
+        Intent iOwnFriendList = new Intent(this, OwnFriendList.class);
+        startActivity(iOwnFriendList);
     }
 }
