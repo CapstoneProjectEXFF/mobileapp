@@ -2,6 +2,7 @@ package com.project.capstone.exchangesystem.activity;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,9 @@ public class SearchActivity extends AppCompatActivity {
 //        arrayList.add("vở");
 //        arrayList.add("cặp");
 //        arrayList.add("áo quần");
+        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        final String authorization = sharedPreferences.getString("authorization", null);
+
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
             @Override
@@ -86,7 +90,7 @@ public class SearchActivity extends AppCompatActivity {
 
         resultList = (ArrayList<Item>) intent.getSerializableExtra("resultList");
         adapter = new ListAdapter(arrayList);
-        activitySearchBinding.listView.setAdapter(adapter);
+//        activitySearchBinding.listView.setAdapter(adapter);
         activitySearchBinding.search.setActivated(true);
         activitySearchBinding.search.setQueryHint("Type your keyword here");
         activitySearchBinding.search.onActionViewExpanded();
@@ -107,8 +111,9 @@ public class SearchActivity extends AppCompatActivity {
         activitySearchBinding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                int categoryId = activitySearchBinding.spCategory.getSelectedItemPosition();
                 RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-                rmaAPIService.findItems(query).enqueue(new Callback<ArrayList<Item>>() {
+                rmaAPIService.findItemsByNameAndCategoryWithPrivacy(authorization, query, categoryId).enqueue(new Callback<ArrayList<Item>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
 
@@ -143,13 +148,16 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, dataArray);
+        List<String> spinnerArrayList = new ArrayList<>();
+        spinnerArrayList.add("Tất Cả");
+        spinnerArrayList.addAll(dataArray);
+        dataArray.add(0, "Tất Cả");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, spinnerArrayList);
         dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(dataAdapter);
     }
 
     private void notifyLoadingError(String tag, String msg) {
-
         Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
         Log.i(tag, msg);
         Intent intent = new Intent(getApplicationContext(), OwnInventory.class);
