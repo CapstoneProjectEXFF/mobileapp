@@ -142,5 +142,9 @@ public interface RmaAPIService {
     @GET("/relationship/friend/count")
     Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);
 
-}
+    @POST("/relationship/contact")
+    Call<List<User>> getNotFriendFromContact(@Header("Authorization") String authorization, @Body ArrayList<String> body);
 
+//    @HTTP(method = "GET", path = "/relationship/contact", hasBody = true)
+//    Call<List<User>> getNotFriendFromContact(@Header("Authorization") String authorization, @Body ArrayList<String> body);
+}
