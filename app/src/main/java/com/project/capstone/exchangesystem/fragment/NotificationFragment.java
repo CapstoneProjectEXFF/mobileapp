@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ public class NotificationFragment extends Fragment {
     ListView listView;
     TransactionNotificationAdapter transactionNotificationAdapter;
     ArrayList<Object> transactions;
+    Toolbar toolbar;
 
 
     public NotificationFragment() {
@@ -56,6 +59,7 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
+
         final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
@@ -64,6 +68,7 @@ public class NotificationFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.notificationListview);
         transactions = new ArrayList<>();
         transactionNotificationAdapter = new TransactionNotificationAdapter(view.getContext(), transactions);
+        toolbar = view.findViewById(R.id.notificationToolbar);
         listView.setAdapter(transactionNotificationAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -93,8 +98,14 @@ public class NotificationFragment extends Fragment {
         });
         getDataFromTransaction();
         getDataFromRelationship();
+        ActionToolbar();
         return view;
 
+    }
+
+    private void ActionToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.notification_title);
     }
 
     private void getDataFromTransaction() {

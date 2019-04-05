@@ -45,6 +45,9 @@
     <string name="data_loading_noti">Đang tải dữ liệu...</string>
     <string name="waiting_noti">Vui lòng chờ...</string>
     <string name="select_item_noti">Vui lòng chọn đồ dùng.</string>
-
     <string name="no_donators">Chưa có ai quyên góp cho bài này</string>
+    <string name="sync_contact_title">Sync Contact</string>
+    <string name="notification_title">Notification</string>
+    <string name="explore_title">Explore</string>
+
 </resources>

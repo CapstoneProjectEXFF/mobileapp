@@ -1,4 +1,4 @@
-package com.project.capstone.exchangesystem;
+package com.project.capstone.exchangesystem.activity;
 
 import android.Manifest;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
+import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.FriendFeedAdapter;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
