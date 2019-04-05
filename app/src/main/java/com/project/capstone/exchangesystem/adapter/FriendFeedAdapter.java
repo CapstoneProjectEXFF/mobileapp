@@ -1,6 +1,5 @@
 package com.project.capstone.exchangesystem.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -57,7 +56,7 @@ public class FriendFeedAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("localData", MODE_PRIVATE);
         final String authorization = sharedPreferences.getString("authorization", null);
         FriendFeedAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {

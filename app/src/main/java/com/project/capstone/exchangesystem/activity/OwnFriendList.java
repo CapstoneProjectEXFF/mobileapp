@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.SyncContact;
 import com.project.capstone.exchangesystem.adapter.FriendListAdapter;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -91,5 +92,10 @@ public class OwnFriendList extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void toSyncContact(View view) {
+        Intent intent = new Intent(this, SyncContact.class);
+        startActivity(intent);
     }
 }

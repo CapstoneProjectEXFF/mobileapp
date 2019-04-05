@@ -5,26 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.OwnFriendList">
+    tools:context=".SyncContact">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/friendToolbar"
+        android:id="@+id/syncContactToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:title="Friend List">
+        app:title="Sync Contact"
+        app:titleTextColor="@color/colorWhite">
 
-        <Button
-            android:id="@+id/btnSyncContact"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="Sync Contact"
-            android:onClick="toSyncContact"
-            android:theme="@style/Widget.AppCompat.Button" />
     </android.support.v7.widget.Toolbar>
 
     <ListView
-        android:id="@+id/friendListview"
+        android:id="@+id/friendFeedListview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
