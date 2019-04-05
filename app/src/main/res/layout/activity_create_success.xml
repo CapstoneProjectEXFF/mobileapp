@@ -37,7 +37,7 @@
             android:layout_marginBottom="10dp">
 
             <TextView
-                android:id="@+id/txtMessage1"
+                android:id="@+id/txtMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -70,7 +70,7 @@
             android:layout_marginBottom="20dp">
 
             <TextView
-                android:id="@+id/txtMessage2"
+                android:id="@+id/txtDirection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -99,7 +99,6 @@
                 android:text="Trở về Đăng Nhập"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"/>
-                <!--android:onClick="onConfirmClick"/>-->
         </TableRow>
 
 

@@ -57,5 +57,10 @@
     <string name="change_pass_alert">Please use other passwords</string>
     <string name="change_pass_success">Change Password Succesfully</string>
     <string name="pass_change_fail_alert">Fail to change password</string>
-
+    <string name="recieve_address">Địa chỉ nhận hàng</string>
+    <string name="confirm_information_title">Xác nhận thông tin</string>
+    <string name="confirm_information_success">Hoàn thành xác nhận</string>
+    <string name="confirm_information_message">Bạn đã xác nhận thông tin thành công!</string>
+    <string name="view_map">Xem bản đồ</string>
+    <string name="continuous">Tiếp tục</string>
 </resources>
