@@ -49,5 +49,13 @@
     <string name="sync_contact_title">Sync Contact</string>
     <string name="notification_title">Notification</string>
     <string name="explore_title">Explore</string>
+    <string name="transaction_confirm_title">Transaction</string>
+    <string name="confirm_password_alert">Need to confirm new password</string>
+    <string name="string_password_alert">New Password is not long enough</string>
+    <string name="password_validation_alert">Old Password is not validate</string>
+    <string name="confirm_new_pass_alert">Your newpassword \'s not to be confirmed</string>
+    <string name="change_pass_alert">Please use other passwords</string>
+    <string name="change_pass_success">Change Password Succesfully</string>
+    <string name="pass_change_fail_alert">Fail to change password</string>
 
 </resources>
