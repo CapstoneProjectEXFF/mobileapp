@@ -12,9 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:title="Kho của bạn"
+        app:title="@string/transaction_confirm_title"
         app:titleTextColor="@color/colorWhite"
-        tools:ignore="MissingConstraints"></android.support.v7.widget.Toolbar>
+        tools:ignore="MissingConstraints">
+
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"

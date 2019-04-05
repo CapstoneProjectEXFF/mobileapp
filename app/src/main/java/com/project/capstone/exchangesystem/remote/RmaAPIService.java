@@ -126,9 +126,6 @@ public interface RmaAPIService {
     @POST("/relationship")
     Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
-    @GET("/relationship/{userId}")
-    Call<ExffMessage> checkRelationship(@Header("Authorization") String authorization, @Path("userId") int userId);
-
 
     @GET("/relationship")
     Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
@@ -145,6 +142,7 @@ public interface RmaAPIService {
     @POST("/relationship/contact")
     Call<List<User>> getNotFriendFromContact(@Header("Authorization") String authorization, @Body ArrayList<String> body);
 
-//    @HTTP(method = "GET", path = "/relationship/contact", hasBody = true)
-//    Call<List<User>> getNotFriendFromContact(@Header("Authorization") String authorization, @Body ArrayList<String> body);
+    @GET("/relationship/explore")
+    Call<List<User>> getNewFriendToAdd(@Header("Authorization") String authorization);
+
 }

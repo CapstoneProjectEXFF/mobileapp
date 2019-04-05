@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.SyncContact;
 import com.project.capstone.exchangesystem.adapter.FriendListAdapter;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;

@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SyncContact">
+    tools:context=".activity.SyncContact">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/syncContactToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:title="Sync Contact"
+        app:title="@string/sync_contact_title"
         app:titleTextColor="@color/colorWhite">
 
     </android.support.v7.widget.Toolbar>

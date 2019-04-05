@@ -3,6 +3,8 @@ package com.project.capstone.exchangesystem.fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.FriendFeedAdapter;
-import com.project.capstone.exchangesystem.constants.AppStatus;
-import com.project.capstone.exchangesystem.model.ExffMessage;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -30,6 +30,7 @@ public class AddFriendFragment extends Fragment {
     FriendFeedAdapter friendFeedAdapter;
     ArrayList<User> userList;
     String temp;
+    Toolbar toolbar;
 
     public AddFriendFragment() {
     }
@@ -54,6 +55,7 @@ public class AddFriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_friend, container, false);
         listView = (ListView) view.findViewById(R.id.friendFeedListview);
         userList = new ArrayList<>();
+        toolbar = view.findViewById(R.id.exploreToolbar);
         friendFeedAdapter = new FriendFeedAdapter(view.getContext(), userList);
         listView.setAdapter(friendFeedAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,9 +65,14 @@ public class AddFriendFragment extends Fragment {
             }
         });
         getData();
+        ActionToolbar();
         return view;
     }
 
+    private void ActionToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.explore_title);
+    }
 
     private void getData() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
@@ -74,31 +81,16 @@ public class AddFriendFragment extends Fragment {
         final int userID = sharedPreferences.getInt("userId", 0);
 
         final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        rmaAPIService.getAllUser(authorization).enqueue(new Callback<List<User>>() {
+        rmaAPIService.getNewFriendToAdd(authorization).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
-                    final List<User> temp = response.body();
+                    List<User> temp = new ArrayList<>();
+                    temp = response.body();
                     for (int i = 0; i < temp.size(); i++) {
-                        if (temp.get(i).getId() != userID && !temp.get(i).getStatus().equals(AppStatus.USER_DISABLE)) {
-                            final int finalI = i;
-                            rmaAPIService.checkRelationship(authorization, temp.get(i).getId()).enqueue(new Callback<ExffMessage>() {
-                                @Override
-                                public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
-                                    if (response.isSuccessful()) {
-                                        ExffMessage relationshipStatus = response.body();
-                                        if (relationshipStatus.getMessage().equals("Not Friend")) {
-                                            userList.add(temp.get(finalI));
-                                            friendFeedAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<ExffMessage> call, Throwable t) {
-
-                                }
-                            });
+                        if (temp.get(i).getId() != userID) {
+                            userList.add(temp.get(i));
+                            friendFeedAdapter.notifyDataSetChanged();
                         }
                     }
                 }
