@@ -9,11 +9,13 @@ import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.TradeAdapter;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +30,7 @@ public class ChooseItemActivity extends AppCompatActivity {
     TradeAdapter tradeAdapter;
     ArrayList<Item> chooseList;
     ArrayList<String> idItemList;
+    ArrayList<Integer> listItem;
     String id;
 
     @Override
@@ -54,9 +57,11 @@ public class ChooseItemActivity extends AppCompatActivity {
 
 
         if (intent.hasExtra("itemMeIdList")) {
-            ArrayList<String> listItem = intent.getStringArrayListExtra("itemMeIdList");
+//            ArrayList<String> listItem = intent.getStringArrayListExtra("itemMeIdList");
+            listItem = intent.getIntegerArrayListExtra("itemMeIdList");
         } else {
-            ArrayList<String> listItem = intent.getStringArrayListExtra("itemYouIdList");
+//            ArrayList<String> listItem = intent.getStringArrayListExtra("itemYouIdList");
+            listItem = intent.getIntegerArrayListExtra("itemYouIdList");
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
@@ -71,11 +76,19 @@ public class ChooseItemActivity extends AppCompatActivity {
 
                     List<Item> result = response.body();
                     for (int i = 0; i < result.size(); i++) {
-                        if (result.get(i).getStatus().equals(ITEM_ENABLE)){
+                        if (result.get(i).getStatus().equals(ITEM_ENABLE)) {
                             chooseList.add(result.get(i));
-                            tradeAdapter.notifyDataSetChanged();
+
                         }
                     }
+                    for (int i = 0; i < listItem.size(); i++){
+                        for (int j = 0; j < chooseList.size(); j++){
+                            if (chooseList.get(j).getId() == listItem.get(i)){
+                                chooseList.remove(j);
+                            }
+                        }
+                    }
+                    tradeAdapter.notifyDataSetChanged();
                 }
 
                 @Override

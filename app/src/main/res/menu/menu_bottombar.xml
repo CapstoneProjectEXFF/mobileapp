@@ -15,6 +15,12 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/bottombaritem_message"
+        android:icon="@drawable/round_forum_black_36"
+        android:title="@string/nav_bar_message"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/bottombaritem_notification"
         android:icon="@drawable/ic_notification"
         android:title="@string/nav_bar_notif"

@@ -59,5 +59,8 @@ dependencies {
     //Facebook
     implementation 'com.facebook.android:facebook-share:[4,5)'
 
+    //Socket
+    implementation 'com.github.nkzawa:socket.io-client:0.3.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

@@ -51,7 +51,7 @@
             android:textSize="@dimen/textSize" />
 
         <ImageButton
-            android:id="@+id/btnAddImages"
+            android:id="@+id/btnAddItems"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/round_add_to_photos_black_36"/>
