@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragment.MessengerTabFragment">
+
+    <ListView
+        android:id="@+id/lvMessageList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:divider="#fff"
+        android:transcriptMode="normal"
+        android:background="@color/lavendar"
+        android:paddingBottom="5dp"
+        android:verticalScrollbarPosition="right"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
+
+        <EditText
+            android:id="@+id/edtMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/input_message"
+            android:layout_weight="2"
+            android:textColor="@color/colorBlack"/>
+
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/round_send_black_36"/>
+
+    </LinearLayout>
+
+</LinearLayout>

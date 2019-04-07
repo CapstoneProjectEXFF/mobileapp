@@ -101,20 +101,20 @@ public class TradeAdapter extends BaseAdapter {
         viewHolder.txtNameTradeItem.setText(item.getName());
         viewHolder.txtTradeIDItem.setText(String.valueOf(item.getId()));
         Intent intent = ((Activity) context).getIntent();
-        ArrayList<String> listItem;
-        if (intent.hasExtra("itemMeIdList")) {
-            listItem = intent.getStringArrayListExtra("itemMeIdList");
-        } else {
-            listItem = intent.getStringArrayListExtra("itemYouIdList");
-        }
-        //TODO check listItem null
-        if (listItem != null) {
-            for (int i = 0; i < listItem.size(); i++) {
-                if (listItem.get(i).equals(String.valueOf(item.getId()))) {
-                    viewHolder.checkBoxTrade.setChecked(true);
-                }
-            }
-        }
+//        ArrayList<String> listItem;
+//        if (intent.hasExtra("itemMeIdList")) {
+//            listItem = intent.getStringArrayListExtra("itemMeIdList");
+//        } else {
+//            listItem = intent.getStringArrayListExtra("itemYouIdList");
+//        }
+//        //TODO check listItem null
+//        if (listItem != null) {
+//            for (int i = 0; i < listItem.size(); i++) {
+//                if (listItem.get(i).equals(String.valueOf(item.getId()))) {
+//                    viewHolder.checkBoxTrade.setChecked(true);
+//                }
+//            }
+//        }
         String url = "";
         if (item.getImage().size() > 0) {
             url = item.getImage().get(0).getUrl();

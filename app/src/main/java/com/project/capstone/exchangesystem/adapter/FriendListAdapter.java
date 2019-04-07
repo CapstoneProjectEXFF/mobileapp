@@ -11,6 +11,7 @@ import android.widget.*;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.FriendInventoryActivity;
 import com.project.capstone.exchangesystem.model.ExffMessage;
+import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -28,9 +29,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FriendListAdapter extends BaseAdapter {
     Context context;
-    ArrayList<User> userArrayList;
+    ArrayList<Relationship> userArrayList;
 
-    public FriendListAdapter(Context context, ArrayList<User> userArrayList) {
+    public FriendListAdapter(Context context, ArrayList<Relationship> userArrayList) {
         this.context = context;
         this.userArrayList = userArrayList;
     }
@@ -40,6 +41,7 @@ public class FriendListAdapter extends BaseAdapter {
         public TextView txtNameFriend, txtPhoneNumber;
         public Button btnUnfriend;
     }
+
     @Override
     public int getCount() {
         return userArrayList.size();
@@ -75,7 +77,13 @@ public class FriendListAdapter extends BaseAdapter {
         } else {
             viewHolder = (FriendListAdapter.ViewHolder) convertView.getTag();
         }
-        final User userItem = (User) getItem(position);
+        final Relationship relationshipItem = (Relationship) getItem(position);
+        User userItem = new User();
+        if (relationshipItem.getSenderId() == userID) {
+            userItem = relationshipItem.getReceiver();
+        } else {
+            userItem = relationshipItem.getSender();
+        }
 
 
         viewHolder.txtNameFriend.setText(userItem.getFullName());
@@ -84,8 +92,8 @@ public class FriendListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Map<String, String> bodyUnfriend = new HashMap<String, String>();
-                bodyUnfriend.put("firstID", String.valueOf(userID));
-                bodyUnfriend.put("secondID", String.valueOf(userItem.getId()));
+                bodyUnfriend.put("id", String.valueOf(relationshipItem.getId()));
+                System.out.println("test " + relationshipItem.getId());
 
                 rmaAPIService.unfriend(authorization, bodyUnfriend).enqueue(new Callback<ExffMessage>() {
                     @Override
@@ -108,11 +116,12 @@ public class FriendListAdapter extends BaseAdapter {
                 .placeholder(R.drawable.ic_profile)
                 .error(R.drawable.ic_profile)
                 .into(viewHolder.imgUser);
+        final User finalUserItem = userItem;
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, FriendInventoryActivity.class);
-                intent.putExtra("friendDetail", userItem);
+                intent.putExtra("friendDetail", finalUserItem);
                 context.startActivity(intent);
             }
         });

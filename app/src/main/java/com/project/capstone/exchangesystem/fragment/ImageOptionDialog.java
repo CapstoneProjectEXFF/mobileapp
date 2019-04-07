@@ -88,7 +88,8 @@ public class ImageOptionDialog extends BottomSheetDialogFragment {
         try{
             imgListener = (ImageOptionListener) context;
         } catch (ClassCastException e){
-            throw new ClassCastException(context.toString());
+//            throw new ClassCastException(context.toString());
+            throw new ClassCastException(e.getMessage());
         }
     }
 

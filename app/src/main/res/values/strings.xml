@@ -19,6 +19,7 @@
     <string name="nav_bar_charity">Từ thiện</string>
     <string name="nav_bar_notif">Thông báo</string>
     <string name="nav_bar_profile">Người dùng</string>
+    <string name="nav_bar_message">Tin nhắn</string>
     <string name="nav_bar_addfriend">Kết bạn</string>
 
     <!--Facebook-->
@@ -63,4 +64,13 @@
     <string name="confirm_information_message">Bạn đã xác nhận thông tin thành công!</string>
     <string name="view_map">Xem bản đồ</string>
     <string name="continuous">Tiếp tục</string>
+    <string name="input_message">Tin nhắn</string>
+    <string name="trade_receive_item">Nhận</string>
+    <string name="trade_send_item">Trao</string>
+    <string name="trade_add_receive_item">Thêm đồ muốn nhận</string>
+    <string name="trade_add_send_item">Thêm đồ muốn gửi</string>
+    <string name="cancel">Hủy</string>
+    <string name="finish">Hoàn thành</string>
+    <string name="message">Tin nhắn</string>
+    <string name="trade">Trao đổi</string>
 </resources>

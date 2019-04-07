@@ -40,7 +40,7 @@ public interface RmaAPIService {
     @GET("/itemSearch")
     Call<ArrayList<Item>> findItems(@Query("name") String name);
 
-    @GET("/item/search/privacy")
+    @GET("/item/search")
     Call<ArrayList<Item>> findItemsByNameAndCategoryWithPrivacy(@Header("Authorization") String authorization, @Query("name") String name, @Query("categoryId") int categoryId);
 
     @GET("/category")
@@ -112,7 +112,13 @@ public interface RmaAPIService {
 
 
     @DELETE("/transaction/{transID}")
-    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
+    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
+
+    @GET("/trading")
+    Call<List<Room>> loadRoomByUserId(@Query("userId") int userId);
+
+    @GET("/room")
+    Call<Room> loadRoom(@Query("room") String roomName);
 
     @DELETE("/relationship/{id}")
     Call<ExffMessage> cancelFriendRequest(@Header("Authorization") String authorization, @Path("id") int id);
@@ -126,7 +132,6 @@ public interface RmaAPIService {
     @POST("/relationship")
     Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
-
     @GET("/relationship")
     Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
 
@@ -134,7 +139,7 @@ public interface RmaAPIService {
     Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
     @GET("/relationship/friend")
-    Call<List<User>> getFriendListByUserId(@Header("Authorization") String authorization);
+    Call<List<Relationship>> getFriendListByUserId(@Header("Authorization") String authorization);
 
     @GET("/relationship/friend/count")
     Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);

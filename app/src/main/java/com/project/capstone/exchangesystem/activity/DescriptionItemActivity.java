@@ -3,28 +3,26 @@ package com.project.capstone.exchangesystem.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.remote.RmaAPIService;
-import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.Item;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class DescriptionItemActivity extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
@@ -162,11 +160,15 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     public void toTradeActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), TradeActivity.class);
+//        Intent intent = new Intent(getApplicationContext(), TradeActivity.class);
+//        Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
+//        intent.putExtra("descriptionItem", item);
+//        startActivity(intent);
+
+        Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
         intent.putExtra("descriptionItem", item);
         startActivity(intent);
-
     }
 
     private String convertDatetime(Timestamp timestamp) {

@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.FriendListAdapter;
-import com.project.capstone.exchangesystem.model.User;
+import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
@@ -25,7 +24,7 @@ public class OwnFriendList extends AppCompatActivity {
     Toolbar toolbar;
     ListView listView;
     FriendListAdapter friendListAdapter;
-    ArrayList<User> friendList;
+    ArrayList<Relationship> friendList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +45,29 @@ public class OwnFriendList extends AppCompatActivity {
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(this, friendList);
         listView.setAdapter(friendListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                User friendDetail = friendList.get(position);
-                Intent intent = new Intent(OwnFriendList.this, FriendInventoryActivity.class);
-                intent.putExtra("friendDetail", friendDetail);
-                startActivity(intent);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                User friendDetail = friendList.get(position);
+//                Intent intent = new Intent(OwnFriendList.this, FriendInventoryActivity.class);
+//                intent.putExtra("friendDetail", friendDetail);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     private void getData() {
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         String authorization = sharedPreferences.getString("authorization", null);
+        final int userID = sharedPreferences.getInt("userId", 0);
 
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        rmaAPIService.getFriendListByUserId(authorization).enqueue(new Callback<List<User>>() {
+        rmaAPIService.getFriendListByUserId(authorization).enqueue(new Callback<List<Relationship>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<List<Relationship>> call, Response<List<Relationship>> response) {
 
                 if (response.isSuccessful()) {
-                    List<User> temp = new ArrayList<>();
+                    List<Relationship> temp = new ArrayList<>();
                     temp = response.body();
                     friendList.addAll(temp);
                     friendListAdapter.notifyDataSetChanged();
@@ -75,7 +75,7 @@ public class OwnFriendList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<Relationship>> call, Throwable t) {
                 System.out.println("Fail rồi");
                 Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
             }
