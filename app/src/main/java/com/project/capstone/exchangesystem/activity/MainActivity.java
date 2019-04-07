@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 import com.project.capstone.exchangesystem.fragment.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottombaritem_message:
                         selectedFragment = MESSENGER_FRAGMENT;
                         break;
-//                    case R.id.bottombaritem_addfriend:
-//                        selectedFragment = ADDFRIEND_FRAGMENT;
-//                        break;
                 }
               
                 initFragment(selectedFragment);
