@@ -10,16 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.project.capstone.exchangesystem.activity.OwnTransaction;
-import com.project.capstone.exchangesystem.activity.EditUserProfileActivity;
-import com.project.capstone.exchangesystem.activity.OwnInventory;
-import com.project.capstone.exchangesystem.activity.ChangePassword;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.SignInActivity;
+import com.project.capstone.exchangesystem.activity.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
-import org.w3c.dom.Text;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,7 +23,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class UserProfileFragment extends Fragment {
-    String temp;
+    String tempTransaction;
+    String tempFriend;
 //    TextView txtNumberTransaction;
 
 
@@ -95,6 +91,7 @@ public class UserProfileFragment extends Fragment {
         TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
         TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
         final TextView txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
+        final TextView txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -116,14 +113,16 @@ public class UserProfileFragment extends Fragment {
                 .placeholder(R.drawable.ic_no_image)
                 .error(R.drawable.ic_no_image)
                 .into(imageView);
-        temp = "";
+        tempTransaction = "";
+        tempFriend = "";
+
         RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.countAllTransactionByUserId(authorization).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful()) {
-                    temp = response.body().toString();
-                    txtNumberTransaction.setText(temp);
+                    tempTransaction = response.body().toString();
+                    txtNumberTransaction.setText(tempTransaction);
                 }
             }
 
@@ -132,7 +131,22 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-        txtNumberTransaction.setText(temp);
+        txtNumberTransaction.setText(tempTransaction);
+        rmaAPIService.countFriendByUserId(authorization).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempFriend = response.body().toString();
+                    txtNumberFriend.setText(tempFriend);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+        txtNumberFriend.setText(tempFriend);
 
 
         return view;
@@ -148,5 +162,8 @@ public class UserProfileFragment extends Fragment {
         startActivity(iOwnTransaction);
     }
 
-
+    public void toOwnFriendList(View view) {
+        Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
+        startActivity(iOwnFriendList);
+    }
 }

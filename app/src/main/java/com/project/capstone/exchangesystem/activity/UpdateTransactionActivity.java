@@ -68,8 +68,6 @@ public class UpdateTransactionActivity extends AppCompatActivity {
         }
 
 
-
-
         choosedYou = (ArrayList<Item>) getIntent().getSerializableExtra("itemsYouUpdate");
         for (int i = 0; i < choosedYou.size(); i++) {
             itemIdsYou.add(String.valueOf(choosedYou.get(i).getId()));
@@ -291,42 +289,31 @@ public class UpdateTransactionActivity extends AppCompatActivity {
                 transactionDetailsAfterUpdate.add(temp);
 
             }
+            System.out.println("Test itemsEliminate size " + itemsEliminate.size());
+            System.out.println("Test itemsAdd size " + itemsAdd.size());
 
             while (itemsEliminate.size() == 0 && itemsAdd.size() == 0) {
-//                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        switch (which) {
-//                            case DialogInterface.BUTTON_POSITIVE:
-//                                break;
-//
-//                            case DialogInterface.BUTTON_NEGATIVE:
-//                                finish();
-//                                break;
-//                        }
-//                    }
-//                };
-//
-//                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
-//                builder.setMessage("You Don't Change Any Items in Transaction?" + "/n" + "Do You Want To Keep Updating").setPositiveButton("Yes", dialogClickListener)
-//                        .setNegativeButton("No", dialogClickListener).show();
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int choice) {
-                        switch (choice) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                break;
-                        }
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,
+                        android.R.style.Theme_DeviceDefault_Light_Dialog));
+
+                alertDialogBuilder.setTitle("Draft");
+                alertDialogBuilder.setMessage("Discard draft?");
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+                alertDialogBuilder.setPositiveButton("DISCARD", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(UpdateTransactionActivity.this, "Discard", Toast.LENGTH_SHORT).show();
                     }
-                };
+                });
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(UpdateTransactionActivity.this);
-                builder.setMessage("Delete this image?")
-                        .setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
 
+                        Toast.makeText(UpdateTransactionActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                alertDialogBuilder.show();
             }
 
             Transaction transactionAfterUpdate = new Transaction();

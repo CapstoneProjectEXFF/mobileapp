@@ -2,7 +2,6 @@ package com.project.capstone.exchangesystem.activity;
 
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.appcompat
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -65,7 +64,7 @@ public class ChangePassword extends AppCompatActivity {
 
         if (oldPass.length() < 6) {
             flag1 = false;
-            Toast.makeText(getApplicationContext(), "Old Password is not validate\n", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.password_validation_alert, Toast.LENGTH_LONG).show();
         } else {
 
         }
@@ -73,7 +72,7 @@ public class ChangePassword extends AppCompatActivity {
 
         if (newPass.length() < 6) {
             flag2 = false;
-            Toast.makeText(getApplicationContext(), "New Password is not long enough\n", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.string_password_alert, Toast.LENGTH_LONG).show();
         } else {
 
         }
@@ -81,7 +80,7 @@ public class ChangePassword extends AppCompatActivity {
 
         if (confirmNewPass.length() < 1) {
             flag3 = false;
-            Toast.makeText(getApplicationContext(), "Need to confirm new password\n", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.confirm_password_alert, Toast.LENGTH_LONG).show();
         } else {
 
         }
@@ -89,7 +88,7 @@ public class ChangePassword extends AppCompatActivity {
 
         if (!newPass.equals(confirmNewPass)) {
             flag4 = false;
-            Toast.makeText(getApplicationContext(), "Your newpassword 's not to be confirmed\n", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.confirm_new_pass_alert, Toast.LENGTH_LONG).show();
         } else {
 
         }
@@ -97,7 +96,7 @@ public class ChangePassword extends AppCompatActivity {
 
         if (newPass.equals(oldPass)) {
             flag5 = false;
-            Toast.makeText(getApplicationContext(), "Please use other passwords\n", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.change_pass_alert, Toast.LENGTH_LONG).show();
         } else {
 
         }
@@ -121,7 +120,7 @@ public class ChangePassword extends AppCompatActivity {
 
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("Authorization")) {
-                            Toast.makeText(getApplicationContext(), "Change Password Succesfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.change_pass_success, Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
                             editor.putString("avatar", responeBody.get("Authorization").toString());
                             editor.commit();
@@ -136,7 +135,7 @@ public class ChangePassword extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
-                    System.out.println("Fail rồi");
+                    System.out.println(getString(R.string.pass_change_fail_alert));
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

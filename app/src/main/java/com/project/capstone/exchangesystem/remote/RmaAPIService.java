@@ -6,6 +6,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +30,20 @@ public interface RmaAPIService {
     @GET("/item")
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
+    @GET("/item/privacy")
+    Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization);
+
     @GET("/user/{id}/item")
     Call<List<Item>> getItemsByUserId(@Path("id") int userID);
 
+    @GET("/user/{id}/item/privacy")
+    Call<List<Item>> getItemsByUserIdWithPrivacy(@Header("Authorization") String authorization, @Path("id") int userID);
+
     @GET("/itemSearch")
-    Call<List<Item>> findItems(@Query("name") String name);
+    Call<ArrayList<Item>> findItems(@Query("name") String name);
+
+    @GET("/item/search/privacy")
+    Call<ArrayList<Item>> findItemsByNameAndCategoryWithPrivacy(@Header("Authorization") String authorization, @Query("name") String name, @Query("categoryId") int categoryId);
 
     @GET("/category")
     Call<List<Category>> getAllCategory();
@@ -107,10 +117,39 @@ public interface RmaAPIService {
     Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
 
     @GET("/trading")
-//    Call<List<Room>> loadRoom(@Body Map<String, Object> body);
     Call<List<Room>> loadRoomByUserId(@Query("userId") int userId);
 
     @GET("/room")
     Call<Room> loadRoom(@Query("room") String roomName);
-}
 
+    @DELETE("/relationship/{id}")
+    Call<ExffMessage> cancelFriendRequest(@Header("Authorization") String authorization, @Path("id") int id);
+
+    @HTTP(method = "DELETE", path = "/relationship", hasBody = true)
+    Call<ExffMessage> unfriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/user")
+    Call<List<User>> getAllUser(@Header("Authorization") String authorization);
+
+    @POST("/relationship")
+    Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/relationship")
+    Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
+
+    @PUT("/relationship")
+    Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+
+    @GET("/relationship/friend")
+    Call<List<User>> getFriendListByUserId(@Header("Authorization") String authorization);
+
+    @GET("/relationship/friend/count")
+    Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);
+
+    @POST("/relationship/contact")
+    Call<List<User>> getNotFriendFromContact(@Header("Authorization") String authorization, @Body ArrayList<String> body);
+
+    @GET("/relationship/explore")
+    Call<List<User>> getNewFriendToAdd(@Header("Authorization") String authorization);
+
+}

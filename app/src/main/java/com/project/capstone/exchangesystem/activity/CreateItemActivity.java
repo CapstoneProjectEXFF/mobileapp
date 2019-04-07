@@ -10,11 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,25 +22,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
-
+import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
-import com.project.capstone.exchangesystem.model.FirebaseImg;
-import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.Category;
+import com.project.capstone.exchangesystem.model.FirebaseImg;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 

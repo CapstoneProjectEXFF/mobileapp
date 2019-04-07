@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".fragment.NotificationFragment">
+    tools:context=".fragment.AddFriendFragment">
+
     <android.support.v7.widget.Toolbar
-        android:id="@+id/notificationToolbar"
+        android:id="@+id/exploreToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -15,10 +16,12 @@
         app:titleTextColor="@color/colorWhite">
 
     </android.support.v7.widget.Toolbar>
+
     <ListView
-        android:id="@+id/notificationListview"
+        android:id="@+id/friendFeedListview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    </ListView>
 </LinearLayout>

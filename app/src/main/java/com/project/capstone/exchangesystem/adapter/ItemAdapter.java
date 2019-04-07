@@ -35,7 +35,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     public void setfilter(ArrayList<Item> tempArray) {
         //wordlist = new ArrayList<>();
         itemArrayList.clear();
-        itemArrayList.addAll(tempArray);
+        if(tempArray != null) {
+            itemArrayList.addAll(tempArray);
+        }
         notifyDataSetChanged();
     }
 

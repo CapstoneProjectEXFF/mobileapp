@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint"
+    android:layout_marginTop="5dp">
+
+    <ImageView
+        android:id="@+id/imgUser"
+        android:layout_width="@dimen/feed_item_profile_pic"
+        android:layout_height="@dimen/feed_item_profile_pic"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintCircleRadius="50dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:background="@drawable/ic_profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="225dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/feed_item_profile_info_padd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgUser"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:id="@+id/linearLayout3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/txtNameFriend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/feed_item_profile_name"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPhoneNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/timestamp"
+            android:textSize="@dimen/feed_item_timestamp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnUnfriend"
+        android:theme="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="Unfriend"
+        android:textAlignment="center"
+        android:shadowRadius="@integer/google_play_services_version"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="@+id/constraint"/>
+
+</android.support.constraint.ConstraintLayout>

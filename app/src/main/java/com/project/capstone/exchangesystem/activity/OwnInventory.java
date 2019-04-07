@@ -39,7 +39,6 @@ public class OwnInventory extends AppCompatActivity {
     }
 
 
-
     private void direct() {
         toolbar = findViewById(R.id.inventoryToolbar);
         recyclerView = findViewById(R.id.inventoryRecyclerView);
@@ -68,13 +67,15 @@ public class OwnInventory extends AppCompatActivity {
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserId(userID).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, userID).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    List<Item> result = response.body();
-                    for (int i = 0; i < result.size(); i++) {
-                        itemArrayList.add(result.get(i));
-                        itemAdapter.notifyDataSetChanged();
+                    if (response.isSuccessful()) {
+                        List<Item> result = response.body();
+                        for (int i = 0; i < result.size(); i++) {
+                            itemArrayList.add(result.get(i));
+                            itemAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
 
