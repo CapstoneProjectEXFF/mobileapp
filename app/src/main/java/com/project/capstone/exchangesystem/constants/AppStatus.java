@@ -9,8 +9,6 @@ public class AppStatus {
     public static final int EXTERNAL_STORAGE_REQUEST = 0;
     public static final int CAMERA_REQUEST = 1;
     public static final int GALLERY_REQUEST = 2;
-    public static final int IMAGE_SIZE = 260;
-    public static final int IMAGE_MARGIN_TOP_RIGHT = 10;
     public static final int CHANGE_IMAGE_FLAG = 0;
     public static final int ADD_IMAGE_FLAG = 1;
     public static final int DONATE_ACTIVITY_IMAGE_FLAG = 2;
@@ -28,4 +26,7 @@ public class AppStatus {
     public static final String TRANSACTION_SEND = "1";
     public static final String TRANSACTION_DONE = "2";
     public static final String TRANSACTION_RESEND = "4";
+    public static final int SEND_MSG = 0;
+    public static final int RECEIVE_MSG = 1;
+
 }

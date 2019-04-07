@@ -55,7 +55,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     Toolbar toolbar;
     RecyclerView rvSelectedImages;
     ItemAdapter itemAdapter;
-    ImageButton btnAddImages;
+    ImageButton btnAddItems;
     Item tmpItem;
     TextView txtNoti;
 
@@ -69,12 +69,12 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         setToolbar();
         setItemAdapter();
 
-        btnAddImages.setOnClickListener(new View.OnClickListener() {
+        btnAddItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> selectedItemIdsStr = new ArrayList<>();
+                ArrayList<Integer> selectedItemIdsStr = new ArrayList<>();
                 for (int i = 0; i < itemList.size(); i++) {
-                    selectedItemIdsStr.add(String.valueOf(itemList.get(i).getId()));
+                    selectedItemIdsStr.add(itemList.get(i).getId());
                 }
                 Intent intent = new Intent(getApplicationContext(), ChooseItemActivity.class);
                 intent.putExtra("id", userId);
@@ -144,7 +144,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         txtReceiverName.setText(donationPost.getUser().getFullName());
         toolbar = findViewById(R.id.tbToolbar);
         rvSelectedImages = findViewById(R.id.rvSelectedImages);
-        btnAddImages = findViewById(R.id.btnAddImages);
+        btnAddItems = findViewById(R.id.btnAddItems);
         txtNoti = findViewById(R.id.txtNoti);
         setNoti();
 

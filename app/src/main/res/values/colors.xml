@@ -44,6 +44,9 @@
     <color name="followersBg">#65DCE5</color>
     <color name="followingBg">#49BEFF</color>
     <color name="transnum">#de8b4c</color>
-    <color name="grey">#E5E5E5</color>
+    <color name="grey">#e2e9f1</color>
+    <color name="lavendar">#E3E4FA</color>
+    <color name="superlightblue">#b9e1f8</color>
+
 
 </resources>

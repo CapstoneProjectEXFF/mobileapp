@@ -12,16 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 import com.project.capstone.exchangesystem.fragment.*;
 
 public class MainActivity extends AppCompatActivity {
     private final Fragment ITEM_FRAGMENT = MainItemShowFragment.newInstance();
     private final Fragment DONATION_FRAGMENT = MainCharityPostFragment.newInstance();
-    //    private final Fragment NOTIFICATION_FRAGMENT = ;
+    private final Fragment NOTIFICATION_FRAGMENT = NotificationFragment.newInstance();
     private final Fragment PROFILE_FRAGMENT = UserProfileFragment.newInstance();
+    private final Fragment MESSENGER_FRAGMENT = MessengerRoomFragment.newInstance();
     private final Fragment ADDFRIEND_FRAGMENT = AddFriendFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +43,19 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = DONATION_FRAGMENT;
                         break;
                     case R.id.bottombaritem_notification:
-                        selectedFragment = NotificationFragment.newInstance();
+                        selectedFragment = NOTIFICATION_FRAGMENT;
                         break;
                     case R.id.bottombaritem_profile:
                         selectedFragment = PROFILE_FRAGMENT;
+                        break;
+                    case R.id.bottombaritem_message:
+                        selectedFragment = MESSENGER_FRAGMENT;
                         break;
                     case R.id.bottombaritem_addfriend:
                         selectedFragment = ADDFRIEND_FRAGMENT;
                         break;
                 }
+              
                 initFragment(selectedFragment);
                 return true;
             }
