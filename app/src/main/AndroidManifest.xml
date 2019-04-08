@@ -1,45 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.project.capstone.exchangesystem">
+xmlns:tools="http://schemas.android.com/tools"
+package="com.project.capstone.exchangesystem">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature android:name="android.hardware.camera2" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/logo_o_64px"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/logo_64px"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+<application
+    android:allowBackup="true"
+    android:icon="@drawable/logo_o_64px"
+    android:label="@string/app_name"
+    android:roundIcon="@drawable/logo_64px"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme"
+    android:usesCleartextTraffic="true">
+    <meta-data
+        android:name="asset_statements"
+        android:resource="@string/asset_statements" />
+    <activity
+        android:name=".activity.SignInActivity">
 
-        <!-- <activity android:name=".MainActivity"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <meta-data
-            android:name="asset_statements"
-            android:resource="@string/asset_statements" />
-
-        <!-- <activity -->
-        <!-- android:name=".activity.SplashScreenActivity" -->
-        <!-- android:theme="@style/SplashTheme"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN"/> -->
-
-
-        <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <activity android:name=".activity.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,77 +32,77 @@
         </activity>
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.SignUpAcitivity" />
-        <!-- <activity android:name=".activity.SignInActivity"/> -->
-        <activity android:name=".activity.ForgetPasswordActivity" />
-        <activity android:name=".activity.CreateSuccessActivity" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.VerifyActivity" />
-        <activity android:name=".activity.ProfileActivity" />
-        <activity
-            android:name=".activity.SearchActivity"
-            android:theme="@style/AppTheme2" />
-        <activity android:name=".activity.DescriptionItemActivity">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
+    <!-- <activity android:name=".activity.SignInActivity"/> -->
+    <activity android:name=".activity.ForgetPasswordActivity" />
+    <activity android:name=".activity.CreateSuccessActivity" />
+    <activity android:name=".activity.MainActivity" />
+    <activity android:name=".activity.VerifyActivity" />
+    <activity android:name=".activity.ProfileActivity" />
+    <activity
+        android:name=".activity.SearchActivity"
+        android:theme="@style/AppTheme2" />
+    <activity android:name=".activity.DescriptionItemActivity">
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data
+                android:host="exff-104b8.firebaseapp.com"
+                android:pathPrefix="/item.html"
+                android:scheme="https" />
+        </intent-filter>
+    </activity>
+    <activity android:name=".activity.TradeActivity" />
+    <activity
+        android:name=".activity.CreateItemActivity"
+        android:screenOrientation="portrait" />
+    <activity
+        android:name=".activity.UpdateItemActivity"
+        android:screenOrientation="portrait" />
+    <activity
+        android:name=".activity.CreateDonationPostActivity"
+        android:screenOrientation="portrait" />
+    <activity
+        android:name=".activity.UpdateDonationPostActivity"
+        android:screenOrientation="portrait" />
+    <activity android:name=".activity.OwnInventory" />
+    <activity android:name=".activity.ChangePassword" />
+    <activity android:name=".activity.EditUserProfileActivity" />
+    <activity android:name=".activity.DescriptionDonationPostActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
 
-                <data
-                    android:host="exff-104b8.firebaseapp.com"
-                    android:pathPrefix="/item.html"
-                    android:scheme="https" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activity.TradeActivity" />
-        <activity
-            android:name=".activity.CreateItemActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.UpdateItemActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.CreateDonationPostActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.UpdateDonationPostActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.OwnInventory" />
-        <activity android:name=".activity.ChangePassword" />
-        <activity android:name=".activity.EditUserProfileActivity" />
-        <activity android:name=".activity.DescriptionDonationPostActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+            <data
+                android:host="exff-104b8.firebaseapp.com"
+                android:pathPrefix="/donation-post.html"
+                android:scheme="https" />
+        </intent-filter>
+    </activity> <!-- Facebook -->
 
-                <data
-                    android:host="exff-104b8.firebaseapp.com"
-                    android:pathPrefix="/donation-post.html"
-                    android:scheme="https" />
-            </intent-filter>
-        </activity> <!-- Facebook -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+    <activity android:name=".activity.TransactionDetailActivity" />
+    <activity android:name=".activity.ChooseItemActivity" />
+    <activity android:name=".activity.UpdateTransactionActivity" />
+    <activity android:name=".activity.DonateItemActivity" />
+    <activity android:name=".activity.TransactionConfirmActivity" />
+    <activity android:name=".activity.OwnTransaction" />
+    <activity android:name=".activity.OwnFriendList" />
+    <activity android:name=".activity.FriendInventoryActivity" />
+    <activity android:name=".activity.SyncContact"></activity>
+    <activity android:name=".activity.InformationConfirmActivity" />
+    <activity android:name=".activity.TradeRealtimeActivity"/>
 
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
-            android:exported="true" />
+    <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activity.TransactionDetailActivity" />
-        <activity android:name=".activity.ChooseItemActivity" />
-        <activity android:name=".activity.UpdateTransactionActivity" />
-        <activity android:name=".activity.DonateItemActivity" />
-        <activity android:name=".activity.TransactionConfirmActivity" />
-        <activity android:name=".activity.OwnTransaction" />
-        <activity android:name=".activity.OwnFriendList" />
-        <activity android:name=".activity.FriendInventoryActivity" />
-        <activity android:name=".activity.SyncContact"></activity>
-        <activity android:name=".activity.InformationConfirmActivity" />
-        <activity android:name=".activity.TradeRealtimeActivity" />
-        <activity android:name=".activity.ExploreFriendActivity" />
-    </application>
+    <provider
+        android:name="com.facebook.FacebookContentProvider"
+        android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
+        android:exported="true" />
+</application>
+
 </manifest>

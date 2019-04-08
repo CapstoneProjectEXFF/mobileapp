@@ -1,6 +1,8 @@
 package com.project.capstone.exchangesystem.remote;
 
 import com.project.capstone.exchangesystem.model.*;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
