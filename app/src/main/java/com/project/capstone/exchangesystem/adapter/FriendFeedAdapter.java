@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.ExffMessage;
+import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -26,12 +27,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class FriendFeedAdapter extends BaseAdapter {
     Context context;
     ArrayList<User> userList;
-    boolean isSent = false;
+    boolean isSent;
+
 
     public class ViewHolder {
         public ImageView imgProfileUser;
         public TextView txtNameUser, txtAddressUser;
-        public Button btnAddFriend;
+        public Button btnAddFriend, btnDeclineRequest;
     }
 
     public FriendFeedAdapter(Context context, ArrayList<User> userList) {
@@ -68,6 +70,7 @@ public class FriendFeedAdapter extends BaseAdapter {
             viewHolder.txtNameUser = (TextView) convertView.findViewById(R.id.txtNameUser);
             viewHolder.txtAddressUser = (TextView) convertView.findViewById(R.id.txtAddressUser);
             viewHolder.btnAddFriend = (Button) convertView.findViewById(R.id.btnAddFriend);
+            viewHolder.btnDeclineRequest = convertView.findViewById(R.id.btnDeclineRequest);
             convertView.setTag(viewHolder);
 
         } else {
@@ -90,41 +93,49 @@ public class FriendFeedAdapter extends BaseAdapter {
                 Map<String, String> friendRequestBody = new HashMap<String, String>();
                 friendRequestBody.put("receiverId", String.valueOf(user.getId()));
                 RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-                if(isSent == false) {
-                    rmaAPIService.addFriend(authorization, friendRequestBody).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Send Request Successfully", Toast.LENGTH_LONG).show();
-                                isSent = true;
-                                finalViewHolder.btnAddFriend.setText("Sent Request");
-
-                            } else {
-                                System.out.println("Fail Add Friend Request");
-                            }
+                rmaAPIService.addFriend(authorization, friendRequestBody).enqueue(new Callback<Relationship>() {
+                    @Override
+                    public void onResponse(Call<Relationship> call, Response<Relationship> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Send Request Successfully", Toast.LENGTH_LONG).show();
+                            finalViewHolder.btnAddFriend.setVisibility(View.GONE);
+                            finalViewHolder.btnDeclineRequest.setVisibility(View.VISIBLE);
+                        } else {
+                            System.out.println("Fail Add Friend Request");
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else if(isSent == true) {
-                    rmaAPIService.cancelFriendRequest(authorization,user.getId()).enqueue(new Callback<ExffMessage>() {
-                        @Override
-                        public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
-                            if(response.isSuccessful()) {
-                                isSent = false;
-                                finalViewHolder.btnAddFriend.setText("Add Friend");
-                            }
-                        }
+                    @Override
+                    public void onFailure(Call<Relationship> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
 
-                        @Override
-                        public void onFailure(Call<ExffMessage> call, Throwable t) {
-
+        viewHolder.btnDeclineRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, String> declineRequest = new HashMap<String, String>();
+                declineRequest.put("userId", String.valueOf(user.getId()));
+                RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+                rmaAPIService.unfriend(authorization, declineRequest).enqueue(new Callback<ExffMessage>() {
+                    @Override
+                    public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Decline Request Successfully", Toast.LENGTH_LONG).show();
+                            finalViewHolder.btnAddFriend.setVisibility(View.GONE);
+                            finalViewHolder.btnDeclineRequest.setVisibility(View.VISIBLE);
+                        } else {
+                            System.out.println("Fail Decline Request");
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ExffMessage> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
         return convertView;

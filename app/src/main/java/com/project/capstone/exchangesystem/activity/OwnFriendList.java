@@ -97,4 +97,9 @@ public class OwnFriendList extends AppCompatActivity {
         Intent intent = new Intent(this, SyncContact.class);
         startActivity(intent);
     }
+
+    public void toExploreFriend(View view) {
+        Intent intent = new Intent(this, ExploreFriendActivity.class);
+        startActivity(intent);
+    }
 }

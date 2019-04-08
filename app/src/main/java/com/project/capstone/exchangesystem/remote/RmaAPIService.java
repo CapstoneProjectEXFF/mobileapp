@@ -28,7 +28,7 @@ public interface RmaAPIService {
     @GET("/item")
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
-    @GET("/item/privacy")
+    @GET("/item")
     Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization);
 
     @GET("/user/{id}/item")
@@ -130,7 +130,7 @@ public interface RmaAPIService {
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
 
     @POST("/relationship")
-    Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+    Call<Relationship> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
     @GET("/relationship")
     Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);

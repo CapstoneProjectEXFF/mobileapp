@@ -146,7 +146,7 @@ public class SyncContact extends AppCompatActivity {
 
                     friendFeedAdapter.notifyDataSetChanged();
                     for (int i = 0; i < temp.size(); i++) {
-                        if(temp.get(i).getId() != userID) {
+                        if (temp.get(i).getId() != userID) {
                             notFriendList.add(temp.get(i));
                         }
                     }

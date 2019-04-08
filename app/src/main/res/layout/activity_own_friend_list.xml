@@ -14,12 +14,21 @@
         android:background="@color/colorPrimary"
         app:title="Friend List">
 
-        <Button
+        <ImageButton
+            android:background="@drawable/round_perm_contact_calendar_black_24"
             android:id="@+id/btnSyncContact"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="Sync Contact"
             android:onClick="toSyncContact"
+            android:theme="@style/Widget.AppCompat.Button" />
+        <ImageButton
+            android:background="@drawable/round_explore_black_24"
+            android:id="@+id/btnExploreFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Sync Contact"
+            android:onClick="toExploreFriend"
             android:theme="@style/Widget.AppCompat.Button" />
     </android.support.v7.widget.Toolbar>
 

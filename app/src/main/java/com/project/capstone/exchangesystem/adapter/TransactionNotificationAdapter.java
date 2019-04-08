@@ -160,7 +160,6 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             }
 
             txtNotification.setText(notification);
-
             Date date = new Date();
             date.setTime(transaction.getCreateTime().getTime());
             String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
