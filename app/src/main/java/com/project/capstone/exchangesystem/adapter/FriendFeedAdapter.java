@@ -124,8 +124,8 @@ public class FriendFeedAdapter extends BaseAdapter {
                     public void onResponse(Call<ExffMessage> call, Response<ExffMessage> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Decline Request Successfully", Toast.LENGTH_LONG).show();
-                            finalViewHolder.btnAddFriend.setVisibility(View.GONE);
-                            finalViewHolder.btnDeclineRequest.setVisibility(View.VISIBLE);
+                            finalViewHolder.btnDeclineRequest.setVisibility(View.GONE);
+                            finalViewHolder.btnAddFriend.setVisibility(View.VISIBLE);
                         } else {
                             System.out.println("Fail Decline Request");
                         }
@@ -138,6 +138,7 @@ public class FriendFeedAdapter extends BaseAdapter {
                 });
             }
         });
+        // TODO show information
         return convertView;
     }
 }

@@ -147,8 +147,6 @@ public class UserProfileFragment extends Fragment {
             }
         });
         txtNumberFriend.setText(tempFriend);
-
-
         return view;
     }
 
@@ -163,6 +161,11 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void toOwnFriendList(View view) {
+        Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
+        startActivity(iOwnFriendList);
+    }
+
+    public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
         startActivity(iOwnFriendList);
     }

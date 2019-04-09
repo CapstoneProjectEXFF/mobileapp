@@ -12,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
-
-import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 import com.project.capstone.exchangesystem.fragment.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = MESSENGER_FRAGMENT;
                         break;
                 }
-              
+
                 initFragment(selectedFragment);
                 return true;
             }
@@ -84,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void toOwnFriendList(View view) {
         Intent iOwnFriendList = new Intent(this, OwnFriendList.class);
+        startActivity(iOwnFriendList);
+    }
+
+    public void toOwnDonationPost(View view) {
+        Intent iOwnFriendList = new Intent(this, OwnDonationPost.class);
         startActivity(iOwnFriendList);
     }
 }

@@ -1,8 +1,6 @@
 package com.project.capstone.exchangesystem.remote;
 
 import com.project.capstone.exchangesystem.model.*;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -114,7 +112,7 @@ public interface RmaAPIService {
 
 
     @DELETE("/transaction/{transID}")
-    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
+    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
     @GET("/trading")
     Call<List<Room>> loadRoomByUserId(@Query("userId") int userId);
@@ -151,5 +149,8 @@ public interface RmaAPIService {
 
     @GET("/relationship/explore")
     Call<List<User>> getNewFriendToAdd(@Header("Authorization") String authorization);
+
+    @GET("/getdonationPost/{userId}")
+    Call<List<DonationPost>> getDonationPostByUserId(@Path("userId") int userId);
 
 }

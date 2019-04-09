@@ -12,24 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:title="Friend List">
+        app:title="@string/title_own_friend_list">
 
-        <ImageButton
-            android:background="@drawable/round_perm_contact_calendar_black_24"
-            android:id="@+id/btnSyncContact"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Sync Contact"
-            android:onClick="toSyncContact"
-            android:theme="@style/Widget.AppCompat.Button" />
-        <ImageButton
-            android:background="@drawable/round_explore_black_24"
-            android:id="@+id/btnExploreFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Sync Contact"
-            android:onClick="toExploreFriend"
-            android:theme="@style/Widget.AppCompat.Button" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:background="@drawable/round_perm_contact_calendar_black_24"
+                android:id="@+id/btnSyncContact"
+                android:layout_width="@dimen/feed_item_profile_pic"
+                android:layout_height="@dimen/feed_item_profile_pic"
+                android:onClick="toSyncContact"
+                app:layout_constraintEnd_toStartOf="@+id/btnExploreFriend"
+                android:theme="@style/Widget.AppCompat.Button" />
+
+            <ImageButton
+                android:background="@drawable/round_explore_black_24"
+                android:id="@+id/btnExploreFriend"
+                android:layout_width="@dimen/feed_item_profile_pic"
+                android:layout_height="@dimen/feed_item_profile_pic"
+                android:onClick="toExploreFriend"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:theme="@style/Widget.AppCompat.Button" />
+        </android.support.constraint.ConstraintLayout>
+
+
     </android.support.v7.widget.Toolbar>
 
     <ListView

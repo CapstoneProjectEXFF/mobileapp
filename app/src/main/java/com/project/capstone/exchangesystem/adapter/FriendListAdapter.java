@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.FriendInventoryActivity;
+import com.project.capstone.exchangesystem.activity.UserProfileActivity;
 import com.project.capstone.exchangesystem.model.ExffMessage;
 import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.User;
@@ -120,7 +120,7 @@ public class FriendListAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, FriendInventoryActivity.class);
+                Intent intent = new Intent(context, UserProfileActivity.class);
                 intent.putExtra("friendDetail", finalUserItem);
                 context.startActivity(intent);
             }
