@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
@@ -86,7 +87,7 @@ public class UserProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-
+        ImageButton btnQR = view.findViewById(R.id.btnQR);
         ImageView imageView = view.findViewById(R.id.imgUserProfile);
         TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
         TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
@@ -148,6 +149,13 @@ public class UserProfileFragment extends Fragment {
         });
         txtNumberFriend.setText(tempFriend);
 
+        btnQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

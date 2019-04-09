@@ -70,7 +70,9 @@
     <string name="trade_add_receive_item">Thêm đồ muốn nhận</string>
     <string name="trade_add_send_item">Thêm đồ muốn gửi</string>
     <string name="cancel">Hủy</string>
-    <string name="finish">Hoàn thành</string>
+    <string name="finish">Chốt</string>
     <string name="message">Tin nhắn</string>
     <string name="trade">Trao đổi</string>
+    <string name="trade_done"> đã chốt.</string>
+
 </resources>

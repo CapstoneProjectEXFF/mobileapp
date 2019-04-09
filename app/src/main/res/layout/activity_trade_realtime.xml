@@ -16,16 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:title="User name" />
-
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"/>
 
     </android.support.design.widget.AppBarLayout>
-
-    <!--<android.support.v4.widget.NestedScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpPager"
@@ -37,16 +30,21 @@
             android:id="@+id/tabBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryLight"
-            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorWhite"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:tabMode="scrollable"
-            app:tabGravity="center">
+            app:tabGravity="fill">
+
+            <!--<android.support.design.widget.TabItem-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:icon="@drawable/round_cached_black_36"/>-->
+
+            <!--<android.support.design.widget.TabItem-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:icon="@drawable/round_forum_black_36"/>-->
 
         </android.support.design.widget.TabLayout>
     </android.support.v4.view.ViewPager>
-
-    <!--</android.support.v4.widget.NestedScrollView>-->
-
 
 </android.support.design.widget.CoordinatorLayout>

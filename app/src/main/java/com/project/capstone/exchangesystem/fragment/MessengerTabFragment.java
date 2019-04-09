@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.JsonObject;
@@ -100,21 +101,20 @@ public class MessengerTabFragment extends Fragment {
         tmpMessage = new ArrayList<>();
 
         tradeRealtimeActivity = (TradeRealtimeActivity) getActivity();
-        sharedPreferences = tradeRealtimeActivity.sharedPreferences;
-        authorization = tradeRealtimeActivity.authorization;
-        item = tradeRealtimeActivity.item;
-        room = tradeRealtimeActivity.room;
-        roomName = tradeRealtimeActivity.roomName;
-        myUserId = tradeRealtimeActivity.myUserId;
-        yourUserId = tradeRealtimeActivity.yourUserId;
+        sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        item = tradeRealtimeActivity.getItem();
+        room = tradeRealtimeActivity.getRoom();
+        roomName = tradeRealtimeActivity.getRoomName();
+        myUserId = tradeRealtimeActivity.getMyUserId();
+        yourUserId = tradeRealtimeActivity.getYourUserId();
 
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
 
-        socketServer = tradeRealtimeActivity.socketServer;
+        socketServer = tradeRealtimeActivity.getSocketServer();
 
         messageAdapter = new MessageAdapter(getActivity().getApplicationContext(), messages, myUserId);
-//        socketServer.onRoom();
-        socketServer.onMsg();
+        socketServer.mSocket.on("send-msg", sendMsg);
 
 
 //        if (item != null){
@@ -185,6 +185,7 @@ public class MessengerTabFragment extends Fragment {
                     }
                     Toast.makeText(getActivity().getApplicationContext(), "sent", Toast.LENGTH_SHORT).show();
                 }
+//                sendTradeConfirmNoti();
             }
         });
 
@@ -244,4 +245,31 @@ public class MessengerTabFragment extends Fragment {
         inputMethodManager =(InputMethodManager) tradeRealtimeActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    private Emitter.Listener sendMsg = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.i("sendMsg", args[0].toString());
+            JSONObject jsonObject = (JSONObject) args[0];
+            try {
+                String newMsg = jsonObject.getString("msg");
+                String sender = jsonObject.getString("sender");
+                Message newMessage = new Message(sender, newMsg);
+
+                messages.add(newMessage);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
 }

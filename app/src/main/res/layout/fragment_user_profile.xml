@@ -97,9 +97,15 @@
             android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_settings"
+            android:src="@drawable/ic_settings"/>
 
-            />
+        <ImageButton
+            android:id="@+id/btnQR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_forum_black_36"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"/>
 
     </RelativeLayout>
 

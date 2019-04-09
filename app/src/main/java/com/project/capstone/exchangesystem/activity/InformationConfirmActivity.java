@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
+import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
@@ -31,30 +32,28 @@ import retrofit2.Response;
 public class InformationConfirmActivity extends AppCompatActivity {
 
     TransactionRequestWrapper transactionRequestWrapper;
+    Transaction transaction;
     List<String> itemName;
+    ArrayList<Item> itemList;
     TextView txtReceiverName, txtReceiverPhone, txtReceiverAddress, txtSenderName, txtSenderPhone, txtSenderAddress;
     ListView lvItemListOfReceiver, lvItemListOfSender;
     int userId;
     Toolbar toolbar;
     RmaAPIService rmaAPIService;
     SharedPreferences sharedPreferences;
-    String authorization;
+    String authorization, senderAddress, userPhoneNumber, userFullName;
+    DonationPost donationPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information_confirm);
+
         getComponents();
-
-
-        transactionRequestWrapper = (TransactionRequestWrapper) getIntent().getSerializableExtra("transaction");
-        Transaction transaction = transactionRequestWrapper.getTransaction();
-        getRecieverInf(transactionRequestWrapper, transaction);
-        getSenderInf(transactionRequestWrapper, transaction);
+        getDonationPostInf();
+        getSenderInf();
 
         setToolbar();
-//        userConfirmInformations.add(recieverInf);
-//        userConfirmInformations.add(senderInf);
     }
 
     private void getComponents() {
@@ -64,7 +63,6 @@ public class InformationConfirmActivity extends AppCompatActivity {
         txtSenderName = findViewById(R.id.txtSenderName);
         txtSenderPhone = findViewById(R.id.txtSenderPhone);
         txtSenderAddress = findViewById(R.id.txtSenderAddress);
-        lvItemListOfReceiver = findViewById(R.id.lvItemListOfReceiver);
         lvItemListOfSender = findViewById(R.id.lvItemListOfSender);
         toolbar = findViewById(R.id.tbToolbar);
 
@@ -72,91 +70,39 @@ public class InformationConfirmActivity extends AppCompatActivity {
         userId = sharedPreferences.getInt("userId", 0);
         authorization = sharedPreferences.getString("authorization", null);
         rmaAPIService = RmaAPIUtils.getAPIService();
+
+        itemList = new ArrayList<>();
+        itemList = (ArrayList<Item>) getIntent().getSerializableExtra("itemList");
+
+        transactionRequestWrapper = (TransactionRequestWrapper) getIntent().getSerializableExtra("transaction");
+        transaction = transactionRequestWrapper.getTransaction();
+
+        senderAddress = (String) getIntent().getSerializableExtra("senderAddress");
+        donationPost = (DonationPost) getIntent().getSerializableExtra("donationPost");
+        itemList = (ArrayList<Item>) getIntent().getSerializableExtra("itemList");
+        userPhoneNumber = (String) getIntent().getSerializableExtra("userPhoneNumber");
+        userFullName = (String) getIntent().getSerializableExtra("userFullName");
     }
 
-    private void getSenderInf(TransactionRequestWrapper transactionRequestWrapper, Transaction transaction) {
-        String userName, phoneNumber, address = "";
+    private void getSenderInf() {
         itemName = new ArrayList<>();
-        if (transactionRequestWrapper.getTransaction().getDonationPostId() != null){
-            userName = sharedPreferences.getString("username", null);
-            phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-            address = (String) getIntent().getSerializableExtra("senderAddress");
-        } else {
-            userName = transaction.getSender().getFullName();
-            phoneNumber = transaction.getSender().getPhone();
 
-            for (int i = 0; i < transactionRequestWrapper.getDetails().size(); i++) {
-                TransactionDetail tmpTransactionDetail = transactionRequestWrapper.getDetails().get(i);
-                if (tmpTransactionDetail.getUserId() == transaction.getSenderId()) {
-                    if (address.equals("")) {
-                        address = tmpTransactionDetail.getItem().getAddress();
-                    }
-                    itemName.add(tmpTransactionDetail.getItem().getName());
-                }
-            }
-            //TODO get adress when sender doesn't have any item to exchange
+        for (int i = 0; i < itemList.size(); i++){
+            itemName.add(itemList.get(i).getName());
         }
 
-        if (userId == transaction.getSenderId()) {
-            setSenderInfView(userName, phoneNumber, address);
-        } else {
-            setReceiverInfView(userName, phoneNumber, address);
-        }
+        txtSenderName.setText(userFullName);
+        txtSenderPhone.setText(userPhoneNumber);
+        txtSenderAddress.setText(senderAddress);
 
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplication(), R.layout.item_names, itemName);
+        lvItemListOfSender.setAdapter(dataAdapter);
     }
 
-    private void setReceiverInfView(String userName, String phoneNumber, String address) {
-        txtReceiverName.setText(userName);
-        txtReceiverPhone.setText(phoneNumber);
-        txtReceiverAddress.setText(address);
-
-        if (itemName.size() != 0){
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplication(), R.layout.item_names, itemName);
-            lvItemListOfReceiver.setAdapter(dataAdapter);
-        }
-    }
-
-    private void setSenderInfView(String userName, String phoneNumber, String address) {
-        txtSenderName.setText(userName);
-        txtSenderPhone.setText(phoneNumber);
-        txtSenderAddress.setText(address);
-
-        if (itemName.size() != 0){
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplication(), R.layout.item_names, itemName);
-            lvItemListOfSender.setAdapter(dataAdapter);
-        }
-    }
-
-    private void getRecieverInf(TransactionRequestWrapper transactionRequestWrapper, Transaction transaction) {
-//        String userName = transaction.getReceiver().getFullName();
-//        String address = "";
-        String userName, phoneNumber, address = "";
-        itemName = new ArrayList<>();
-        if (transactionRequestWrapper.getTransaction().getDonationPostId() != null){
-            DonationPost donationPost = (DonationPost) getIntent().getSerializableExtra("donationPost");
-            userName = donationPost.getUser().getFullName();
-            phoneNumber = donationPost.getUser().getPhone();
-            address = donationPost.getAddress();
-        } else {
-            userName = transaction.getReceiver().getFullName();
-            phoneNumber = transaction.getReceiver().getPhone();
-
-            for (int i = 0; i < transactionRequestWrapper.getDetails().size(); i++) {
-                TransactionDetail tmpTransactionDetail = transactionRequestWrapper.getDetails().get(i);
-                if (tmpTransactionDetail.getUserId() == transaction.getReceiverId()) {
-                    if (address.equals("")) {
-                        address = tmpTransactionDetail.getItem().getAddress();
-                    }
-                    itemName.add(tmpTransactionDetail.getItem().getName());
-                }
-            }
-        }
-
-        if (userId == transaction.getReceiverId()) {
-            setSenderInfView(userName, phoneNumber, address);
-        } else {
-            setReceiverInfView(userName, phoneNumber, address);
-        }
+    private void getDonationPostInf() {
+        txtReceiverName.setText(donationPost.getUser().getFullName());
+        txtReceiverPhone.setText(donationPost.getUser().getPhone());
+        txtReceiverAddress.setText(donationPost.getAddress());
     }
 
     private void setToolbar() {
@@ -179,7 +125,7 @@ public class InformationConfirmActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (transactionRequestWrapper.getTransaction().getDonationPostId() != null){
+        if (transactionRequestWrapper.getTransaction().getDonationPostId() != null) {
             if (authorization != null) {
                 rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
                     @Override
@@ -214,11 +160,6 @@ public class InformationConfirmActivity extends AppCompatActivity {
                 goToSuccessPage();
             }
         }
-//        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txtReceiverAddress.getText().toString());
-////        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + txtReceiverAddress.getText().toString());
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        startActivity(mapIntent);
         return true;
     }
 

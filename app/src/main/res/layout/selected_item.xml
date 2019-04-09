@@ -11,10 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/feed_item_margin"
-        android:layout_marginTop="@dimen/feed_item_margin"
-        android:layout_marginRight="@dimen/feed_item_margin"
-        android:layout_marginBottom="@dimen/feed_item_margin"
+        android:layout_margin="5dp"
         app:cardCornerRadius="4dp">
 
         <android.support.constraint.ConstraintLayout
@@ -24,15 +21,15 @@
             android:background="@color/colorWhite">
 
             <ImageView
-                android:id="@+id/imgTradeItem"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/imgItem"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
                 android:layout_margin="5dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.098"
@@ -40,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtNameTradeItem"
+                android:id="@+id/txtNameItem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -48,39 +45,16 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="Name Item"
-                android:textColor="@color/colorGrayDark"
+                android:textColor="@color/colorBlackTransparent"
+                android:textStyle="bold"
                 android:textSize="20sp"
+                android:maxLines="1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imgTradeItem"
+                app:layout_constraintStart_toEndOf="@+id/imgItem"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/txtTradeIDItem"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="test ID"
-                android:textColor="@color/colorGrayDark"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imgTradeItem" />
-
-            <CheckBox
-                android:id="@+id/checkBoxTrade"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:buttonTint="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

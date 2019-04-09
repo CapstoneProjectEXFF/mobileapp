@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+                Fragment selectedFragment = ITEM_FRAGMENT;
                 switch (item.getItemId()) {
                     case R.id.bottombaritem_main:
                         selectedFragment = ITEM_FRAGMENT;
@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottombaritem_message:
                         selectedFragment = MESSENGER_FRAGMENT;
                         break;
-                    case R.id.bottombaritem_addfriend:
-                        selectedFragment = ADDFRIEND_FRAGMENT;
-                        break;
+//                    case R.id.bottombaritem_addfriend:
+//                        selectedFragment = ADDFRIEND_FRAGMENT;
+//                        break;
                 }
               
                 initFragment(selectedFragment);

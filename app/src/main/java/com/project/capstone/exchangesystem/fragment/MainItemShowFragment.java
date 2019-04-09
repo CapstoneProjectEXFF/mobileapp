@@ -117,10 +117,12 @@ public class MainItemShowFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     List<Item> result = response.body();
-                    for (int i = 0; i < result.size(); i++) {
-                        if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {
-                            itemArrayList.add(result.get(i));
-                            itemAdapter.notifyDataSetChanged();
+                    if (result != null){
+                        for (int i = 0; i < result.size(); i++) {
+                            if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {
+                                itemArrayList.add(result.get(i));
+                                itemAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }

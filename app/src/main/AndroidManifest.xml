@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature android:name="android.hardware.camera2" />
 
@@ -17,19 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.QRCodeResultActivity"></activity>
+        <activity android:name=".activity.QRCodeActivity" />
 
         <meta-data
             android:name="asset_statements"
-            android:resource="@string/asset_statements" />
-
-        <!--<activity-->
-            <!--android:name=".activity.TradeRealtimeActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+            android:resource="@string/asset_statements" /> <!-- <activity -->
+        <!-- android:name=".activity.TradeRealtimeActivity"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -63,7 +63,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TradeActivity" />
         <activity
             android:name=".activity.CreateItemActivity"
             android:screenOrientation="portrait" />
@@ -91,7 +90,16 @@
                     android:pathPrefix="/donation-post.html"
                     android:scheme="https" />
             </intent-filter>
-        </activity> <!-- Facebook -->
+        </activity>
+        <activity android:name=".activity.TransactionDetailActivity" />
+        <activity android:name=".activity.ChooseItemActivity" />
+        <activity android:name=".activity.DonateItemActivity" />
+        <activity android:name=".activity.InformationConfirmActivity" />
+        <activity android:name=".activity.TradeRealtimeActivity" />
+        <activity android:name=".activity.OwnTransaction" />
+        <activity android:name=".activity.OwnFriendList" />
+        <activity android:name=".activity.FriendInventoryActivity" />
+        <activity android:name=".activity.SyncContact" /> <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -100,13 +108,6 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
             android:exported="true" />
-
-        <activity android:name=".activity.TransactionDetailActivity" />
-        <activity android:name=".activity.ChooseItemActivity" />
-        <activity android:name=".activity.DonateItemActivity" />
-        <activity android:name=".activity.TransactionConfirmActivity" />
-        <activity android:name=".activity.InformationConfirmActivity" />
-        <activity android:name=".activity.TradeRealtimeActivity"/>
     </application>
 
 </manifest>
