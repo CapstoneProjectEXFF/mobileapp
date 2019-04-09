@@ -21,6 +21,8 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class OwnInventory extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
@@ -47,8 +49,11 @@ public class OwnInventory extends AppCompatActivity {
             @Override
             public void onItemClick(Item item) {
                 Toast.makeText(getApplicationContext(), item.getDescription(), Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
-                intent.putExtra("itemId", item.getId());
+//                Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+//                intent.putExtra("itemId", item.getId());
+                Intent intent = new Intent(getApplicationContext(), DescriptionItemActivity.class);
+                intent.putExtra("descriptionItem", item);
+
                 startActivity(intent);
             }
         });
