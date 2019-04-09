@@ -80,4 +80,6 @@
     <string name="title_friend">friend</string>
     <string name="title_donation">donation</string>
     <string name="info_PhoneNumber">Phone</string>
+    <string name="delete_item">Xóa</string>
+    <string name="update_item">Chỉnh sửa thông tin</string>
 </resources>

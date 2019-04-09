@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.facebook.CallbackManager;
@@ -38,8 +40,10 @@ public class DescriptionItemActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization;
+    int idMe;
 
     Item item;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,27 @@ public class DescriptionItemActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (idMe == item.getUser().getId()){
+            getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
+            menu.getItem(0).setTitle(R.string.update_item);
+            menu.getItem(1).setTitle(R.string.delete_item);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.editpost) {
+            Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
+            startActivity(intent);
+        }
+        return true;
+    }
+
     private void GetInformation(int uriItemId) {
         if (uriItemId == -1) {
             item = (Item) getIntent().getSerializableExtra("descriptionItem");
@@ -68,6 +93,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         } else {
             sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
             authorization = sharedPreferences.getString("authorization", null);
+            idMe = sharedPreferences.getInt("userId", 0);
             if (authorization != null) {
                 txtDateDescriptionItem.setText("");
                 rmaAPIService.getItemById(authorization, uriItemId).enqueue(new Callback<Item>() {
