@@ -21,12 +21,6 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/bottombaritem_addfriend"
-        android:icon="@drawable/ic_addfriend"
-        android:title="@string/nav_bar_addfriend"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/bottombaritem_notification"
         android:icon="@drawable/ic_notification"
         android:title="@string/nav_bar_notif"

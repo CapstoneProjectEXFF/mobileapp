@@ -73,4 +73,11 @@
     <string name="finish">Hoàn thành</string>
     <string name="message">Tin nhắn</string>
     <string name="trade">Trao đổi</string>
+    <string name="title_explore_friend">Explore Friend</string>
+    <string name="title_own_friend_list">Friend List</string>
+    <string name="title_inventory">inventory</string>
+    <string name="title_transaction">transaction</string>
+    <string name="title_friend">friend</string>
+    <string name="title_donation">donation</string>
+    <string name="info_PhoneNumber">Phone</string>
 </resources>

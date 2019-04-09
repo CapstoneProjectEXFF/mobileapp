@@ -1,8 +1,6 @@
 package com.project.capstone.exchangesystem.remote;
 
 import com.project.capstone.exchangesystem.model.*;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -30,7 +28,7 @@ public interface RmaAPIService {
     @GET("/item")
     Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
-    @GET("/item/privacy")
+    @GET("/item")
     Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization);
 
     @GET("/user/{id}/item")
@@ -42,7 +40,7 @@ public interface RmaAPIService {
     @GET("/itemSearch")
     Call<ArrayList<Item>> findItems(@Query("name") String name);
 
-    @GET("/item/search/privacy")
+    @GET("/item/search")
     Call<ArrayList<Item>> findItemsByNameAndCategoryWithPrivacy(@Header("Authorization") String authorization, @Query("name") String name, @Query("categoryId") int categoryId);
 
     @GET("/category")
@@ -114,7 +112,7 @@ public interface RmaAPIService {
 
 
     @DELETE("/transaction/{transID}")
-    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization,  @Path("transID") int transID);
+    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
     @GET("/trading")
     Call<List<Room>> loadRoomByUserId(@Query("userId") int userId);
@@ -132,7 +130,7 @@ public interface RmaAPIService {
     Call<List<User>> getAllUser(@Header("Authorization") String authorization);
 
     @POST("/relationship")
-    Call<Object> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
+    Call<Relationship> addFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
     @GET("/relationship")
     Call<List<Relationship>> getFriendRequest(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
@@ -141,7 +139,7 @@ public interface RmaAPIService {
     Call<ExffMessage> acceptFriend(@Header("Authorization") String authorization, @Body Map<String, String> body);
 
     @GET("/relationship/friend")
-    Call<List<User>> getFriendListByUserId(@Header("Authorization") String authorization);
+    Call<List<Relationship>> getFriendListByUserId(@Header("Authorization") String authorization);
 
     @GET("/relationship/friend/count")
     Call<Integer> countFriendByUserId(@Header("Authorization") String authorization);
@@ -151,5 +149,8 @@ public interface RmaAPIService {
 
     @GET("/relationship/explore")
     Call<List<User>> getNewFriendToAdd(@Header("Authorization") String authorization);
+
+    @GET("/getdonationPost/{userId}")
+    Call<List<DonationPost>> getDonationPostByUserId(@Path("userId") int userId);
 
 }
