@@ -82,4 +82,5 @@
     <string name="info_PhoneNumber">Phone</string>
     <string name="delete_item">Xóa</string>
     <string name="update_item">Chỉnh sửa thông tin</string>
+    <string name="delete_item_noti">Xóa Thành Công</string>
 </resources>

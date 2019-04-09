@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -33,6 +34,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
     Button btnTrade;
     ImageButton btnShare;
 
+
     //share facebook
     CallbackManager callbackManager;
     ShareDialog shareDialog;
@@ -51,7 +53,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_description_item);
         direct();
-        actionToolbar();
+
 //        EventButton();
 
         Intent appLinkIntent = getIntent();
@@ -63,11 +65,12 @@ public class DescriptionItemActivity extends AppCompatActivity {
             int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
             GetInformation(uriItemId);
         }
+        actionToolbar();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (idMe == item.getUser().getId()){
+        if (true) {
             getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
             menu.getItem(0).setTitle(R.string.update_item);
             menu.getItem(1).setTitle(R.string.delete_item);
@@ -78,12 +81,41 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.editpost) {
-            Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.editpost) {
+            Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+            intent.putExtra("itemId", item.getId());
             startActivity(intent);
+        } else if (menuItem.getItemId() == R.id.deletepost) {
+            // TODO dialog choose options
+            deleteItem();
         }
         return true;
+    }
+
+    private void deleteItem() {
+        System.out.println("test authorization " + authorization);
+        System.out.println("test id " + item.getId());
+        rmaAPIService.deleteItemWithId(authorization, item.getId()).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), R.string.delete_item_noti, Toast.LENGTH_LONG).show();
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error Request", Toast.LENGTH_LONG).show();
+                    System.out.println(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private void GetInformation(int uriItemId) {
@@ -126,6 +158,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         txtNameUserDescriotionItem.setText(item.getUser().getFullName());
         txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
         txtViewDescriptionItem.setText(item.getDescription());
+
         String url = "";
         if (item.getImage().size() > 0) {
             url = item.getImage().get(0).getUrl();
@@ -159,6 +192,9 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     private void direct() {
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        idMe = sharedPreferences.getInt("userId", 0);
+        authorization = sharedPreferences.getString("authorization", null);
         toolbarDescriptionItem = findViewById(R.id.toolbarDescriptionItem);
         imgDescriptionItem = findViewById(R.id.imgDescriptionItem);
         imgAvatar = findViewById(R.id.imgUserAvatar);
@@ -167,7 +203,6 @@ public class DescriptionItemActivity extends AppCompatActivity {
         txtViewDescriptionItem = findViewById(R.id.txtViewDescriptionItem);
         btnTrade = findViewById(R.id.btnTrade);
         btnShare = findViewById(R.id.btnShare);
-
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
 

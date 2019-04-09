@@ -153,4 +153,8 @@ public interface RmaAPIService {
     @GET("/getdonationPost/{userId}")
     Call<List<DonationPost>> getDonationPostByUserId(@Path("userId") int userId);
 
+    @DELETE("/item/{itemId}")
+    Call<Object> deleteItemWithId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
+
+
 }
