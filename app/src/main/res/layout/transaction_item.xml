@@ -30,13 +30,12 @@
                 android:id="@+id/btnSender"
                 android:clickable="false" />
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-
-                android:src="@drawable/arrow"
-                android:text="Update Request" />
+            <!--<ImageView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/arrow"-->
+                <!--android:text="Update Request" />-->
 
 
             <Button

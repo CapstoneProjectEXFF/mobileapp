@@ -58,9 +58,13 @@ public class PostAction {
                             if (response.body() != null) {
                                 Log.i("PostAction", "item added");
                                 progressDialog.dismiss();
-                                Intent intent = new Intent(context, OwnInventory.class);
-                                intent.putExtra("itemId", response.body().getId());
-                                context.startActivity(intent);
+//                                Intent intent = new Intent(context, OwnInventory.class);
+//                                intent.putExtra("itemId", response.body().getId());
+//                                context.startActivity(intent);
+
+                                Intent returnIntent = new Intent();
+                                ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
+                                ((Activity) context).finish();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
