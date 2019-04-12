@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -44,7 +45,9 @@ public class MainCharityPostFragment extends Fragment {
     boolean limitData;
     int page;
     mHandler mHandler;
-
+    private static final int UPDATE_CODE = 1;
+    private static final int ADD_CODE = 2;
+    private boolean reloadNeed;
 
 
     public MainCharityPostFragment() {
@@ -56,6 +59,30 @@ public class MainCharityPostFragment extends Fragment {
         MainCharityPostFragment fragment = new MainCharityPostFragment();
 
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (this.reloadNeed) {
+            mainCharityPostAdapter.clearFilter();
+            page = 0;
+            isLoading = false;
+            limitData = false;
+            getData(page);
+            loadMoreData();
+        }
+        this.reloadNeed = false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPDATE_CODE) { // Ah! We are back from EditActivity, did we make any changes?
+            if (resultCode == Activity.RESULT_OK) {
+                // Yes we did! Let's allow onResume() to reload the data
+                this.reloadNeed = true;
+            }
+        }
     }
 
     @Override
@@ -99,16 +126,17 @@ public class MainCharityPostFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
                 intent.putExtra("descriptionDonationPost", donationPosts.get(position));
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, UPDATE_CODE);
             }
         });
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
 
     private void loadMoreData() {
@@ -145,7 +173,6 @@ public class MainCharityPostFragment extends Fragment {
     }
 
 
-
     public class mHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -171,6 +198,7 @@ public class MainCharityPostFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<DonationPost> donationPostList = response.body();
                     if (!donationPostList.isEmpty()) {
+//                        mainCharityPostAdapter.setfilter(donationPosts);
                         donationPosts.addAll(donationPostList);
                         mainCharityPostAdapter.notifyDataSetChanged();
                     } else {

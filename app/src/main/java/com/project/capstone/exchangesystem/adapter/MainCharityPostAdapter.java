@@ -51,6 +51,11 @@ public class MainCharityPostAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void clearFilter() {
+        donationPosts.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         MainCharityPostAdapter.ViewHolder viewHolder = null;
