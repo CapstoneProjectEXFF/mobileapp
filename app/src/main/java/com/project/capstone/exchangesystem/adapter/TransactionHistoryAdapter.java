@@ -78,44 +78,32 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         } else {
             viewHolder = (TransactionHistoryAdapter.ViewHolder) convertView.getTag();
         }
-        final Transaction transactions = (Transaction) getItem(position);
+
+        final Transaction transaction = (Transaction) getItem(position);
         String status = "";
-        if (transactions.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
+        if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
             status = status + "Giao dịch thành công";
-        } else if (transactions.getStatus().equals(AppStatus.TRANSACTION_RESEND) || transactions.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
+        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND) || transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
             status = status + "Đang chờ xử lý";
         }
         viewHolder.txtStatusTrans.setText(status);
-        viewHolder.btnSender.setText(transactions.getSender().getFullName());
-        viewHolder.btnReceiver.setText(transactions.getReceiver().getFullName());
+        viewHolder.btnSender.setText(transaction.getSender().getFullName());
+        viewHolder.btnReceiver.setText(transaction.getReceiver().getFullName());
         Date date = new Date();
-        date.setTime(transactions.getCreateTime().getTime());
+        date.setTime(transaction.getCreateTime().getTime());
         String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
         viewHolder.txtDateTrans.setText(formattedDate);
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rmaAPIService.getTransactionByTransID(authorization, transactions.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
-                    @Override
-                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        if (response.isSuccessful()) {
-                            TransactionRequestWrapper temp = response.body();
-                            Intent intent = new Intent(context, TransactionDetailActivity.class);
-                            intent.putExtra("transactionDetail", temp);
-                            context.startActivity(intent);
-                        } else {
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-                        System.out.println("fail in daa");
-                    }
-                });
-
+                Intent intent = new Intent(context, TransactionDetailActivity.class);
+                intent.putExtra("transactionId", transaction.getId());
+                context.startActivity(intent);
             }
         });
         return convertView;
     }
+
+
 }

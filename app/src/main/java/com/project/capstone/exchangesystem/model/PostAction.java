@@ -69,7 +69,7 @@ public class PostAction {
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
-                            Log.i("PostAction", "item create error " + response.code());
+                            Log.i("PostAction", "item create error: " + response.message());
                         }
                     }
 
@@ -101,7 +101,7 @@ public class PostAction {
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
-                            Log.i("PostAction", "item update error " + response.code());
+                            Log.i("PostAction", "item update error: " + response.message());
                         }
                     }
 

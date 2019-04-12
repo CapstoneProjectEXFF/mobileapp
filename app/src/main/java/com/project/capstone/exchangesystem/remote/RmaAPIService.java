@@ -27,10 +27,10 @@ public interface RmaAPIService {
     @GET("/phone")
     Call<Object> checkValidationLogin(@Query("phone") String phone);
 
-    @GET("/item")
-    Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
+//    @GET("/item")
+//    Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
-    @GET("/item/privacy")
+    @GET("/item")
     Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization);
 
     @GET("/user/{id}/item")

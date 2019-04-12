@@ -259,6 +259,7 @@ public class MessengerTabFragment extends Fragment {
                 messages.add(newMessage);
 
                 getActivity().runOnUiThread(new Runnable() {
+//                tradeRealtimeActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         messageAdapter.notifyDataSetChanged();
@@ -269,7 +270,6 @@ public class MessengerTabFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     };
 }

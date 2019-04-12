@@ -29,6 +29,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.ChooseItemActivity;
 import com.project.capstone.exchangesystem.activity.TradeRealtimeActivity;
+import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
@@ -63,7 +64,7 @@ public class TradeTabFragment extends Fragment {
     private static final String YOUR_ITEM_TAG = "itemYouIdList";
 
     SharedPreferences sharedPreferences;
-    public RmaAPIService rmaAPIService, rmaRealtimeService;
+    RmaAPIService rmaAPIService, rmaRealtimeService;
 
     RecyclerView rvMyItems, rvYourItems;
     ImageButton btnChooseMyItems, btnChooseYourItems;
@@ -71,14 +72,13 @@ public class TradeTabFragment extends Fragment {
     LinearLayout linearTradeList, linearFinalList, linearButton;
     ImageView ivQRCode;
 
-    public SelectedItemAdapter myItemAdapter, yourItemAdapter, myFinalItemAdapter, yourFinalItemAdapter;
+    SelectedItemAdapter myItemAdapter, yourItemAdapter, myFinalItemAdapter, yourFinalItemAdapter;
 
-    public int myUserId, yourUserId, selectedUserId;
-    private ArrayList<Item> tmpMySelectedItems, tmpYourSelectedItems, myAvailableItems, yourAvailableItems;
+    int myUserId, yourUserId, selectedUserId, transactionId;
+    ArrayList<Item> tmpMySelectedItems, tmpYourSelectedItems, myAvailableItems, yourAvailableItems;
     ArrayList<String> myItemIds, yourItemIds;
 
-    public String authorization;
-    String roomName;
+    String roomName, tmpRoomName, authorization;
     View view;
     Room room;
     Boolean checkTradeConfirm = false;
@@ -130,8 +130,9 @@ public class TradeTabFragment extends Fragment {
         socketServer = tradeRealtimeActivity.getSocketServer();
         socketServer.mSocket.on("item-added", addedItemInfo);
         socketServer.mSocket.on("item-removed", removedItemInfo);
-        socketServer.mSocket.on("trade-done", tradeDoneData);
         socketServer.mSocket.on("user-accepted-trade", acceptedUser);
+        socketServer.mSocket.on("trade-done", tradeDoneData);
+        //ko vo duoc trade done
     }
 
     @Override
@@ -156,7 +157,6 @@ public class TradeTabFragment extends Fragment {
     }
 
     public void loadRoomData() {
-
         for (int i = 0; i < room.getUsers().size(); i++) {
             List<String> tmpItemIds = room.getUsers().get(i).getItem();
             int tmpUserId = room.getUsers().get(i).getUserId();
@@ -201,14 +201,24 @@ public class TradeTabFragment extends Fragment {
 
         //when join room by clicking on trade button
         if (item != null) {
-            JSONObject tradeInfo = new JSONObject();
-            try {
-                tradeInfo.put("userId", "" + item.getUser().getId());
-                tradeInfo.put("itemId", "" + item.getId());
-                tradeInfo.put("room", roomName);
-                socketServer.emitAddItem(tradeInfo);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            boolean check = false; //to check if this item existed in selected list or not
+            for (int i = 0; i < tmpYourSelectedItems.size(); i++){
+                if (tmpYourSelectedItems.get(i).getId() == item.getId()){
+                    check = true;
+                    break;
+                }
+            }
+
+            if (!check){
+                JSONObject tradeInfo = new JSONObject();
+                try {
+                    tradeInfo.put("userId", "" + item.getUser().getId());
+                    tradeInfo.put("itemId", "" + item.getId());
+                    tradeInfo.put("room", roomName);
+                    socketServer.emitAddItem(tradeInfo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -221,9 +231,9 @@ public class TradeTabFragment extends Fragment {
                     if (response.body() != null) {
                         Item tmpItem = response.body();
 //                        if (!checkInSelectedItems(tmpYourSelectedItems, tmpItem)){
-                            tmpItem.setCheckPrivacy(true);
-                            tmpYourSelectedItems.add(tmpItem);
-                            yourItemAdapter.setfilter(tmpYourSelectedItems);
+                        tmpItem.setCheckPrivacy(true);
+                        tmpYourSelectedItems.add(tmpItem);
+                        yourItemAdapter.setfilter(tmpYourSelectedItems);
 //                        }
                     }
                 }
@@ -263,14 +273,14 @@ public class TradeTabFragment extends Fragment {
         btnChooseMyItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseItems(tmpMySelectedItems, myUserId, myAvailableItems);
+                chooseItems(myUserId, myAvailableItems);
             }
         });
 
         btnChooseYourItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseItems(tmpYourSelectedItems, yourUserId, yourAvailableItems);
+                chooseItems(yourUserId, yourAvailableItems);
             }
         });
 
@@ -284,6 +294,9 @@ public class TradeTabFragment extends Fragment {
                     data.put("userId", myUserId);
                     data.put("token", authorization);
                     socketServer.emitTradeConfirm(data);
+
+//                    Intent intent = new Intent(getActivity().getApplicationContext(), TransactionDetailActivity.class);
+//                    startActivity(intent);
 
                     linearTradeList.setVisibility(View.GONE);
 
@@ -335,7 +348,7 @@ public class TradeTabFragment extends Fragment {
         });
     }
 
-    private void chooseItems(ArrayList<Item> itemList, int userId, ArrayList<Item> availableItems) {
+    private void chooseItems(int userId, ArrayList<Item> availableItems) {
         selectedUserId = userId;
         Intent intent = new Intent(getContext(), ChooseItemActivity.class);
         intent.putExtra("availableItems", availableItems);
@@ -394,30 +407,6 @@ public class TradeTabFragment extends Fragment {
 //        outState.putBoolean("hasConnection", hasConnection);
 //    }
 
-    public ArrayList<Item> getMyAvailableItems() {
-        return myAvailableItems;
-    }
-
-    public ArrayList<Item> getYourAvailableItems() {
-        return yourAvailableItems;
-    }
-
-    public ArrayList<Item> getTmpMySelectedItems() {
-        return tmpMySelectedItems;
-    }
-
-    public void setTmpMySelectedItems(ArrayList<Item> tmpMySelectedItems) {
-        this.tmpMySelectedItems = tmpMySelectedItems;
-    }
-
-    public ArrayList<Item> getTmpYourSelectedItems() {
-        return tmpYourSelectedItems;
-    }
-
-    public void setTmpYourSelectedItems(ArrayList<Item> tmpYourSelectedItems) {
-        this.tmpYourSelectedItems = tmpYourSelectedItems;
-    }
-
     public SelectedItemAdapter getMyItemAdapter() {
         return myItemAdapter;
     }
@@ -426,57 +415,33 @@ public class TradeTabFragment extends Fragment {
         return yourItemAdapter;
     }
 
-    public int getYourUserId() {
-        return yourUserId;
-    }
-
-    public void createQRCode(String qrCode){
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, 500, 500);
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
-                }
-            }
-
-            linearTradeList.setVisibility(View.GONE);
-            linearFinalList.setVisibility(View.GONE);
-            linearButton.setVisibility(View.GONE);
-            ivQRCode.setVisibility(View.VISIBLE);
-            ivQRCode.setImageBitmap(bitmap);
-
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-    }
 
     private Emitter.Listener acceptedUser = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            final String userId = args[0].toString();
-            Log.i("acceptedUser", userId);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-//                String message = "" + userId + getActivity().getString(R.string.trade_done);
-                        String message = userId + " đã chốt.";
-                        jsonObject.put("room", room.getRoom());
-                        jsonObject.put("sender", userId);
-                        jsonObject.put("msg", message);
-                        Toast.makeText(getActivity().getApplicationContext(), "aaaaaa", Toast.LENGTH_SHORT).show();
-                        socketServer.emitMsg(jsonObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            JSONObject acceptedUser = (JSONObject) args[0];
+            Log.i("acceptedUser", acceptedUser.toString());
+            String tmpRoomName = "", acceptedUserId = "";
+            try {
+                tmpRoomName = acceptedUser.getString("room");
+                acceptedUserId = acceptedUser.getString("userId");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+            if (tmpRoomName.equals(roomName)){
+                JSONObject msg = new JSONObject();
+                try {
+//                String message = "" + userId + getActivity().getString(R.string.trade_done);
+                    String message = acceptedUserId + " đã chốt.";
+                    msg.put("room", roomName);
+                    msg.put("sender", acceptedUserId);
+                    msg.put("msg", message);
+                    socketServer.emitMsg(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     };
 
@@ -484,35 +449,45 @@ public class TradeTabFragment extends Fragment {
         @Override
         public void call(Object... args) {
             Log.i("tradeDoneData", "alo1234");
-            final String roomName = args[0].toString();
-            Log.i("tradeDoneData", roomName);
+            JSONObject tradeData = (JSONObject) args[0];
+            Log.i("tradeDoneData", tradeData.toString());
+            try {
+                tmpRoomName = tradeData.getString("room");
+                transactionId = Integer.parseInt(tradeData.getString("transactionId"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-//            getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (authorization != null) {
-//                        rmaRealtimeService.loadRoom(roomName).enqueue(new Callback<Room>() {
-//                            @Override
-//                            public void onResponse(Call<Room> call, Response<Room> response) {
-//                                if (response.body() != null) {
-////                                    String qrCode = response.body().getQrCode();
-////                                    Log.i("tradeDone QRCode", qrCode);
-////                                    createQRCode(qrCode);
-//                                } else {
-//                                    Log.i("tradeDoneData", "null");
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<Room> call, Throwable t) {
-//                                Log.i("tradeDoneData", t.getMessage());
-//                            }
-//                        });
-//
-//
-//                    }
-//                }
-//            });
+            if (tmpRoomName.equals(roomName)){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (authorization != null) {
+                            rmaRealtimeService.loadRoom(tmpRoomName).enqueue(new Callback<Room>() {
+                                @Override
+                                public void onResponse(Call<Room> call, Response<Room> response) {
+                                    if (response.body() != null) {
+//                                    String qrCode = response.body().getQrCode();
+//                                    Log.i("tradeDone QRCode", qrCode);
+//                                    createQRCode(qrCode);
+                                        Intent intent = new Intent(getActivity().getApplicationContext(), TransactionDetailActivity.class);
+//                                    intent.putExtra("qrCode", qrCode);
+                                        intent.putExtra("transactionId", transactionId);
+                                        startActivity(intent);
+                                    } else {
+                                        Log.i("tradeDoneData", "null");
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Room> call, Throwable t) {
+                                    Log.i("tradeDoneData", t.getMessage());
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         }
     };
 
@@ -556,8 +531,6 @@ public class TradeTabFragment extends Fragment {
                         Log.i("removedItemInfoaaa", "raaaaaaaa");
                     }
                 });
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -583,9 +556,9 @@ public class TradeTabFragment extends Fragment {
 
                                 if (itemId == tmpItem.getId()) {
                                     //check selected item existed in recyleview or not
-                                    if (!checkInSelectedItems(tmpMySelectedItems, tmpItem)){
+                                    if (!checkInSelectedItems(tmpMySelectedItems, tmpItem)) {
                                         tmpMySelectedItems.add(myAvailableItems.get(i));
-                                        getMyItemAdapter().setfilter(tmpMySelectedItems);
+                                        myItemAdapter.setfilter(tmpMySelectedItems);
                                         myAvailableItems.remove(tmpItem);
                                     }
                                 }
@@ -599,7 +572,7 @@ public class TradeTabFragment extends Fragment {
                                     if (!checkInSelectedItems(tmpYourSelectedItems, tmpItem)) {
                                         checkExistedItem = true;
                                         tmpYourSelectedItems.add(yourAvailableItems.get(i));
-                                        getYourItemAdapter().setfilter(tmpYourSelectedItems);
+                                        yourItemAdapter.setfilter(tmpYourSelectedItems);
                                         yourAvailableItems.remove(tmpItem);
                                     }
                                 }
@@ -621,8 +594,8 @@ public class TradeTabFragment extends Fragment {
     };
 
     private boolean checkInSelectedItems(ArrayList<Item> tmpSelectedItems, Item tmpItem) {
-        for (int j = 0; j < tmpSelectedItems.size(); j++){
-            if (tmpSelectedItems.get(j).getId() == tmpItem.getId()){
+        for (int j = 0; j < tmpSelectedItems.size(); j++) {
+            if (tmpSelectedItems.get(j).getId() == tmpItem.getId()) {
                 return true;
             }
         }

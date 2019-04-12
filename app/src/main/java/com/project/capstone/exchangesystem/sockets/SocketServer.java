@@ -88,14 +88,6 @@ public class SocketServer {
         }
     }
 
-    public ListView getListView() {
-        return listView;
-    }
-
-    public void setListView(ListView listView) {
-        this.listView = listView;
-    }
-
     public Fragment getFragment() {
         return fragment;
     }
@@ -131,5 +123,13 @@ public class SocketServer {
 
     public void emitTradeConfirm(JSONObject data) {
         mSocket.emit("confirm-trade", data);
+    }
+
+    public void emitTradeReset(JSONObject data){
+        mSocket.emit("trade-reset", data);
+    }
+
+    public void emitTradeCancel(JSONObject data){
+        mSocket.emit("trade-cancel", data);
     }
 }
