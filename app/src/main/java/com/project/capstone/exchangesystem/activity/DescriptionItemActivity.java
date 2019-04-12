@@ -221,10 +221,6 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     public void toTradeActivity(View view) {
-//        Intent intent = new Intent(getApplicationContext(), TradeActivity.class);
-//        Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
-//        intent.putExtra("descriptionItem", item);
-//        startActivity(intent);
 
         Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
         Item item = (Item) getIntent().getSerializableExtra("descriptionItem");

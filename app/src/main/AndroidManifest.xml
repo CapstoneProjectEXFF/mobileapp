@@ -18,11 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
-
-        <activity android:name=".activity.SignInActivity">
+  
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +34,7 @@
         </activity>
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.SignUpAcitivity" />
-        <!-- <activity android:name=".activity.SignInActivity"/> -->
+        <activity android:name=".activity.SignInActivity"/>
         <activity android:name=".activity.ForgetPasswordActivity" />
         <activity android:name=".activity.CreateSuccessActivity" />
         <activity android:name=".activity.MainActivity" />
@@ -53,7 +56,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TradeActivity" />
+      
         <activity
             android:name=".activity.CreateItemActivity"
             android:screenOrientation="portrait" />
@@ -66,9 +69,11 @@
         <activity
             android:name=".activity.UpdateDonationPostActivity"
             android:screenOrientation="portrait" />
+      
         <activity android:name=".activity.OwnInventory" />
         <activity android:name=".activity.ChangePassword" />
         <activity android:name=".activity.EditUserProfileActivity" />
+      
         <activity android:name=".activity.DescriptionDonationPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -81,8 +86,17 @@
                     android:pathPrefix="/donation-post.html"
                     android:scheme="https" />
             </intent-filter>
-        </activity> <!-- Facebook -->
-
+        </activity>
+      
+        <activity android:name=".activity.TransactionDetailActivity" />
+        <activity android:name=".activity.ChooseItemActivity" />
+        <activity android:name=".activity.DonateItemActivity" />
+        <activity android:name=".activity.InformationConfirmActivity" />
+        <activity android:name=".activity.TradeRealtimeActivity" />
+        <activity android:name=".activity.OwnTransaction" />
+        <activity android:name=".activity.OwnFriendList" />
+        <activity android:name=".activity.FriendInventoryActivity" />
+        <activity android:name=".activity.SyncContact" /> 
         <activity android:name=".activity.TransactionDetailActivity" />
         <activity android:name=".activity.ChooseItemActivity" />
         <activity android:name=".activity.UpdateTransactionActivity" />
@@ -97,7 +111,10 @@
         <activity android:name=".activity.ExploreFriendActivity" />
         <activity android:name=".activity.OwnDonationPost" />
         <activity android:name=".activity.UserProfileActivity" />
+        <activity android:name=".activity.QRCodeResultActivity"/>
+        <activity android:name=".activity.QRCodeActivity" />
 
+        <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

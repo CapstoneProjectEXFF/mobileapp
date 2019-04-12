@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.TransactionConfirmActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
 import com.project.capstone.exchangesystem.model.Relationship;
@@ -80,10 +79,7 @@ public class NotificationFragment extends Fragment {
                     @Override
                     public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
                         if (response.isSuccessful()) {
-                            TransactionRequestWrapper temp = response.body();
-                            Intent intent = new Intent(getActivity(), TransactionConfirmActivity.class);
-                            intent.putExtra("transactionDetail", temp);
-                            startActivity(intent);
+
                         }
                     }
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.TransactionHistoryAdapter;
@@ -27,10 +28,16 @@ import java.util.List;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class OwnTransaction extends AppCompatActivity {
+
     Toolbar toolbar;
     ListView listView;
+    TextView txtNoHistory;
+
     TransactionHistoryAdapter transactionHistoryAdapter;
     ArrayList<Transaction> transactions;
+    RmaAPIService rmaAPIService;
+    SharedPreferences sharedPreferences;
+    String authorization;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,38 +50,41 @@ public class OwnTransaction extends AppCompatActivity {
     }
 
     private void direct() {
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        rmaAPIService = RmaAPIUtils.getAPIService();
+
         toolbar = findViewById(R.id.transactionToolbar);
-        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        final String authorization = sharedPreferences.getString("authorization", null);
-        listView = (ListView) findViewById(R.id.transactionHistoryListview);
+        txtNoHistory = findViewById(R.id.txtNoHistory);
+        listView = findViewById(R.id.transactionHistoryListview);
         transactions = new ArrayList<>();
         transactionHistoryAdapter = new TransactionHistoryAdapter(this, transactions);
-        listView.setAdapter(transactionHistoryAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Toast.makeText(getApplicationContext(), "vào được!! Try Again", Toast.LENGTH_LONG).show();
-                rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
-                    @Override
-                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        if (response.isSuccessful()) {
-                            TransactionRequestWrapper temp = response.body();
-                            Intent intent = new Intent(OwnTransaction.this, TransactionDetailActivity.class);
-                            intent.putExtra("transactionDetail", temp);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error in data!! Try Again", Toast.LENGTH_LONG).show();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-                        System.out.println("fail in daa");
-                    }
-                });
-            }
-        });
+        listView.setAdapter(transactionHistoryAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
+//                    @Override
+//                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
+//                        if (response.isSuccessful()) {
+//                            TransactionRequestWrapper temp = response.body();
+//                            Intent intent = new Intent(OwnTransaction.this, TransactionDetailActivity.class);
+//                            intent.putExtra("transactionDetail", temp);
+//                            startActivity(intent);
+//                        } else {
+//                            Toast.makeText(getApplicationContext(), "Error in data!! Try Again", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
+//                        System.out.println("fail in daa");
+//                    }
+//                });
+//            }
+//        });
     }
 
     private void actionToolbar() {
@@ -89,31 +99,32 @@ public class OwnTransaction extends AppCompatActivity {
     }
 
     private void getData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        String authorization = sharedPreferences.getString("authorization", null);
 
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        rmaAPIService.getAllTransactionByUserID(authorization).enqueue(new Callback<List<Transaction>>() {
-            @Override
-            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+        if (authorization != null){
+            rmaAPIService.getAllTransactionByUserID(authorization).enqueue(new Callback<List<Transaction>>() {
+                @Override
+                public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
 
-                if (response.isSuccessful()) {
-                    List<Transaction> temp = new ArrayList<>();
-                    temp = response.body();
-                    transactions.addAll(temp);
-                    transactionHistoryAdapter.notifyDataSetChanged();
-                    if (temp.size() == 0) {
-                        Toast.makeText(getApplicationContext(), "Your Own Transaction is Empty", Toast.LENGTH_LONG).show();
-                        finish();
+                    if (response.isSuccessful()) {
+                        List<Transaction> temp = response.body();
+
+                        if (temp.size() == 0) {
+                            listView.setVisibility(View.GONE);
+                            txtNoHistory.setVisibility(View.VISIBLE);
+                        } else {
+                            transactions.addAll(temp);
+                            transactionHistoryAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Transaction>> call, Throwable t) {
-                System.out.println("Fail rồi");
-                Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                    System.out.println("Fail rồi");
+                    Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
     }
 }

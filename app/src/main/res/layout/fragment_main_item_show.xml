@@ -16,24 +16,13 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Đồ dùng"
-            android:textSize="30sp"
-            app:layout_scrollFlags="scroll|enterAlways|snap" />
-
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            android:background="@color/colorGrayWhite"
+            android:elevation="2dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
 
 
             <android.support.v7.widget.Toolbar
