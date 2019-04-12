@@ -1,28 +1,27 @@
 package com.project.capstone.exchangesystem.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import com.project.capstone.exchangesystem.activity.CreateDonationPostActivity;
-import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
+import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.CreateDonationPostActivity;
+import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
+import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +45,9 @@ public class MainCharityPostFragment extends Fragment {
     boolean limitData;
     int page;
     mHandler mHandler;
-
+    private static final int UPDATE_CODE = 1;
+    private static final int ADD_CODE = 2;
+    private boolean reloadNeed;
 
 
     public MainCharityPostFragment() {
@@ -58,6 +59,30 @@ public class MainCharityPostFragment extends Fragment {
         MainCharityPostFragment fragment = new MainCharityPostFragment();
 
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (this.reloadNeed) {
+            mainCharityPostAdapter.clearFilter();
+            page = 0;
+            isLoading = false;
+            limitData = false;
+            getData(page);
+            loadMoreData();
+        }
+        this.reloadNeed = false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPDATE_CODE) { // Ah! We are back from EditActivity, did we make any changes?
+            if (resultCode == Activity.RESULT_OK) {
+                // Yes we did! Let's allow onResume() to reload the data
+                this.reloadNeed = true;
+            }
+        }
     }
 
     @Override
@@ -101,16 +126,17 @@ public class MainCharityPostFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), DescriptionDonationPostActivity.class);
                 intent.putExtra("descriptionDonationPost", donationPosts.get(position));
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, UPDATE_CODE);
             }
         });
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
 
     private void loadMoreData() {
@@ -146,6 +172,7 @@ public class MainCharityPostFragment extends Fragment {
 
     }
 
+
     public class mHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -171,6 +198,7 @@ public class MainCharityPostFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<DonationPost> donationPostList = response.body();
                     if (!donationPostList.isEmpty()) {
+//                        mainCharityPostAdapter.setfilter(donationPosts);
                         donationPosts.addAll(donationPostList);
                         mainCharityPostAdapter.notifyDataSetChanged();
                     } else {

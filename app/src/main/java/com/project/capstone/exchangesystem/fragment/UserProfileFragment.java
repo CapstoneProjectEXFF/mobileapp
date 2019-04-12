@@ -147,8 +147,9 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
+      
         txtNumberFriend.setText(tempFriend);
-
+      
         btnQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +172,11 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void toOwnFriendList(View view) {
+        Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
+        startActivity(iOwnFriendList);
+    }
+
+    public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
         startActivity(iOwnFriendList);
     }

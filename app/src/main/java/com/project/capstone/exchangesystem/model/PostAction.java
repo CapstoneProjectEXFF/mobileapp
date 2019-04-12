@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.model;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +10,8 @@ import android.widget.Toast;
 import com.google.gson.internal.LinkedTreeMap;
 import com.project.capstone.exchangesystem.activity.MainActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
-import com.project.capstone.exchangesystem.activity.UpdateDonationPostActivity;
-import com.project.capstone.exchangesystem.activity.UpdateItemActivity;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +25,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 public class PostAction {
     RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
     ProgressDialog progressDialog;
+
     public PostAction() {
     }
 
@@ -58,9 +58,13 @@ public class PostAction {
                             if (response.body() != null) {
                                 Log.i("PostAction", "item added");
                                 progressDialog.dismiss();
-                                Intent intent = new Intent(context, OwnInventory.class);
-                                intent.putExtra("itemId", response.body().getId());
-                                context.startActivity(intent);
+//                                Intent intent = new Intent(context, OwnInventory.class);
+//                                intent.putExtra("itemId", response.body().getId());
+//                                context.startActivity(intent);
+
+                                Intent returnIntent = new Intent();
+                                ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
+                                ((Activity) context).finish();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
@@ -80,7 +84,7 @@ public class PostAction {
                         Log.i("PostAction", "item create failed");
                     }
                 });
-            } else if (action == ITEM_UPDATE_ACTION){
+            } else if (action == ITEM_UPDATE_ACTION) {
                 jsonBody.put("newUrls", urlList);
                 jsonBody.put("removedUrlIds", item.getImageIds());
                 rmaAPIService.updateItem(jsonBody, authorization, item.getId()).enqueue(new Callback<Object>() {
@@ -176,8 +180,12 @@ public class PostAction {
                                 Log.i("PostAction", "donation updated");
                                 //go to main
                                 progressDialog.dismiss();
-                                Intent intent = new Intent(context, MainActivity.class);
-                                context.startActivity(intent);
+//                                Intent intent = new Intent(context, MainActivity.class);
+//                                context.startActivity(intent);
+
+                                Intent returnIntent = new Intent();
+                                ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
+                                ((Activity) context).finish();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();

@@ -1,30 +1,31 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.remote.RmaAPIService;
-import com.squareup.picasso.Picasso;
 import com.project.capstone.exchangesystem.model.Item;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class DescriptionItemActivity extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
@@ -33,6 +34,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
     Button btnTrade;
     ImageButton btnShare;
 
+
     //share facebook
     CallbackManager callbackManager;
     ShareDialog shareDialog;
@@ -40,8 +42,10 @@ public class DescriptionItemActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization;
+    int idMe;
 
     Item item;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_description_item);
         direct();
-        actionToolbar();
+
 //        EventButton();
 
         Intent appLinkIntent = getIntent();
@@ -61,6 +65,57 @@ public class DescriptionItemActivity extends AppCompatActivity {
             int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
             GetInformation(uriItemId);
         }
+        actionToolbar();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (true) {
+            getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
+            menu.getItem(0).setTitle(R.string.update_item);
+            menu.getItem(1).setTitle(R.string.delete_item);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.editpost) {
+            Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
+            intent.putExtra("itemId", item.getId());
+            startActivity(intent);
+        } else if (menuItem.getItemId() == R.id.deletepost) {
+            // TODO dialog choose options
+            deleteItem();
+        }
+        return true;
+    }
+
+    private void deleteItem() {
+        System.out.println("test authorization " + authorization);
+        System.out.println("test id " + item.getId());
+        rmaAPIService.deleteItemWithId(authorization, item.getId()).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), R.string.delete_item_noti, Toast.LENGTH_LONG).show();
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error Request", Toast.LENGTH_LONG).show();
+                    System.out.println(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private void GetInformation(int uriItemId) {
@@ -70,6 +125,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         } else {
             sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
             authorization = sharedPreferences.getString("authorization", null);
+            idMe = sharedPreferences.getInt("userId", 0);
             if (authorization != null) {
                 txtDateDescriptionItem.setText("");
                 rmaAPIService.getItemById(authorization, uriItemId).enqueue(new Callback<Item>() {
@@ -102,6 +158,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
         txtNameUserDescriotionItem.setText(item.getUser().getFullName());
         txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
         txtViewDescriptionItem.setText(item.getDescription());
+
         String url = "";
         if (item.getImage().size() > 0) {
             url = item.getImage().get(0).getUrl();
@@ -135,6 +192,9 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     private void direct() {
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        idMe = sharedPreferences.getInt("userId", 0);
+        authorization = sharedPreferences.getString("authorization", null);
         toolbarDescriptionItem = findViewById(R.id.toolbarDescriptionItem);
         imgDescriptionItem = findViewById(R.id.imgDescriptionItem);
         imgAvatar = findViewById(R.id.imgUserAvatar);
@@ -143,7 +203,6 @@ public class DescriptionItemActivity extends AppCompatActivity {
         txtViewDescriptionItem = findViewById(R.id.txtViewDescriptionItem);
         btnTrade = findViewById(R.id.btnTrade);
         btnShare = findViewById(R.id.btnShare);
-
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
 

@@ -116,12 +116,14 @@ public class MainItemShowFragment extends Fragment {
             rmaAPIService.getAllItemsWithPrivacy(authorization).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-                    List<Item> result = response.body();
-                    if (result != null){
-                        for (int i = 0; i < result.size(); i++) {
-                            if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {
-                                itemArrayList.add(result.get(i));
-                                itemAdapter.notifyDataSetChanged();
+                    if (response.isSuccessful()) {
+                        List<Item> result = response.body();
+                        if (result != null) {
+                            for (int i = 0; i < result.size(); i++) {
+                                if (result.get(i).getUser().getId() != meID && result.get(i).getStatus().equals(AppStatus.ITEM_ENABLE)) {
+                                    itemArrayList.add(result.get(i));
+                                    itemAdapter.notifyDataSetChanged();
+                                }
                             }
                         }
                     }

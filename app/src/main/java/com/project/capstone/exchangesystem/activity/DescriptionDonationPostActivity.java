@@ -1,13 +1,11 @@
 package com.project.capstone.exchangesystem.activity;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,31 +13,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.DonatorAdapter;
+import com.project.capstone.exchangesystem.constants.AppStatus;
+import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Donator;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DescriptionDonationPostActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -61,6 +54,10 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     ArrayList<Donator> donators, tmpDonators;
     DonatorAdapter donatorAdapter;
     RecyclerView rvDonators;
+    private static final int UPDATE_CODE = 1;
+    private static final int ADD_CODE = 2;
+    private boolean reloadNeed = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,20 +86,74 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+
+                if (reloadNeed = true) {
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                } else {
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_CANCELED, returnIntent);
+                    finish();
+                }
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (userId == donationPost.getUser().getId()){
+        System.out.println("test create " + donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST));
+        if (userId == donationPost.getUser().getId() && !donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
             getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
             menu.getItem(0).setTitle("Sửa bài viết");
             menu.getItem(1).setTitle("Khóa bài viết");
             return true;
-        } else {
-            return false;
+        }
+//        if (donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
+//            return false;
+//        }
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.reloadNeed)
+            reloadData();
+        this.reloadNeed = false;
+    }
+
+    private void reloadData() {
+        rmaAPIService.getDonationPostById(authorization, donationPost.getId()).enqueue(new Callback<DonationPost>() {
+            @Override
+            public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        donationPost = response.body();
+                        setDonationPostInf(donationPost);
+                    } else {
+                        Log.i("Donation", "null");
+                    }
+                } else {
+                    Log.i("Donation", "cannot load donation post");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DonationPost> call, Throwable t) {
+                Log.i("Donation", "failed");
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPDATE_CODE) { // Ah! We are back from EditActivity, did we make any changes?
+            if (resultCode == Activity.RESULT_OK) {
+                // Yes we did! Let's allow onResume() to reload the data
+                this.reloadNeed = true;
+            }
         }
     }
 
@@ -111,9 +162,36 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.editpost) {
             Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
             intent.putExtra("donationPostId", donationPost.getId());
-            startActivity(intent);
+            startActivityForResult(intent, UPDATE_CODE);
+        } else if (item.getItemId() == R.id.deletepost) {
+            // TODO dialog choose options
+            deleteDonationPost();
         }
         return true;
+    }
+
+    private void deleteDonationPost() {
+
+        rmaAPIService.removeDonationPost(authorization, donationPost.getId()).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), R.string.lock_donation, Toast.LENGTH_LONG).show();
+//                    Intent returnIntent = new Intent();
+//                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
+                    System.out.println(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private void direct() {
@@ -176,7 +254,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     }
 
     private void loadDonators() {
-        if (authorization != null){
+        if (authorization != null) {
             rmaAPIService.getTransactionByDonationPostId(donationPost.getId()).enqueue(new Callback<List<TransactionRequestWrapper>>() {
                 @Override
                 public void onResponse(Call<List<TransactionRequestWrapper>> call, Response<List<TransactionRequestWrapper>> response) {
@@ -260,8 +338,12 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
                 .error(R.drawable.ic_no_image)
                 .into(imgUserDonation);
 
-        if (userId == donationPost.getUser().getId()){
+        if (userId == donationPost.getUser().getId() || donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
             btnDonate.setVisibility(View.GONE);
+        }
+
+        if (donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
+            btnShare.setVisibility(View.GONE);
         }
     }
 }

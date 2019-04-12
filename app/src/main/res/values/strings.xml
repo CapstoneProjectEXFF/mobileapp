@@ -77,4 +77,17 @@
     <string name="trade_inf_title">Thông tin trao đổi</string>
     <string name="transaction_history">Lịch sử trao đổi</string>
     <string name="no_transaction">Bạn chưa có lịch sử trao đổi nào.</string>
+    <string name="title_explore_friend">Explore Friend</string>
+    <string name="title_own_friend_list">Friend List</string>
+    <string name="title_inventory">inventory</string>
+    <string name="title_transaction">transaction</string>
+    <string name="title_friend">friend</string>
+    <string name="title_donation">donation</string>
+    <string name="info_PhoneNumber">Phone</string>
+    <string name="delete_item">Xóa</string>
+    <string name="update_item">Chỉnh sửa thông tin</string>
+    <string name="delete_item_noti">Xóa Thành Công</string>
+    <string name="error_server">Error Server</string>
+    <string name="error_request">Error Request</string>
+    <string name="lock_donation">Khóa Thành Công</string>
 </resources>
