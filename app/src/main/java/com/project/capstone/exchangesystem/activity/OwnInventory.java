@@ -28,7 +28,7 @@ public class OwnInventory extends AppCompatActivity {
     ItemAdapter itemAdapter;
     ArrayList<Item> itemArrayList;
     private static final int DELETE_CODE = 1;
-    private static final int ADD_CODE = 2;
+    private static final int UPDATE_CODE = 2;
     private boolean reloadNeed = true;
 
 
@@ -58,6 +58,8 @@ public class OwnInventory extends AppCompatActivity {
                 // Yes we did! Let's allow onResume() to reload the data
                 this.reloadNeed = true;
             }
+        } else if (requestCode == UPDATE_CODE) {
+            this.reloadNeed = true;
         }
     }
 
@@ -71,9 +73,10 @@ public class OwnInventory extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), item.getDescription(), Toast.LENGTH_LONG).show();
 //                Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
 //                intent.putExtra("itemId", item.getId());
+//                startActivity(intent);
+
                 Intent intent = new Intent(getApplicationContext(), DescriptionItemActivity.class);
                 intent.putExtra("descriptionItem", item);
-//                startActivity(intent);
                 startActivityForResult(intent, DELETE_CODE);
             }
         });
@@ -133,8 +136,8 @@ public class OwnInventory extends AppCompatActivity {
 
     public void toAddItemActivity(View view) {
         Intent iTimKiem = new Intent(this, CreateItemActivity.class);
-        startActivityForResult(iTimKiem, DELETE_CODE);
-        startActivity(iTimKiem);
+        startActivityForResult(iTimKiem, UPDATE_CODE);
+//        startActivity(iTimKiem);
     }
 
 

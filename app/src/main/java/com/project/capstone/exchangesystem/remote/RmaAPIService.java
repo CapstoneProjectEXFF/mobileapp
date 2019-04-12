@@ -114,6 +114,9 @@ public interface RmaAPIService {
     @DELETE("/transaction/{transID}")
     Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
+    @DELETE("/donationPost/{donationId}")
+    Call<Object> removeDonationPost(@Header("Authorization") String authorization, @Path("donationId") int donationId);
+
     @GET("/trading")
     Call<List<Room>> loadRoomByUserId(@Query("userId") int userId);
 

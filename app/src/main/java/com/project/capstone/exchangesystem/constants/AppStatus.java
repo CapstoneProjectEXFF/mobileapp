@@ -28,5 +28,6 @@ public class AppStatus {
     public static final String TRANSACTION_RESEND = "4";
     public static final int SEND_MSG = 0;
     public static final int RECEIVE_MSG = 1;
+    public static final String DISABLED_DONATION_POST = "0";
 
 }
