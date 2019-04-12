@@ -37,6 +37,9 @@ public interface RmaAPIService {
     @GET("/user/{id}/item")
     Call<List<Item>> getItemsByUserIdWithPrivacy(@Header("Authorization") String authorization, @Path("id") int userID);
 
+    //test
+
+
     @GET("/user/my/item")
     Call<List<Item>> getMyItems(@Header("Authorization") String authorization);
 
@@ -49,6 +52,7 @@ public interface RmaAPIService {
 
     @GET("/category")
     Call<List<Category>> getAllCategory();
+
 
     @POST("/item")
     Call<Item> createItem(@Body Map<String, Object> body, @Header("Authorization") String authorization);
