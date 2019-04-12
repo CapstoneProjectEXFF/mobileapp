@@ -2,27 +2,25 @@ package com.project.capstone.exchangesystem.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import com.project.capstone.exchangesystem.activity.CreateDonationPostActivity;
-import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
+import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.CreateDonationPostActivity;
+import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
+import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -145,6 +143,8 @@ public class MainCharityPostFragment extends Fragment {
         });
 
     }
+
+
 
     public class mHandler extends Handler {
         @Override

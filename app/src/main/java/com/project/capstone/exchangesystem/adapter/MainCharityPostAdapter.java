@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.squareup.picasso.Picasso;
-import com.project.capstone.exchangesystem.model.CharityPostItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +43,12 @@ public class MainCharityPostAdapter extends BaseAdapter {
     public class ViewHolder {
         public TextView txtContent, txtNameCharity, txtTimestamp, txtTitle, txtAddress;
         public ImageView imgCharityPost, imgProfileCharity;
+    }
+
+    public void setfilter(ArrayList<DonationPost> newList) {
+        donationPosts.clear();
+        donationPosts.addAll(newList);
+        notifyDataSetChanged();
     }
 
     @Override

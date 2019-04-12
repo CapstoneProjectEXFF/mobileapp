@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,6 +42,9 @@ public class OwnDonationPost extends AppCompatActivity {
     RmaAPIService rmaAPIService;
     User userDetail;
     TextView btnAddCharityPost;
+    private static final int UPDATE_CODE = 1;
+    private static final int NO_CODE = 0;
+    private boolean reloadNeed =  true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +80,27 @@ public class OwnDonationPost extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DescriptionDonationPostActivity.class);
                 intent.putExtra("descriptionDonationPost", donationPosts.get(position));
-                startActivity(intent);
+                startActivityForResult(intent, UPDATE_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UPDATE_CODE) { // Ah! We are back from EditActivity, did we make any changes?
+            if (resultCode == Activity.RESULT_OK) {
+                // Yes we did! Let's allow onResume() to reload the data
+                this.reloadNeed = true;
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.reloadNeed)
+            getData();
+        this.reloadNeed = false;
     }
 
     private void actionToolbar() {
@@ -98,7 +120,8 @@ public class OwnDonationPost extends AppCompatActivity {
             public void onResponse(Call<List<DonationPost>> call, Response<List<DonationPost>> response) {
                 if (response.isSuccessful()) {
                     List<DonationPost> result = response.body();
-                    donationPosts.addAll(result);
+                    mainCharityPostAdapter.setfilter((ArrayList<DonationPost>) result);
+//                    donationPosts.addAll(result);
                     mainCharityPostAdapter.notifyDataSetChanged();
                 }
             }
@@ -109,4 +132,6 @@ public class OwnDonationPost extends AppCompatActivity {
             }
         });
     }
+
+
 }

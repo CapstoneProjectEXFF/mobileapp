@@ -71,9 +71,10 @@ public class OwnInventory extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), item.getDescription(), Toast.LENGTH_LONG).show();
 //                Intent intent = new Intent(getApplicationContext(), UpdateItemActivity.class);
 //                intent.putExtra("itemId", item.getId());
+//                startActivity(intent);
+
                 Intent intent = new Intent(getApplicationContext(), DescriptionItemActivity.class);
                 intent.putExtra("descriptionItem", item);
-//                startActivity(intent);
                 startActivityForResult(intent, DELETE_CODE);
             }
         });
