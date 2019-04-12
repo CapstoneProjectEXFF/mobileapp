@@ -95,11 +95,10 @@ public class OwnInventory extends AppCompatActivity {
     private void GetData() {
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         String authorization = sharedPreferences.getString("authorization", null);
-        int userID = sharedPreferences.getInt("userId", 0);
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, userID).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getMyItems(authorization).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     if (response.isSuccessful()) {
