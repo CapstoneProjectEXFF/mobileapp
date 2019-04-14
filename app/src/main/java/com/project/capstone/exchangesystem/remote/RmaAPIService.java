@@ -99,6 +99,10 @@ public interface RmaAPIService {
     @GET("/transaction/confirm")
     Call<List<Transaction>> getTransactionsTradedBySenderId(@Header("Authorization") String authorization);
 
+    @GET("/transaction/donation")
+    Call<List<TransactionRequestWrapper>> getDonationnTransactionByAgentID(@Header("Authorization") String authorization);
+
+
     @GET("/transaction/{transID}")
     Call<TransactionRequestWrapper> getTransactionByTransID(@Header("Authorization") String authorization, @Path("transID") int transID);
 
