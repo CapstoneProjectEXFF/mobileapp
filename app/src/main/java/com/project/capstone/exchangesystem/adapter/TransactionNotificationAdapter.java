@@ -157,6 +157,8 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                 } else {
                     notification = transaction.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
                 }
+            } else if (transaction.getDonationPostId() != null && transaction.getStatus().equals(String.valueOf(AppStatus.DONATION_UPDATE_ACTION))) {
+                notification = transaction.getSender().getFullName() + " vừa gửi từ thiện";
             }
 
             txtNotification.setText(notification);

@@ -105,7 +105,7 @@ public class NotificationFragment extends Fragment {
 
     private void ActionToolbar() {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.notification_title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.notification_title);
     }
 
     private void getDataFromTransaction() {
@@ -153,8 +153,29 @@ public class NotificationFragment extends Fragment {
             }
         });
 
-        transactionNotificationAdapter.notifyDataSetChanged();
+        rmaAPIService.getDonationnTransactionByAgentID(authorization).enqueue(new Callback<List<TransactionRequestWrapper>>() {
+            @Override
+            public void onResponse(Call<List<TransactionRequestWrapper>> call, Response<List<TransactionRequestWrapper>> response) {
+                if (response.isSuccessful()) {
+                    List<TransactionRequestWrapper> temp = new ArrayList<>();
+                    temp = response.body();
+                    for(int i = 0;i < temp.size(); i++) {
+                        transactions.add(temp.get(i).getTransaction());
+                        transactionNotificationAdapter.notifyDataSetChanged();
 
+                    }
+//                    transactions.addAll(temp);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TransactionRequestWrapper>> call, Throwable t) {
+                System.out.println("Fail rồi");
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        transactionNotificationAdapter.notifyDataSetChanged();
 
     }
 
