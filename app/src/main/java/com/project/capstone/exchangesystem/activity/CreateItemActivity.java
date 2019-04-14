@@ -99,7 +99,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
             }
         });
         rvSelectedImages.setHasFixedSize(true);
-        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 4));
+        rvSelectedImages.setLayoutManager(new GridLayoutManager(this, 5));
         rvSelectedImages.setAdapter(imageAdapter);
     }
 

@@ -28,6 +28,10 @@ public class Room implements Serializable {
     @Expose
     private int status;
 
+    @SerializedName("qrCode")
+    @Expose
+    private String qrCode;
+
     public List<UserRoom> getUsers() {
         return users;
     }
@@ -58,5 +62,9 @@ public class Room implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getQrCode() {
+        return qrCode;
     }
 }

@@ -24,9 +24,9 @@ import java.util.List;
 public class TradeAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Item> itemList;
+    private ArrayList<Item> itemList;
 
-    public TradeAdapter(Context context, List<Item> itemList) {
+    public TradeAdapter(Context context, ArrayList<Item> itemList) {
         this.context = context;
         this.itemList = itemList;
     }
@@ -63,26 +63,6 @@ public class TradeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//
-//        if (convertView == null) {
-//            convertView = inflater.inflate(R.layout.trade_item, null);
-//        }
-//        TextView txtNameTradeItem = (TextView) convertView.findViewById(R.id.txtNameTradeItem);
-//        txtNameTradeItem.setText(itemList.get(position).getName());
-//
-//
-//        ImageView imgTradeItem = (ImageView) convertView.findViewById(R.id.imgTradeItem);
-//        Picasso.with(context).load("https://cdn.tgdd.vn/Products/Images/42/192001/samsung-galaxy-j6-plus-1-400x460.png")
-//                .placeholder(R.drawable.no)
-//                .error(R.drawable.loadingimage)
-//                .into(imgTradeItem);
-//
-//        CheckBox Chkbox = (CheckBox) convertView.findViewById(R.id.checkBoxTrade);
-//        return convertView;
-
-
         TradeAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new TradeAdapter.ViewHolder();

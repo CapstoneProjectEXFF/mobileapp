@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
+import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -27,15 +29,16 @@ import java.util.List;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
+import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
 
 public class DonateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
     TextView txtReceiverName;
-    ArrayList<Item> itemList;
+    ArrayList<Item> itemList, tmpItemList, availableItems;
 
     DonationPost donationPost;
     SharedPreferences sharedPreferences;
-    String authorization;
+    String authorization, userPhoneNumber, userFullName;
     RmaAPIService rmaAPIService;
     Integer userId;
 
@@ -44,7 +47,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     //new view
     Toolbar toolbar;
     RecyclerView rvSelectedImages;
-    ItemAdapter itemAdapter;
+    SelectedItemAdapter itemAdapter;
     ImageButton btnAddItems;
     Item tmpItem;
     TextView txtNoti;
@@ -54,28 +57,26 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donate_item);
         itemList = new ArrayList<>();
+        tmpItemList = new ArrayList<>();
+        availableItems = new ArrayList<>();
         context = this;
         getComponent();
         setToolbar();
         setItemAdapter();
+        loadAvailableItems();
 
         btnAddItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> selectedItemIdsStr = new ArrayList<>();
-                for (int i = 0; i < itemList.size(); i++) {
-                    selectedItemIdsStr.add(itemList.get(i).getId());
-                }
                 Intent intent = new Intent(getApplicationContext(), ChooseItemActivity.class);
-                intent.putExtra("id", userId);
-                intent.putExtra("itemMeIdList", selectedItemIdsStr);
+                intent.putExtra("availableItems", availableItems);
                 startActivityForResult(intent, 2);
             }
         });
     }
 
     private void setItemAdapter() {
-        itemAdapter = new ItemAdapter(getApplicationContext(), itemList, new ItemAdapter.OnItemClickListener() {
+        itemAdapter = new SelectedItemAdapter(getApplicationContext(), itemList, new SelectedItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
                 tmpItem = item;
@@ -98,10 +99,23 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
 
         // check if the request code is same as what is passed  here it is 2
         if (requestCode == 2) {
-            Bundle bundle = data.getExtras();
-            itemList = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
-            itemAdapter.setfilter(itemList);
-            setNoti();
+            if (data != null){
+                Bundle bundle = data.getExtras();
+                ArrayList<Item> selectedItems = (ArrayList<Item>) bundle.getSerializable("LISTCHOOSE");
+                if (selectedItems.size() > 0){
+                    for (int i = 0; i < selectedItems.size(); i++){
+                        for (int j = 0; j < availableItems.size(); j++){
+                            if (availableItems.get(j).getId() == selectedItems.get(i).getId()){
+                                availableItems.remove(j);
+                                break;
+                            }
+                        }
+                    }
+                    tmpItemList.addAll(selectedItems);
+                }
+                itemAdapter.setfilter(tmpItemList);
+                setNoti();
+            }
         }
     }
 
@@ -121,9 +135,13 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
 
         Intent intent = new Intent(getApplicationContext(), InformationConfirmActivity.class);
+
         intent.putExtra("transaction", transactionRequestWrapper);
         intent.putExtra("senderAddress", itemList.get(0).getAddress());
         intent.putExtra("donationPost", donationPost);
+        intent.putExtra("itemList", itemList);
+        intent.putExtra("userPhoneNumber", userPhoneNumber);
+        intent.putExtra("userFullName", userFullName);
         startActivity(intent);
     }
 
@@ -141,6 +159,8 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         userId = sharedPreferences.getInt("userId", 0);
+        userPhoneNumber = sharedPreferences.getString("phoneNumber", null);
+        userFullName = sharedPreferences.getString("username", null);
     }
 
     private void setNoti() {
@@ -187,10 +207,50 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     @Override
     public void onButtonClicked(int choice) {
         if (choice == DELETE_IMAGE_OPTION) {
-            itemList.remove(tmpItem);
+            for (int i = 0; i < tmpItemList.size(); i++){
+                if (tmpItemList.get(i).getId() == tmpItem.getId()){
+                    tmpItemList.remove(i);
+                    break;
+                }
+            }
+
+            availableItems.add(tmpItem);
             itemAdapter.notifyDataSetChanged();
-            itemAdapter.setfilter(itemList);
+            itemAdapter.setfilter(tmpItemList);
             setNoti();
+        }
+    }
+
+    private void loadAvailableItems() {
+
+        if (authorization != null) {
+            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, userId).enqueue(new Callback<List<Item>>() {
+                @Override
+                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
+                    Log.i("loadAvailableItems", "" + response.body().size());
+                    List<Item> result = new ArrayList<>();
+                    result = response.body();
+                    if (result.size() > 0) {
+                        List<Item> tmpAvailableItems = new ArrayList<>();
+                        for (int i = 0; i < result.size(); i++) {
+                            if (result.get(i).getStatus().equals(ITEM_ENABLE)) {
+                                tmpAvailableItems.add(result.get(i));
+                            }
+                        }
+                        if (tmpAvailableItems.size() > 0) {
+                            availableItems.addAll(tmpAvailableItems);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Item>> call, Throwable t) {
+                    Log.i("loadAvailableItems", "" + t.getMessage());
+                }
+            });
+        } else {
+            Log.i("loadAvailableItems", "load failed");
         }
     }
 }
