@@ -9,15 +9,15 @@ import com.project.capstone.exchangesystem.R;
 public class QRCodeResultActivity extends AppCompatActivity {
 
     String qrResult;
-    TextView txtReslt;
+    TextView txtResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_result);
-
+        txtResult = findViewById(R.id.txtResult);
         qrResult = getIntent().getStringExtra("result");
-        txtReslt.setText(qrResult);
+        txtResult.setText(qrResult);
         //TODO
     }
 }

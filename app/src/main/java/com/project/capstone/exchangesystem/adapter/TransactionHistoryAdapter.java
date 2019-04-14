@@ -82,9 +82,9 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         final Transaction transaction = (Transaction) getItem(position);
         String status = "";
         if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
-            status = status + "Giao dịch thành công";
+            status = status + context.getString(R.string.done_transaction);
         } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND) || transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
-            status = status + "Đang chờ xử lý";
+            status = status + context.getString(R.string.waiting_transaction);
         }
         viewHolder.txtStatusTrans.setText(status);
         viewHolder.btnSender.setText(transaction.getSender().getFullName());

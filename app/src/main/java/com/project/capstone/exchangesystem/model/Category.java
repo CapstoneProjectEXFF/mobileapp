@@ -15,9 +15,9 @@ public class Category  implements Serializable {
     @Expose
     private String name;
 
-    @SerializedName("suppercategoryId")
+    @SerializedName("supercategoryId")
     @Expose
-    private int suppercategoryId;
+    private int supercategoryId;
 
     public int getId() {
         return id;
@@ -35,17 +35,17 @@ public class Category  implements Serializable {
         this.name = name;
     }
 
-    public int getSuppercategoryId() {
-        return suppercategoryId;
+    public int getSupercategoryId() {
+        return supercategoryId;
     }
 
-    public void setSuppercategoryId(int suppercategoryId) {
-        this.suppercategoryId = suppercategoryId;
+    public void setSupercategoryId(int supercategoryId) {
+        this.supercategoryId = supercategoryId;
     }
 
-    public Category(int id, String name, int suppercategoryId) {
+    public Category(int id, String name, int supercategoryId) {
         this.id = id;
         this.name = name;
-        this.suppercategoryId = suppercategoryId;
+        this.supercategoryId = supercategoryId;
     }
 }

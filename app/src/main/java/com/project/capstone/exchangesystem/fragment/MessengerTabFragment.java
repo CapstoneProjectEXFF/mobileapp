@@ -72,7 +72,7 @@ public class MessengerTabFragment extends Fragment {
     TradeRealtimeActivity tradeRealtimeActivity;
 
     int myUserId, yourUserId;
-    String authorization, roomName;
+    String authorization, roomName, yourName;
     public List<Message> messages, tmpMessage;
     public MessageAdapter messageAdapter;
 
@@ -108,40 +108,14 @@ public class MessengerTabFragment extends Fragment {
         roomName = tradeRealtimeActivity.getRoomName();
         myUserId = tradeRealtimeActivity.getMyUserId();
         yourUserId = tradeRealtimeActivity.getYourUserId();
+        yourName = tradeRealtimeActivity.getYourName();
 
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
 
         socketServer = tradeRealtimeActivity.getSocketServer();
 
-        messageAdapter = new MessageAdapter(getActivity().getApplicationContext(), messages, myUserId);
+        messageAdapter = new MessageAdapter(getActivity().getApplicationContext(), messages, myUserId, yourName);
         socketServer.mSocket.on("send-msg", sendMsg);
-
-
-//        if (item != null){
-//            yourUserId = item.getUser().getId();
-//            roomName = "" + myUserId + "-" + yourUserId;
-//
-//        } else {
-//            room = (Room)getActivity().getIntent().getSerializableExtra("room");
-//            roomName = room.getRoom();
-//            for (int i = 0; i < room.getUsers().size(); i++){
-//                if (room.getUsers().get(i).getUserId() != myUserId){
-//                    yourUserId = room.getUsers().get(i).getUserId();
-//                    break;
-//                }
-//            }
-//        }
-//
-//        JSONObject jsonObject = new JSONObject();
-//        try {
-//            jsonObject.put("room", roomName);
-//            jsonObject.put("userA", myUserId);
-//            jsonObject.put("userB", yourUserId);
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        socketServer.emitRoom(jsonObject);
 
     }
 
@@ -151,7 +125,6 @@ public class MessengerTabFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_messenger_tab, container, false);
         getComponents(view);
         socketServer.setMessengerTabFragment(this);
-
 
         lvMessageList.setAdapter(messageAdapter);
 
