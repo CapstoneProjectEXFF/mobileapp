@@ -69,7 +69,6 @@ public interface RmaAPIService {
     @GET("/item/{id}")
     Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
 
-
     @POST("/donationPost")
     Call<DonationPost> createDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization);
 
@@ -87,6 +86,9 @@ public interface RmaAPIService {
 
     @GET("/donationPost")
     Call<List<DonationPost>> getDonationPost(@Query("page") int page, @Query("size") int size);
+
+    @GET("/item")
+    Call<List<Item>> getAllItemsWithPrivacy(@Header("Authorization") String authorization, @Query("page") int page, @Query("size") int size);
 
     @GET("/item/{itemId}")
     Call<Item> getItemById(@Path("itemId") int id);
