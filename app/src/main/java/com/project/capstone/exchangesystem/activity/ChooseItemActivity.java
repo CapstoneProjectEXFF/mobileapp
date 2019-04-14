@@ -28,10 +28,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABL
 public class ChooseItemActivity extends AppCompatActivity {
     GridView grideviewChoose;
     TradeAdapter tradeAdapter;
-    ArrayList<Item> chooseList;
-    ArrayList<String> idItemList;
-    ArrayList<Integer> listItem;
-    String id;
+    ArrayList<Item> chooseList, availableItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,73 +45,22 @@ public class ChooseItemActivity extends AppCompatActivity {
     private void direct() {
         grideviewChoose = findViewById(R.id.grideviewChoose);
         chooseList = new ArrayList<>();
-        tradeAdapter = new TradeAdapter(this, chooseList);
-        grideviewChoose.setAdapter(tradeAdapter);
-
-
+        availableItems = new ArrayList<>();
         Intent intent = this.getIntent();
-        int id = (int) intent.getIntExtra("id", 0);
-
-
-        if (intent.hasExtra("itemMeIdList")) {
-//            ArrayList<String> listItem = intent.getStringArrayListExtra("itemMeIdList");
-            listItem = intent.getIntegerArrayListExtra("itemMeIdList");
-        } else {
-//            ArrayList<String> listItem = intent.getStringArrayListExtra("itemYouIdList");
-            listItem = intent.getIntegerArrayListExtra("itemYouIdList");
-        }
-
-        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        String authorization = sharedPreferences.getString("authorization", null);
-
-
-        if (authorization != null) {
-            RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, id).enqueue(new Callback<List<Item>>() {
-                @Override
-                public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
-
-                    List<Item> result = response.body();
-                    for (int i = 0; i < result.size(); i++) {
-                        if (result.get(i).getStatus().equals(ITEM_ENABLE)) {
-                            chooseList.add(result.get(i));
-
-                        }
-                    }
-                    for (int i = 0; i < listItem.size(); i++){
-                        for (int j = 0; j < chooseList.size(); j++){
-                            if (chooseList.get(j).getId() == listItem.get(i)){
-                                chooseList.remove(j);
-                            }
-                        }
-                    }
-                    tradeAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onFailure(Call<List<Item>> call, Throwable t) {
-                    System.out.println(t.getMessage());
-                }
-            });
-        } else {
-            System.out.println("Fail Test Authorization");
-        }
-
+        availableItems = (ArrayList<Item>) intent.getSerializableExtra("availableItems");
+        tradeAdapter = new TradeAdapter(this, availableItems);
+        grideviewChoose.setAdapter(tradeAdapter);
     }
 
     public void addItem(View view) {
-        Intent intent1 = this.getIntent();
-        int id = (int) intent1.getIntExtra("id", 0);
+        ArrayList<Item> selectedItems = new ArrayList<>();
         int countMe = grideviewChoose.getAdapter().getCount();
-        ArrayList<Item> idItemList = new ArrayList<>();
         for (int i = 0; i < countMe; i++) {
             try {
                 LinearLayout itemLayout = (LinearLayout) grideviewChoose.getChildAt(i);
-                CheckBox checkBox = (CheckBox) itemLayout.findViewById(R.id.checkBoxTrade);
+                CheckBox checkBox = itemLayout.findViewById(R.id.checkBoxTrade);
                 if (checkBox.isChecked()) {
-                    TextView tempView = (TextView) itemLayout.findViewById(R.id.txtTradeIDItem);
-                    idItemList.add(chooseList.get(i));
-
+                    selectedItems.add(availableItems.get(i));
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
@@ -125,9 +71,8 @@ public class ChooseItemActivity extends AppCompatActivity {
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("LISTCHOOSE", idItemList);
+        bundle.putSerializable("LISTCHOOSE", selectedItems);
         intent.putExtras(bundle);
-        intent.putExtra("tempID", id);
         setResult(1, intent);
         finish();
     }

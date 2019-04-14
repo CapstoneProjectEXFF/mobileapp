@@ -75,6 +75,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         public void bind(final Image image, final OnItemClickListener listener) {
             if (image.getUri() != null) {
                 try {
+                    //TODO handle oversize of image
                     Bitmap bmp = (Bitmap) MediaStore.Images.Media.getBitmap(context.getContentResolver(), image.getUri());
                     ivSeletecImage.setImageBitmap(bmp);
                 } catch (IOException e) {

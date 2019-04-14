@@ -1,91 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.TransactionDetailActivity">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbToolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="4">
+        android:background="@color/colorPrimary" />
 
-        <TextView
-            android:id="@+id/nameMe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Me Inventory"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAlignment="center"
-            android:layout_weight="2" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/itemsMe"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="4">
-
-        <TextView
-            android:id="@+id/nameYou"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Partner Inventory"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAlignment="center"
-            android:layout_weight="2" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/itemsYou"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
-
-
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/trade_inf_title"
+        android:textColor="@color/colorGrayDark"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="2">
+        android:orientation="vertical">
 
-        <Button
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="2.5dp"
-            android:layout_weight="1"
-            android:onClick="toMain"
-            android:text="Back To Main" />
+            android:layout_margin="10dp"
+            android:layout_weight="0.05"
+            android:background="@drawable/bg_border_trade"
+            android:orientation="vertical"
+            android:paddingBottom="4dp"
+            tools:ignore="NestedWeights">
 
-        <Button
-            android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/linearInf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivQRCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtReceiverName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="8dp"
+                        android:text="Receiver's Name"
+                        android:textColor="@color/colorGrayDark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtReceiverPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="8dp"
+                        android:text="Receiver's Phone"
+                        android:textColor="@color/colorGrayDark"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtReceiverAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:singleLine="false"
+                            android:text="Receiver's Address"
+                            android:textColor="@color/colorGrayDark"
+                            android:textSize="16sp" />
+
+                        <ImageButton
+                            android:id="@+id/btnMaps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:background="@drawable/round_directions_bike_black_36" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvYourItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/colorGrayWhite"/>
+        </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/myItemLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2.5dp"
-            android:layout_weight="1"
-            android:text="Update"
-            android:onClick="toUpdateTransaction"/>
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/bg_border_trade"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/txtSend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/trade_send_item"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/rvMyItems"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvMyItems"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/colorGrayWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtSend" />
+        </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
 
