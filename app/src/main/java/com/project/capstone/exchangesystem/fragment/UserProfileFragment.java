@@ -280,6 +280,7 @@ public class UserProfileFragment extends Fragment {
                 }
             });
         }
+    }
 
     public void toLoginReminder(View view) {
         Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
