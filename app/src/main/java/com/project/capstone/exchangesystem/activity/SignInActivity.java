@@ -3,18 +3,18 @@ package com.project.capstone.exchangesystem.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.gson.internal.LinkedTreeMap;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.model.AuthorizationUser;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.service.UserService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +32,7 @@ public class SignInActivity extends AppCompatActivity {
     boolean flag = true;
     boolean flag1 = true;
     boolean flag2 = true;
+    UserSession userSession;
 
 
     @Override
@@ -43,12 +44,17 @@ public class SignInActivity extends AppCompatActivity {
 //        lbl_toolbar.setText("Đăng Nhập");
 //        lbl_toolbar.setTypeface(null, Typeface.BOLD);
 
+
+        direct();
+
+    }
+
+    private void direct() {
         context = this;
+        userSession = new UserSession(getApplicationContext());
         txtPhone = findViewById(R.id.txtPhone);
         txtPassword = findViewById(R.id.txtPassword);
         progressDialog = UserService.setUpProcessDialog(context);
-
-
     }
 
     public void signIn(View view) {
@@ -85,64 +91,67 @@ public class SignInActivity extends AppCompatActivity {
             jsonBody.put("phoneNumber", phone);
             jsonBody.put("password", password);
             progressDialog.show();
-            rmaAPIService.login(jsonBody).enqueue(new Callback<Object>() {
+            rmaAPIService.login(jsonBody).enqueue(new Callback<AuthorizationUser>() {
                 @Override
-                public void onResponse(Call<Object> call, Response<Object> response) {
+                public void onResponse(Call<AuthorizationUser> call, Response<AuthorizationUser> response) {
                     progressDialog.cancel();
                     Toast.makeText(getApplicationContext(), "Vào rồi", Toast.LENGTH_LONG).show();
                     if (response.isSuccessful()) {
                         progressDialog.cancel();
                         if (response.body() != null) {
                             try {
+//
+//                                LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
+//
+//                                String authorization = (String) responeBody.get("Authorization");
+//                                LinkedTreeMap<String, Object> userInfo = (LinkedTreeMap<String, Object>) responeBody.get("User");
+                                AuthorizationUser authorizationUser = (AuthorizationUser) response.body();
 
-                                LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
+//
+//                                int id = (int) Math.round((Double) userInfo.get("id"));
+//
+//                                String phoneNumber = (String) userInfo.get("phoneNumber");
+//
+//                                String fullName = (String) userInfo.get("fullName");
+//
+//                                String status = (String) userInfo.get("status");
+//
+//                                String avatar = "";
+//                                if (userInfo.containsKey("avatar")) {
+//                                    avatar = avatar + (String) userInfo.get("avatar");
+//                                }
+//
+//                                String address = (String) userInfo.get("address");
 
-                                String authorization = (String) responeBody.get("Authorization");
-                                LinkedTreeMap<String, Object> userInfo = (LinkedTreeMap<String, Object>) responeBody.get("User");
+                                if (authorizationUser.getUser().getStatus().equals(USER_ENABLE)) {
+                                    userSession.createUserLoginSession(authorizationUser.getUser(), authorizationUser.getAuthorization());
 
-                                int id = (int) Math.round((Double) userInfo.get("id"));
 
-                                String phoneNumber = (String) userInfo.get("phoneNumber");
-
-                                String fullName = (String) userInfo.get("fullName");
-
-                                String status = (String) userInfo.get("status");
-
-                                String avatar = "";
-                                if (userInfo.containsKey("avatar")) {
-                                    avatar = avatar + (String) userInfo.get("avatar");
-                                }
-
-                                String address = (String) userInfo.get("status");
-
-                                //TODO hardcode status
-                                if (status.equals(USER_ENABLE)) {
-                                    SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-                                    editor.putString("avatar", avatar);
-                                    editor.putString("phoneNumberSignIn", phoneNumber);
-                                    editor.putInt("userId", id);
-                                    editor.putString("username", fullName);
-                                    editor.putString("authorization", authorization);
-                                    editor.putString("status", status);
-                                    editor.putString("address", address);
-                                    editor.commit();
+//                                    SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
+//                                    editor.putString("avatar", avatar);
+//                                    editor.putString("phoneNumberSignIn", phoneNumber);
+//                                    editor.putInt("userId", id);
+//                                    editor.putString("username", fullName);
+//                                    editor.putString("authorization", authorization);
+//                                    editor.putString("status", status);
+//                                    editor.putString("address", address);
+//                                    editor.commit();
 
 
                                     // login thẳng vào Main
                                     Intent intent = new Intent(context, MainActivity.class);
                                     startActivity(intent);
+//                                    finish();
 
-                                    //login vào createItem
-//                                Intent intent = new Intent(context, CreateItemActivity.class);
-//                                startActivity(intent);
 
                                 } else {
-                                    Intent intent = new Intent(context, VerifyActivity.class);
-                                    intent.putExtra("phoneNumber", phoneNumber);
-                                    intent.putExtra("type", "create-account");
-                                    intent.putExtra("userId", id);
-                                    intent.putExtra("userName", fullName);
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(context, VerifyActivity.class);
+//                                    intent.putExtra("phoneNumber", phoneNumber);
+//                                    intent.putExtra("type", "create-account");
+//                                    intent.putExtra("userId", id);
+//                                    intent.putExtra("userName", fullName);
+//                                    startActivity(intent);
+//                                    Toast.makeText()
                                 }
 
                             } catch (Exception e) {
@@ -164,7 +173,7 @@ public class SignInActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<Object> call, Throwable t) {
+                public void onFailure(Call<AuthorizationUser> call, Throwable t) {
                     progressDialog.cancel();
                     Toast toast = Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT);
                     System.out.println("message from failure: " + t.getMessage());

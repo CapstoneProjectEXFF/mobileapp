@@ -17,7 +17,7 @@ public interface RmaAPIService {
 //    @FormUrlEncoded
 //    Call<Object> login(@Field("phoneNumber") String phone, @Field("password") String password);
 //    Call<User> login(Req)
-    Call<Object> login(@Body Map<String, String> body);
+    Call<AuthorizationUser> login(@Body Map<String, String> body);
 
     @POST("/register")
     Call<Object> register(@Body Map<String, String> body);
