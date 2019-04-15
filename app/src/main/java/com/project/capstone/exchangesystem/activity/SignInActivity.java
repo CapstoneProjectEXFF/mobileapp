@@ -95,7 +95,6 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AuthorizationUser> call, Response<AuthorizationUser> response) {
                     progressDialog.cancel();
-                    Toast.makeText(getApplicationContext(), "Vào rồi", Toast.LENGTH_LONG).show();
                     if (response.isSuccessful()) {
                         progressDialog.cancel();
                         if (response.body() != null) {
