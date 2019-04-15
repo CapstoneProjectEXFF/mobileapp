@@ -25,11 +25,15 @@ import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
+import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
 
 public class DonateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 

@@ -30,5 +30,11 @@ public class AppStatus {
     public static final int SEND_MSG = 0;
     public static final int RECEIVE_MSG = 1;
     public static final String DISABLED_DONATION_POST = "0";
-
+    public static final int USER_ACCEPTED_TRADE = 1;
+    public static final int USER_ACCEPTED_TRADE_MESSAGE = -1;
+    public static final int USER_CANCELED_TRADE_CONFIRM_MESSAGE = -2;
+    public static final int USER_RESET_TRADE_MESSAGE = -3;
+    public static final int TRADE_DONE_MESSAGE = -4;
+    public static final int USER_ADDED_ITEM_MESSAGE = -5;
+    public static final int USER_REMOVED_ITEM_MESSAGE = -6;
 }

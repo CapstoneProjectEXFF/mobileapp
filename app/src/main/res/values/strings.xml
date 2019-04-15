@@ -73,7 +73,6 @@
     <string name="finish">Chốt</string>
     <string name="message">Tin nhắn</string>
     <string name="trade">Trao đổi</string>
-    <string name="trade_done"> đã chốt.</string>
     <string name="trade_inf_title">Thông tin trao đổi</string>
     <string name="transaction_history">Lịch sử trao đổi</string>
     <string name="no_transaction">Bạn chưa có lịch sử trao đổi nào.</string>
@@ -95,4 +94,20 @@
     <string name="login">Đăng Nhập</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="cancle">Hủy</string>
+    <string name="waiting_transaction">Đang chờ xử lý</string>
+    <string name="done_transaction">Giao dịch thành công</string>
+
+    <!--trade room noti-->
+    <string name="user_accepted_trade">đã chốt.</string>
+    <string name="user_reseted_trade">đã xóa tất cả đồ dùng.</string>
+    <string name="user_canceled_confirm_trade">đã hủy chốt.</string>
+    <string name="user_added_item">đã được thêm vào.</string>
+    <string name="user_removed_item">đã bị xóa.</string>
+    <string name="trade_done">Xác nhận trao đổi.</string>
+    <string name="me_confirmed">Bạn</string>
+
+    <!--rating-->
+    <string name="rating_ques">Đánh giá của bạn</string>
+    <string name="rating_send">Gửi</string>
+    <string name="rating_title">Đánh giá người dùng</string>
 </resources>

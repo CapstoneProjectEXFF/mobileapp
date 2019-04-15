@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +23,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.adapter.CategoryAdapter;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.Category;
@@ -62,6 +65,8 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     ArrayList<Image> imageList, tmpImageList;
     Image tmpImage;
     RecyclerView rvSelectedImages;
+    List<Category> tmpCategoryList;
+    CategoryAdapter categoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +78,6 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         setImageAdapter();
         getAllCategory();
         getAllPrivacy();
-
-
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,17 +247,22 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
+
         rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        List<Category> result = response.body();
+                        tmpCategoryList = response.body();
                         categoryList = new ArrayList<>();
-                        for (int i = 0; i < result.size(); i++) {
-                            categoryList.add(result.get(i).getName());
+                        for (int i = 0; i < tmpCategoryList.size(); i++) {
+                            categoryList.add(tmpCategoryList.get(i).getName());
                         }
-                        setDataForSpinner(spCategory, categoryList);
+//                        setDataForSpinner(spCategory, categoryList);
+
+                        categoryAdapter = new CategoryAdapter(context, tmpCategoryList);
+                        spCategory.setAdapter(categoryAdapter);
+//                        setDataForCategorySpinner(spCategory, categoryList);
                         progressDialog.dismiss();
                     } else {
                         notifyLoadingError("loadCategory", "httpstatus" + response.code());
@@ -312,6 +320,10 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, dataArray);
         dataAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(dataAdapter);
+    }
+
+    private void setDataForCategorySpinner(Spinner spinner, List<String> dataArray){
+
     }
 
     @Override

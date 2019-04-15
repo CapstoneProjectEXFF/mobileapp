@@ -126,10 +126,10 @@ public class SocketServer {
     }
 
     public void emitTradeReset(JSONObject data){
-        mSocket.emit("trade-reset", data);
+        mSocket.emit("reset-trade", data);
     }
 
-    public void emitTradeCancel(JSONObject data){
-        mSocket.emit("trade-cancel", data);
+    public void emitTradeUnconfirm(JSONObject data){
+        mSocket.emit("unconfirm-trade", data);
     }
 }
