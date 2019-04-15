@@ -16,9 +16,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.dialog.LoginOptionDialog;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,12 +29,16 @@ import retrofit2.Response;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class DescriptionItemActivity extends AppCompatActivity {
+import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMINDER;
+
+public class DescriptionItemActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
     ImageView imgDescriptionItem, imgAvatar;
     TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
     Button btnTrade;
     ImageButton btnShare;
+    UserSession userSession;
 
 
     //share facebook
@@ -70,7 +76,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (true) {
+        if (userSession.isUserLoggedIn() && idMe == item.getUser().getId()) {
             getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
             menu.getItem(0).setTitle(R.string.update_item);
             menu.getItem(1).setTitle(R.string.delete_item);
@@ -192,6 +198,7 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     private void direct() {
+        userSession = new UserSession(getApplicationContext());
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         idMe = sharedPreferences.getInt("userId", 0);
         authorization = sharedPreferences.getString("authorization", null);
@@ -221,11 +228,16 @@ public class DescriptionItemActivity extends AppCompatActivity {
     }
 
     public void toTradeActivity(View view) {
-
-        Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
-        Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
-        intent.putExtra("descriptionItem", item);
-        startActivity(intent);
+        if (userSession.isUserLoggedIn()) {
+            Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
+            Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
+            intent.putExtra("descriptionItem", item);
+            startActivity(intent);
+        } else {
+            // TODO dialog ask user
+            LoginOptionDialog optionDialog = new LoginOptionDialog();
+            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+        }
     }
 
     private String convertDatetime(Timestamp timestamp) {
@@ -236,5 +248,23 @@ public class DescriptionItemActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
         return date;
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case LOGIN_REMINDER:
+                login();
+                break;
+            case CANCEL_IMAGE_OPTION:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void login() {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
     }
 }

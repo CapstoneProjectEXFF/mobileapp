@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:background="@color/colorPrimaryLighter"
+        android:text="@string/login_reminder" />
+
+    <Button
+        android:id="@+id/btnLoginDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:text="@string/login"
+        android:textColor="@color/colorBlack"
+        android:textSize="22dp" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:text="@string/cancle"
+        android:textColor="@color/colorRed"
+        android:textSize="22dp" />
+
+</LinearLayout>

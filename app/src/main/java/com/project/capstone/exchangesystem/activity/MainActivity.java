@@ -12,9 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.dialog.LoginOptionDialog;
 import com.project.capstone.exchangesystem.fragment.*;
+import com.project.capstone.exchangesystem.utils.UserSession;
 
-public class MainActivity extends AppCompatActivity {
+import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
+import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMINDER;
+
+public class MainActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener {
     private final Fragment ITEM_FRAGMENT = MainItemShowFragment.newInstance();
     private final Fragment DONATION_FRAGMENT = MainCharityPostFragment.newInstance();
     private final Fragment NOTIFICATION_FRAGMENT = NotificationFragment.newInstance();
@@ -22,11 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private final Fragment MESSENGER_FRAGMENT = MessengerRoomFragment.newInstance();
     private final Fragment ADDFRIEND_FRAGMENT = AddFriendFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
+    UserSession userSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userSession = new UserSession(getApplicationContext());
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -41,13 +49,28 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = DONATION_FRAGMENT;
                         break;
                     case R.id.bottombaritem_notification:
-                        selectedFragment = NOTIFICATION_FRAGMENT;
+                        if (userSession.isUserLoggedIn()) {
+                            selectedFragment = NOTIFICATION_FRAGMENT;
+                        } else {
+                            LoginOptionDialog optionDialog = new LoginOptionDialog();
+                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                        }
                         break;
                     case R.id.bottombaritem_profile:
-                        selectedFragment = PROFILE_FRAGMENT;
+                        if (userSession.isUserLoggedIn()) {
+                            selectedFragment = PROFILE_FRAGMENT;
+                        } else {
+                            LoginOptionDialog optionDialog = new LoginOptionDialog();
+                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                        }
                         break;
                     case R.id.bottombaritem_message:
-                        selectedFragment = MESSENGER_FRAGMENT;
+                        if (userSession.isUserLoggedIn()) {
+                            selectedFragment = MESSENGER_FRAGMENT;
+                        } else {
+                            LoginOptionDialog optionDialog = new LoginOptionDialog();
+                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                        }
                         break;
                 }
 
@@ -88,5 +111,23 @@ public class MainActivity extends AppCompatActivity {
     public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(this, OwnDonationPost.class);
         startActivity(iOwnFriendList);
+    }
+
+    @Override
+    public void onButtonClicked(int choice) {
+        switch (choice) {
+            case LOGIN_REMINDER:
+                login();
+                break;
+            case CANCEL_IMAGE_OPTION:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void login() {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
     }
 }

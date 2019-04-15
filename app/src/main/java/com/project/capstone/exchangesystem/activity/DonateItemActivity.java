@@ -17,20 +17,20 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+import java.util.ArrayList;
+import java.util.List;
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
 import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
