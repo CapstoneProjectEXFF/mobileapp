@@ -1,162 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/register_main"
+    android:background="@color/feed_bg"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
     <android.support.v7.widget.Toolbar
         android:background="@color/feed_bg"
         app:titleTextColor="#ff3da1"
-        app:title="Laptop"
+        app:title="Cập Nhật Thông Tin"
         android:id="@+id/edituserprofileToolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.Toolbar>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+    </android.support.v7.widget.Toolbar>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true" />
-
-    <ScrollView
-        android:id="@+id/ScrollView"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/registration_background"
-        android:padding="25dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true">
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/Register_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:text="Edit Profile"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:typeface="monospace" />
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="129dp"
+            android:layout_height="129dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/pencilcircle"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            <EditText
-                android:id="@+id/txtPhoneNumberEditProfile"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/Register_tv"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:gravity="center"
-                android:hint="Phone Number"
-                android:inputType="text"
-                android:editable="false"
-                android:textColor="#000000"
-                android:textStyle="bold" />
+        <EditText
+            android:id="@+id/txtPhoneNumberEditProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Số Điện Thoại"
+            android:inputType="phone"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivAvatar" />
 
-            <EditText
-                android:id="@+id/txtNameEditUserProfile"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtPhoneNumberEditProfile"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/register_uname"
-                android:gravity="center"
-                android:hint="Full Name"
-                android:inputType="text"
-                android:textColor="#000000"
-                android:textStyle="bold" />
+        <EditText
+            android:id="@+id/txtNameEditUserProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Họ và tên"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPhoneNumberEditProfile" />
 
-            <EditText
-                android:id="@+id/txtAdressEditUserProfile"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtNameEditUserProfile"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/register_password"
-                android:gravity="center"
-                android:hint="Address"
-                android:inputType="textPassword"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:enabled="false" />
+        <EditText
+            android:id="@+id/txtAdressEditUserProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Địa chỉ"
+            android:textColor="@color/tranparentBlack"
+            android:textColorHint="@color/colorGrayDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameEditUserProfile" />
 
-            <EditText
-                android:id="@+id/txtStatus"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAdressEditUserProfile"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/register_cnfpassword"
-                android:gravity="center"
-                android:hint="Status"
-                android:inputType="textPassword"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:enabled="false" />
-
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtStatus"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/register_button"
-                android:text="Submit"
-                android:textColor="#ffffff"
-                android:textSize="20dp" />
-
-            <!--<Button-->
-            <!--android:id="@+id/btnSubmit"-->
-            <!--android:layout_width="fill_parent"-->
+        <!--<EditText-->
+            <!--android:id="@+id/txtPassword"-->
+            <!--android:layout_width="0dp"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/txtStatus"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="25dp"-->
-            <!--android:background="@drawable/register_button"-->
-            <!--android:onClick="EditProfile"-->
-            <!--android:text="Submit"-->
-            <!--android:textColor="#ffffff"-->
-            <!--android:textSize="20dp" />-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="24dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:background="@drawable/custom_input"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Mật khẩu"-->
+            <!--android:inputType="textPassword"-->
+            <!--android:textColor="@color/tranparentBlack"-->
+            <!--android:textColorHint="@color/colorGrayDark"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/txtAdressEditUserProfile" />-->
 
-            <!--<TextView-->
-            <!--android:id="@+id/member_login_tv"-->
-            <!--android:layout_width="wrap_content"-->
+        <!--<EditText-->
+            <!--android:id="@+id/txtPasswordCheck"-->
+            <!--android:layout_width="0dp"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/register_button"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="30dp"-->
-            <!--android:text="Memeber Login?"-->
-            <!--android:textSize="15dp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:typeface="monospace" />-->
-        </RelativeLayout>
-    </ScrollView>
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="24dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:background="@drawable/custom_input"-->
+            <!--android:ems="10"-->
+            <!--android:hint="Nhập lại mật khẩu"-->
+            <!--android:inputType="textPassword"-->
+            <!--android:textColor="@color/tranparentBlack"-->
+            <!--android:textColorHint="@color/colorGrayDark"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/txtPassword" />-->
 
-    <ImageView
-        android:id="@+id/ivAvatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/register_imview" />
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="#f9b43d"
+            android:onClick="signUpUser"
+            android:text="Submit"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtAdressEditUserProfile" />
 
-</RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <!--<View-->
+    <!--android:id="@+id/view"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_alignParentTop="true" />-->
+
+    <!--<ScrollView-->
+    <!--android:id="@+id/ScrollView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_below="@+id/view"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginLeft="30dp"-->
+    <!--android:layout_marginRight="30dp"-->
+    <!--android:background="@color/colorPrimaryLight"-->
+    <!--android:padding="25dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentLeft="true">-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/Register_tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="30dp"-->
+    <!--android:text="Edit Profile"-->
+    <!--android:textSize="30dp"-->
+    <!--android:textStyle="bold"-->
+    <!--android:typeface="monospace" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txtPhoneNumberEditProfile"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/Register_tv"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:background="@color/colorPrimaryLight"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:gravity="center"-->
+    <!--android:hint="Phone Number"-->
+    <!--android:inputType="text"-->
+    <!--android:editable="false"-->
+    <!--android:textColor="#000000"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txtNameEditUserProfile"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/txtPhoneNumberEditProfile"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:background="@color/colorPrimaryLight"-->
+    <!--android:gravity="center"-->
+    <!--android:hint="Full Name"-->
+    <!--android:inputType="text"-->
+    <!--android:textColor="#000000"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txtAdressEditUserProfile"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/txtNameEditUserProfile"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:background="@color/colorPrimaryLight"-->
+    <!--android:gravity="center"-->
+    <!--android:hint="Address"-->
+    <!--android:inputType="textPassword"-->
+    <!--android:textColor="#000000"-->
+    <!--android:textStyle="bold"-->
+    <!--android:enabled="false" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txtStatus"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/txtAdressEditUserProfile"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:background="@color/colorPrimaryLight"-->
+    <!--android:gravity="center"-->
+    <!--android:hint="Status"-->
+    <!--android:inputType="textPassword"-->
+    <!--android:textColor="#000000"-->
+    <!--android:textStyle="bold"-->
+    <!--android:enabled="false" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btnSubmit"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/txtStatus"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="25dp"-->
+    <!--android:background="@color/colorRed"-->
+    <!--android:text="Submit"-->
+    <!--android:textColor="#ffffff"-->
+    <!--android:textSize="20dp" />-->
+
+    <!--</RelativeLayout>-->
+    <!--</ScrollView>-->
+
+
+</android.support.constraint.ConstraintLayout>
+

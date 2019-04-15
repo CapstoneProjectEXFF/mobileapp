@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.dialog.LoginDialogFragment;
 import com.project.capstone.exchangesystem.dialog.LoginOptionDialog;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -32,7 +34,7 @@ import java.text.SimpleDateFormat;
 import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMINDER;
 
-public class DescriptionItemActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener {
+public class DescriptionItemActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener, LoginDialogFragment.LoginDialogListener {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
     ImageView imgDescriptionItem, imgAvatar;
     TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
@@ -111,14 +113,14 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Error Request", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
                     System.out.println(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -184,6 +186,10 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         } else {
             imgDescriptionItem.setImageResource(R.drawable.ic_no_image);
         }
+
+        if (item.getUser().getId() == idMe) {
+            btnTrade.setVisibility(View.GONE);
+        }
     }
 
     private void actionToolbar() {
@@ -234,9 +240,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
             intent.putExtra("descriptionItem", item);
             startActivity(intent);
         } else {
-            // TODO dialog ask user
-            LoginOptionDialog optionDialog = new LoginOptionDialog();
-            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            showNoticeDialog();
         }
     }
 
@@ -266,5 +270,22 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     private void login() {
         Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(signInActivity);
+    }
+
+    public void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new LoginDialogFragment();
+        dialog.show(getSupportFragmentManager(), "LoginDialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        return;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.DonatorAdapter;
 import com.project.capstone.exchangesystem.constants.AppStatus;
+import com.project.capstone.exchangesystem.dialog.LoginDialogFragment;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Donator;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
@@ -35,7 +37,7 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DescriptionDonationPostActivity extends AppCompatActivity {
+public class DescriptionDonationPostActivity extends AppCompatActivity implements LoginDialogFragment.LoginDialogListener {
     Toolbar toolbar;
     ImageView imgUserDonation, imgDescriptionDonationPost;
     TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators;
@@ -105,7 +107,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("test create " + donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST));
         if (userId == donationPost.getUser().getId() && !donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
             getMenuInflater().inflate(R.menu.menu_edit_post_option, menu);
             menu.getItem(0).setTitle("Sửa bài viết");
@@ -238,7 +239,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
                     intent.putExtra("donationPost", donationPost);
                     startActivity(intent);
                 } else {
-                    // TODO dialog ask user
+                    showNoticeDialog();
                 }
             }
         });
@@ -352,5 +353,22 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         if (donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
             btnShare.setVisibility(View.GONE);
         }
+    }
+
+    public void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new LoginDialogFragment();
+        dialog.show(getSupportFragmentManager(), "LoginDialogFragment");
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        return;
     }
 }

@@ -95,7 +95,6 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AuthorizationUser> call, Response<AuthorizationUser> response) {
                     progressDialog.cancel();
-                    Toast.makeText(getApplicationContext(), "Vào rồi", Toast.LENGTH_LONG).show();
                     if (response.isSuccessful()) {
                         progressDialog.cancel();
                         if (response.body() != null) {
@@ -175,7 +174,7 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<AuthorizationUser> call, Throwable t) {
                     progressDialog.cancel();
-                    Toast toast = Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_SHORT);
                     System.out.println("message from failure: " + t.getMessage());
                     toast.show();
                 }

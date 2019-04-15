@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.activity.TradeRealtimeActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
 import com.project.capstone.exchangesystem.model.Relationship;
+import com.project.capstone.exchangesystem.model.Room;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -36,7 +39,9 @@ public class NotificationFragment extends Fragment {
     TransactionNotificationAdapter transactionNotificationAdapter;
     ArrayList<Object> transactions;
     Toolbar toolbar;
+    RmaAPIService rmaRealtimeService;
 
+    int userID;
 
     public NotificationFragment() {
     }
@@ -60,10 +65,12 @@ public class NotificationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
         final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+
+        rmaRealtimeService = RmaAPIUtils.getRealtimeService();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         final String authorization = sharedPreferences.getString("authorization", null);
-
+        userID = sharedPreferences.getInt("userId", 0);
         listView = (ListView) view.findViewById(R.id.notificationListview);
         transactions = new ArrayList<>();
         transactionNotificationAdapter = new TransactionNotificationAdapter(view.getContext(), transactions);
@@ -73,27 +80,34 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
-                Transaction tempTrans = (Transaction) transactions.get(position);
-                rmaAPIService.getTransactionByTransID(authorization, tempTrans.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
+                if (transactions.get(position) == Transaction.class) {
+                    Transaction tempTrans = (Transaction) transactions.get(position);
+                    rmaAPIService.getTransactionByTransID(authorization, tempTrans.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
 
-                    @Override
-                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                        if (response.isSuccessful()) {
+                        @Override
+                        public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
+                            if (response.isSuccessful()) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
 
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-
-                    }
-                });
-
+                    });
+                } else if (transactions.get(position) == Room.class) {
+                    Room room = (Room) transactions.get(position);
+                    Intent intent2 = new Intent(view.getContext(), TradeRealtimeActivity.class);
+                    intent.putExtra("room", room);
+                    startActivity(intent2);
+                }
 
             }
         });
         getDataFromTransaction();
         getDataFromRelationship();
+        getDataFromRoom();
         ActionToolbar();
         return view;
 
@@ -155,7 +169,7 @@ public class NotificationFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<TransactionRequestWrapper> temp = new ArrayList<>();
                     temp = response.body();
-                    for(int i = 0;i < temp.size(); i++) {
+                    for (int i = 0; i < temp.size(); i++) {
                         transactions.add(temp.get(i).getTransaction());
                         transactionNotificationAdapter.notifyDataSetChanged();
 
@@ -198,6 +212,26 @@ public class NotificationFragment extends Fragment {
         });
 
 
+    }
+
+    private void getDataFromRoom() {
+        rmaRealtimeService.loadRoomByUserId(userID).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.body() != null) {
+                    Log.i("room size: ", "" + response.body().size());
+                    List<Room> tmpRooms = response.body();
+                    transactions.addAll(tmpRooms);
+                    transactionNotificationAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable t) {
+                Log.i("messageTab", "failed");
+
+            }
+        });
     }
 
 

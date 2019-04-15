@@ -21,6 +21,7 @@ import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
 import com.project.capstone.exchangesystem.model.Rate;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,15 +38,18 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class UserProfileFragment extends Fragment {
     String tempTransaction;
     String tempFriend;
+    //    TextView txtNumberTransaction;
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
+    String authorization;
+    TextView txtNumberTransaction, txtNumberFriend, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
+    ImageView imageView;
+    ImageButton btnQR;
+    UserSession userSession;
     RecyclerView rvReviewers;
     ReviewerAdapter reviewerAdapter;
     ArrayList<Rate> ratingList;
-    String authorization;
     int userId;
-//    TextView txtNumberTransaction;
-
 
     public static UserProfileFragment newInstance() {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -61,7 +65,6 @@ public class UserProfileFragment extends Fragment {
         rmaAPIService = RmaAPIUtils.getAPIService();
         sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
-        userId = sharedPreferences.getInt("userId", 0);
     }
 
     @Override
@@ -114,52 +117,76 @@ public class UserProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        ImageButton btnQR = view.findViewById(R.id.btnQR);
-        ImageView imageView = view.findViewById(R.id.imgUserProfile);
-        TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
-        TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
-        final TextView txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
-        final TextView txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
+        view.findViewById(R.id.linlay4).setVisibility(View.GONE);
+        btnQR = view.findViewById(R.id.btnQR);
+        imageView = view.findViewById(R.id.imgUserProfile);
+        txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
+        txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
+        txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
+        txtAddressProfile = view.findViewById(R.id.txtAddressUserProfile);
+        txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
+        rvReviewers = view.findViewById(R.id.rvReviewers);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        userSession = new UserSession(getApplicationContext());
+        if (userSession.isUserLoggedIn()) {
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-        String avatar = "dsa";
-        if (sharedPreferences.contains("avatar")) {
-            avatar = avatar + sharedPreferences.getString("avatar", "");
+
+            sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+            String avatar = "dsa";
+            if (sharedPreferences.contains("avatar")) {
+                avatar = avatar + sharedPreferences.getString("avatar", "");
+            }
+            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "");
+            String userName = sharedPreferences.getString("username", "");
+            String status = sharedPreferences.getString("status", "");
+            int id = sharedPreferences.getInt("userId", 0);
+            String address = sharedPreferences.getString("address", "");
+            authorization = sharedPreferences.getString("authorization", "");
+            userId = sharedPreferences.getInt("userId", 0);
+
+            txtNameUserProfile.setText(userName);
+            txtPhoneNumberProfile.setText(phoneNumber);
+            Picasso.with(view.getContext()).load(avatar)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imageView);
+            tempTransaction = "";
+            tempFriend = "";
+            rmaAPIService = RmaAPIUtils.getAPIService();
+            txtAddressProfile.setText(address);
+
+            getTransactionNumber();
+            getFriendNumber();
+          
+            btnQR.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
+                  startActivity(intent);
+              }
+            });
+
+            //load reviewers
+            showReviewers(view);
+        } else {
+            view.findViewById(R.id.iconEdit).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay1).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay2).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay3).setVisibility(View.GONE);
+            view.findViewById(R.id.btnQR).setVisibility(View.GONE);
+            view.findViewById(R.id.testLayout).setVisibility(View.GONE);
+            txtNameUserProfile.setVisibility(View.GONE);
+            txtAddressProfile.setVisibility(View.GONE);
+            view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
+
         }
-        String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
-        String userName = sharedPreferences.getString("username", null);
-        String status = sharedPreferences.getString("status", null);
-        int id = sharedPreferences.getInt("userId", 0);
-        String authorization = sharedPreferences.getString("authorization", null);
 
-        txtNameUserProfile.setText(userName);
-        txtPhoneNumberProfile.setText(phoneNumber);
-        Picasso.with(view.getContext()).load(avatar)
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
-                .into(imageView);
-        tempTransaction = "";
-        tempFriend = "";
+        return view;
+    }
 
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-        rmaAPIService.countAllTransactionByUserId(authorization).enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if (response.isSuccessful()) {
-                    tempTransaction = response.body().toString();
-                    txtNumberTransaction.setText(tempTransaction);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-
-            }
-        });
-        txtNumberTransaction.setText(tempTransaction);
+    private void getFriendNumber() {
         rmaAPIService.countFriendByUserId(authorization).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -174,21 +201,26 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-
         txtNumberFriend.setText(tempFriend);
+    }
 
-        btnQR.setOnClickListener(new View.OnClickListener() {
+    private void getTransactionNumber() {
+        rmaAPIService.countAllTransactionByUserId(authorization).enqueue(new Callback<Integer>() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
-                startActivity(intent);
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempTransaction = response.body().toString();
+                    txtNumberTransaction.setText(tempTransaction);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
             }
         });
 
-        //load reviewers
-        showReviewers(view);
-
-        return view;
+        txtNumberTransaction.setText(tempTransaction);
     }
 
     public void toOwnInventory(View view) {
@@ -212,7 +244,6 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void showReviewers(View view) {
-        rvReviewers = view.findViewById(R.id.rvReviewers);
         ratingList = new ArrayList<>();
         reviewerAdapter = new ReviewerAdapter(getApplicationContext(), ratingList, new ReviewerAdapter.OnItemClickListener() {
             @Override
@@ -240,10 +271,6 @@ public class UserProfileFragment extends Fragment {
                         ratingList.clear();
                         ratingList.addAll(tmpRatingList);
                         reviewerAdapter.notifyDataSetChanged();
-//                        if (donators.size() > 0) {
-//                            rvDonators.setVisibility(View.VISIBLE);
-//                            txtNoDonators.setVisibility(View.GONE);
-//                        }
                     }
                 }
 
@@ -253,5 +280,10 @@ public class UserProfileFragment extends Fragment {
                 }
             });
         }
+
+    public void toLoginReminder(View view) {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
+
     }
 }

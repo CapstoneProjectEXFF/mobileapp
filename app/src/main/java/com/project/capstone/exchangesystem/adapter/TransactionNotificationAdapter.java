@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.constants.AppStatus;
-import com.project.capstone.exchangesystem.model.ExffMessage;
-import com.project.capstone.exchangesystem.model.Relationship;
-import com.project.capstone.exchangesystem.model.Transaction;
+import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
@@ -20,10 +18,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -61,12 +56,18 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (notifications.get(position).getClass() == Relationship.class) ? 0 : 1;
+        if (notifications.get(position).getClass() == Relationship.class) {
+            return 0;
+        } else if (notifications.get(position).getClass() == Transaction.class) {
+            return 1;
+        } else {
+            return 2;
+        }
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 3;
     }
 
 //    @Override
@@ -133,7 +134,9 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             if (type == 0) {
                 // Inflate the layout with image
                 view = inflater.inflate(R.layout.notification_friend_request_item, parent, false);
-            } else {
+            } else if (type == 1) {
+                view = inflater.inflate(R.layout.transaction_notification, parent, false);
+            } else if (type == 2) {
                 view = inflater.inflate(R.layout.transaction_notification, parent, false);
             }
         }
@@ -219,7 +222,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                         @Override
                         public void onFailure(Call<ExffMessage> call, Throwable t) {
 
-                            Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -232,6 +235,24 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
                     .into(imgProfileUser);
+        } else if (c.getClass() == Room.class) {
+            Room room = (Room) c;
+            String otherUserName = "";
+            ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
+            TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
+            TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
+            List<UserRoom> listUser = room.getUsers();
+            for (int i = 0; i < listUser.size(); i++) {
+                if (listUser.get(i).getUserId() != idMe) {
+                    Picasso.with(context).load(listUser.get(i).getAvatar())
+                            .placeholder(R.drawable.ic_no_image)
+                            .error(R.drawable.ic_no_image)
+                            .into(imgSender);
+                    otherUserName = otherUserName + listUser.get(i).getUserName();
+                }
+            }
+            txtNotification.setText("Phòng Trao Đổi của bạn và " + otherUserName + " đang hoạt động");
+
         }
         return view;
     }
