@@ -44,6 +44,7 @@ public class UserSession {
     }
 
 
+
     public boolean checkLogin() {
         if (!this.isUserLoggedIn()) {
             return true;

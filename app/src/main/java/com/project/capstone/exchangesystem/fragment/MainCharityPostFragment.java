@@ -19,9 +19,11 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.CreateDonationPostActivity;
 import com.project.capstone.exchangesystem.activity.DescriptionDonationPostActivity;
 import com.project.capstone.exchangesystem.adapter.MainCharityPostAdapter;
+import com.project.capstone.exchangesystem.dialog.LoginOptionDialog;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +33,7 @@ import java.util.List;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class MainCharityPostFragment extends Fragment {
@@ -48,6 +51,7 @@ public class MainCharityPostFragment extends Fragment {
     private static final int UPDATE_CODE = 1;
     private static final int ADD_CODE = 2;
     private boolean reloadNeed;
+    UserSession userSession;
 
 
     public MainCharityPostFragment() {
@@ -94,6 +98,8 @@ public class MainCharityPostFragment extends Fragment {
         page = 0;
         isLoading = false;
         limitData = false;
+        userSession = new UserSession(getApplicationContext());
+
     }
 
 
@@ -103,11 +109,19 @@ public class MainCharityPostFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_charity_post, container, false);
         btnAdd = view.findViewById(R.id.btnAddCharityPost);
+//        if (!userSession.isUserLoggedIn()) {
+//            btnAdd.setVisibility(View.GONE);
+//        }
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateDonationPostActivity.class);
-                startActivity(intent);
+                if (userSession.isUserLoggedIn()) {
+                    Intent intent = new Intent(getActivity(), CreateDonationPostActivity.class);
+                    startActivity(intent);
+                } else {
+                    LoginOptionDialog optionDialog = new LoginOptionDialog();
+                    optionDialog.show(getActivity().getSupportFragmentManager(), "optionDialog");
+                }
             }
         });
 

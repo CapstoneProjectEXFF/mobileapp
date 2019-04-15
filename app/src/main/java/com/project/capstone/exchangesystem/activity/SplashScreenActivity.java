@@ -38,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             if (s)
                 startMainActivity();
             else
-                startSignInActivity();
+                startMainActivity();
         }
     }
 
