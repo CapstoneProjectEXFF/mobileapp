@@ -78,6 +78,8 @@ public class UserProfileFragment extends Fragment {
         SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);
         settings.edit().clear().commit();
         Intent intent = new Intent(getContext(), SignInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -147,9 +149,9 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-      
+
         txtNumberFriend.setText(tempFriend);
-      
+
         btnQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
