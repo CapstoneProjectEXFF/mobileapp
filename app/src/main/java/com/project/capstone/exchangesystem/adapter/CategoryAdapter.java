@@ -57,6 +57,7 @@ public class CategoryAdapter extends BaseAdapter {
 
         if (category.getSupercategoryId() == 0){
             viewHolder.txtName.setTypeface(viewHolder.txtName.getTypeface(), Typeface.BOLD);
+            viewHolder.txtName.setEnabled(false);
         }
 
         return convertView;

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating_title"
+            android:textSize="24dp"
+            android:textColor="@color/colorGrayDark"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearStar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnStar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_black_48"
+            android:tint="@android:color/white"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/btnSelectedStar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_border_black_48"
+            android:tint="@android:color/white"/>
+
+        <ImageButton
+            android:id="@+id/btnStar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_black_48"
+            android:tint="@android:color/white"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/btnSelectedStar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_border_black_48"/>
+
+        <ImageButton
+            android:id="@+id/btnStar3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_black_48"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/btnSelectedStar3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_border_black_48" />
+
+        <ImageButton
+            android:id="@+id/btnStar4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_black_48"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/btnSelectedStar4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_border_black_48" />
+
+        <ImageButton
+            android:id="@+id/btnStar5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_black_48"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/btnSelectedStar5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_star_border_black_48" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/custom_button"
+            android:text="Hủy"/>
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/custom_button"
+            android:enabled="false"
+            android:text="@string/rating_send"/>
+
+    </LinearLayout>
+
+</LinearLayout>
