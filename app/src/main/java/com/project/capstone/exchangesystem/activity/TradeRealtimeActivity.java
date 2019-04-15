@@ -290,6 +290,10 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
         return friendAccount.getFullName();
     }
 
+    public User getFriendAccount() {
+        return friendAccount;
+    }
+
     private Emitter.Listener onRoomReady = new Emitter.Listener() {
         @Override
         public void call(Object... args) {

@@ -6,26 +6,44 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.*;
+import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
+import com.project.capstone.exchangesystem.model.Rate;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class UserProfileFragment extends Fragment {
     String tempTransaction;
     String tempFriend;
+    SharedPreferences sharedPreferences;
+    RmaAPIService rmaAPIService;
+    RecyclerView rvReviewers;
+    ReviewerAdapter reviewerAdapter;
+    ArrayList<Rate> ratingList;
+    String authorization;
+    int userId;
 //    TextView txtNumberTransaction;
 
 
@@ -39,6 +57,11 @@ public class UserProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        userId = sharedPreferences.getInt("userId", 0);
     }
 
     @Override
@@ -162,6 +185,9 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        //load reviewers
+        showReviewers(view);
+
         return view;
     }
 
@@ -183,5 +209,49 @@ public class UserProfileFragment extends Fragment {
     public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
         startActivity(iOwnFriendList);
+    }
+
+    private void showReviewers(View view) {
+        rvReviewers = view.findViewById(R.id.rvReviewers);
+        ratingList = new ArrayList<>();
+        reviewerAdapter = new ReviewerAdapter(getApplicationContext(), ratingList, new ReviewerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Rate rate) {
+                //TODO VIEW USER'S PROFILE
+                Toast.makeText(getApplicationContext(), "" + rate.getSender().getFullName(), Toast.LENGTH_LONG).show();
+            }
+        });
+        rvReviewers.setHasFixedSize(true);
+        rvReviewers.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
+        rvReviewers.setAdapter(reviewerAdapter);
+        loadReviewers();
+    }
+
+    private void loadReviewers() {
+        if (authorization != null) {
+            rmaAPIService.getRating(userId).enqueue(new Callback<List<Rate>>() {
+                @Override
+                public void onResponse(Call<List<Rate>> call, Response<List<Rate>> response) {
+                    if (response.body() != null) {
+                        ArrayList<Rate> tmpRatingList = new ArrayList<>();
+                        for (int i = 0; i < response.body().size(); i++) {
+                            tmpRatingList.add(response.body().get(i));
+                        }
+                        ratingList.clear();
+                        ratingList.addAll(tmpRatingList);
+                        reviewerAdapter.notifyDataSetChanged();
+//                        if (donators.size() > 0) {
+//                            rvDonators.setVisibility(View.VISIBLE);
+//                            txtNoDonators.setVisibility(View.GONE);
+//                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Rate>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 }

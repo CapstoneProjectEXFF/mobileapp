@@ -169,5 +169,9 @@ public interface RmaAPIService {
     @DELETE("/item/{itemId}")
     Call<Object> deleteItemWithId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
 
+    @POST("/rating")
+    Call<Rate> createRating(@Header("Authorization") String authorization, @Body Rate rate);
 
+    @GET("/rating/{userId}")
+    Call<List<Rate>> getRating(@Path("userId") int userId);
 }

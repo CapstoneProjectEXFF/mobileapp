@@ -6,7 +6,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rating_title"
+            android:textStyle="bold"
             android:textSize="24dp"
             android:textColor="@color/colorGrayDark"
             android:layout_gravity="center"/>
@@ -41,7 +43,7 @@
             android:id="@+id/btnStar1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_black_48"
+            android:background="@drawable/round_star_border_black_48"
             android:tint="@android:color/white"/>
 
         <ImageButton
@@ -49,14 +51,14 @@
             android:id="@+id/btnSelectedStar1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_border_black_48"
+            android:background="@drawable/round_star_black_48"
             android:tint="@android:color/white"/>
 
         <ImageButton
             android:id="@+id/btnStar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_black_48"
+            android:background="@drawable/round_star_border_black_48"
             android:tint="@android:color/white"/>
 
         <ImageButton
@@ -64,51 +66,64 @@
             android:id="@+id/btnSelectedStar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_border_black_48"/>
+            android:background="@drawable/round_star_black_48"/>
 
         <ImageButton
             android:id="@+id/btnStar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_black_48"/>
+            android:background="@drawable/round_star_border_black_48"/>
 
         <ImageButton
             android:visibility="gone"
             android:id="@+id/btnSelectedStar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_border_black_48" />
+            android:background="@drawable/round_star_black_48"/>
 
         <ImageButton
             android:id="@+id/btnStar4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_black_48"/>
+            android:background="@drawable/round_star_border_black_48"/>
 
         <ImageButton
             android:visibility="gone"
             android:id="@+id/btnSelectedStar4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_border_black_48" />
+            android:background="@drawable/round_star_black_48"/>
 
         <ImageButton
             android:id="@+id/btnStar5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_black_48"/>
+            android:background="@drawable/round_star_border_black_48"/>
 
         <ImageButton
             android:visibility="gone"
             android:id="@+id/btnSelectedStar5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_star_border_black_48" />
+            android:background="@drawable/round_star_black_48"/>
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/edtContent"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:hint="@string/comment_hint"
+        android:gravity="top"
+        android:textColor="@color/colorGrayDark"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
         <Button

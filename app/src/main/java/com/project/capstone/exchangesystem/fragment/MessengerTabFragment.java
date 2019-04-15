@@ -29,6 +29,7 @@ import com.project.capstone.exchangesystem.adapter.MessageAdapter;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Message;
 import com.project.capstone.exchangesystem.model.Room;
+import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -75,6 +76,7 @@ public class MessengerTabFragment extends Fragment {
     String authorization, roomName, yourName;
     public List<Message> messages, tmpMessage;
     public MessageAdapter messageAdapter;
+    User friendAccount;
 
     Room room;
     Item item;
@@ -109,12 +111,13 @@ public class MessengerTabFragment extends Fragment {
         myUserId = tradeRealtimeActivity.getMyUserId();
         yourUserId = tradeRealtimeActivity.getYourUserId();
         yourName = tradeRealtimeActivity.getYourName();
+        friendAccount = tradeRealtimeActivity.getFriendAccount();
 
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
 
         socketServer = tradeRealtimeActivity.getSocketServer();
 
-        messageAdapter = new MessageAdapter(getActivity().getApplicationContext(), messages, myUserId, yourName);
+        messageAdapter = new MessageAdapter(getActivity().getApplicationContext(), messages, myUserId, friendAccount);
         socketServer.mSocket.on("send-msg", sendMsg);
 
     }
