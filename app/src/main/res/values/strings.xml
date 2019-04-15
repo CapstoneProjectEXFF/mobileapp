@@ -90,4 +90,6 @@
     <string name="error_server">Error Server</string>
     <string name="error_request">Error Request</string>
     <string name="lock_donation">Khóa Thành Công</string>
+    <string name="signup_error">Đăng Nhập Lại</string>
+    <string name="edit_profile_success">Change User Profile Succesfully</string>
 </resources>

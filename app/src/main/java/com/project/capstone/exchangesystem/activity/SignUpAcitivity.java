@@ -1,19 +1,17 @@
 package com.project.capstone.exchangesystem.activity;
 
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +32,7 @@ public class SignUpAcitivity extends AppCompatActivity {
     boolean flag5 = true;
     boolean flag6 = true;
     boolean flag7 = true;
+    boolean flag8 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class SignUpAcitivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
         });
@@ -121,6 +120,7 @@ public class SignUpAcitivity extends AppCompatActivity {
             txtPasswordCheck.setBackgroundResource(R.drawable.signupedt);
         }
 
+
         if (!passwordCheck.equals(password) && password.length() == 0) {
             flag7 = false;
             txtPasswordCheck.setBackgroundResource(R.drawable.signuperror);
@@ -128,6 +128,13 @@ public class SignUpAcitivity extends AppCompatActivity {
         } else {
             txtPasswordCheck.setBackgroundResource(R.drawable.signupedt);
             txtPassword.setBackgroundResource(R.drawable.signupedt);
+        }
+
+        if (address.length() < 1) {
+            flag8 = false;
+            txtAddress.setBackgroundResource(R.drawable.signuperror);
+        } else {
+            txtAddress.setBackgroundResource(R.drawable.signupedt);
         }
 
 
@@ -143,16 +150,17 @@ public class SignUpAcitivity extends AppCompatActivity {
             jsonBody.put("password", password);
             jsonBody.put("fullName", fullname);
             jsonBody.put("status", USER_ENABLE);
+            jsonBody.put("address", address);
 
 
             rmaAPIService.register(jsonBody).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-                    if (response.body() != null) {
+                    if (response.body() != null && response.isSuccessful()) {
                         Intent intent = new Intent(context, CreateSuccessActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Đăng Nhập Lại", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.signup_error, Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }

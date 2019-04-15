@@ -1,25 +1,23 @@
 package com.project.capstone.exchangesystem.activity;
 
-import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.internal.LinkedTreeMap;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.service.UserService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.project.capstone.exchangesystem.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -115,6 +113,8 @@ public class SignInActivity extends AppCompatActivity {
                                     avatar = avatar + (String) userInfo.get("avatar");
                                 }
 
+                                String address = (String) userInfo.get("status");
+
                                 //TODO hardcode status
                                 if (status.equals(USER_ENABLE)) {
                                     SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
@@ -124,6 +124,7 @@ public class SignInActivity extends AppCompatActivity {
                                     editor.putString("username", fullName);
                                     editor.putString("authorization", authorization);
                                     editor.putString("status", status);
+                                    editor.putString("address", address);
                                     editor.commit();
 
 
