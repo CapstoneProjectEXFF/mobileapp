@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.internal.LinkedTreeMap;
+import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.MainActivity;
 import com.project.capstone.exchangesystem.activity.OwnInventory;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -221,24 +222,25 @@ public class PostAction {
         setDialog(context);
 
         final String fullName = user.getFullName();
+        final String address = user.getAddress();
         final Map<String, String> jsonBody = new HashMap<String, String>();
         jsonBody.put("fullName", fullName);
         jsonBody.put("avatar", url);
+        jsonBody.put("address", address);
 
         if (action == USER_UPDATE_ACTION) {
             rmaAPIService.updateInfo(jsonBody, authorization).enqueue(new Callback<Object>() {
-
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
 
 
                     if (response.isSuccessful()) {
-
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("User")) {
-                            Toast.makeText(context, "Change UserProfile Succesfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
                             editor.putString("fullname", fullName);
                             editor.putString("avatar", url);
+                            editor.putString("address", address);
                             editor.commit();
                             progressDialog.dismiss();
                         }

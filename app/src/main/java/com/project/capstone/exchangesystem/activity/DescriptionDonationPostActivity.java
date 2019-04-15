@@ -26,6 +26,7 @@ import com.project.capstone.exchangesystem.model.Donator;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +41,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators;
     ImageButton btnShare;
     Button btnDonate;
+    UserSession userSession;
 
     //share facebook
     CallbackManager callbackManager;
@@ -195,6 +197,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
     }
 
     private void direct() {
+        userSession = new UserSession(getApplicationContext());
         imgUserDonation = findViewById(R.id.imgUserDonation);
         imgDescriptionDonationPost = findViewById(R.id.imgDescriptionDonationPost);
         txtDescriptionDonationContent = findViewById(R.id.txtDescriptionDonationContent);
@@ -230,9 +233,13 @@ public class DescriptionDonationPostActivity extends AppCompatActivity {
         btnDonate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DonateItemActivity.class);
-                intent.putExtra("donationPost", donationPost);
-                startActivity(intent);
+                if (userSession.isUserLoggedIn()) {
+                    Intent intent = new Intent(getApplicationContext(), DonateItemActivity.class);
+                    intent.putExtra("donationPost", donationPost);
+                    startActivity(intent);
+                } else {
+                    // TODO dialog ask user
+                }
             }
         });
     }

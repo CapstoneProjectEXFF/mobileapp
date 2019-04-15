@@ -75,9 +75,13 @@ public class UserProfileFragment extends Fragment {
 
 
     private void logout() {
+        getActivity().finish();
         SharedPreferences settings = getContext().getSharedPreferences("localData", Context.MODE_PRIVATE);
         settings.edit().clear().commit();
         Intent intent = new Intent(getContext(), SignInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -98,9 +102,9 @@ public class UserProfileFragment extends Fragment {
 
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-        String avatar = "";
+        String avatar = "dsa";
         if (sharedPreferences.contains("avatar")) {
-            avatar = avatar + sharedPreferences.getString("avatar", null);
+            avatar = avatar + sharedPreferences.getString("avatar", "");
         }
         String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
         String userName = sharedPreferences.getString("username", null);
@@ -147,9 +151,9 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-      
+
         txtNumberFriend.setText(tempFriend);
-      
+
         btnQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

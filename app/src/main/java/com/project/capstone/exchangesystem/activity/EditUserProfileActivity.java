@@ -36,7 +36,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     EditText txtPhoneNumber, txtName, txtAddress;
-//    boolean flag1 = true, flag2 = true, flag3 = true, flag4 = true, flag5 = true;
+    //    boolean flag1 = true, flag2 = true, flag3 = true, flag4 = true, flag5 = true;
     boolean avaCheck = false;
     String toastText;
     String userPhoneNumber, authorization, name, address, avatar, status;
@@ -46,6 +46,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
     Button btnSubmit;
     FirebaseImg firebaseImg;
     Context context;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +70,16 @@ public class EditUserProfileActivity extends AppCompatActivity {
     private void direct() {
         firebaseImg = new FirebaseImg();
         context = this;
-
-        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         userID = sharedPreferences.getInt("userId", 0);
         userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         authorization = sharedPreferences.getString("authorization", null);
         name = sharedPreferences.getString("username", null);
-        if(sharedPreferences.contains("avatar")) {
+        if (sharedPreferences.contains("avatar")) {
             avatar = sharedPreferences.getString("avatar", null);
         }
         status = sharedPreferences.getString("status", null);
+        address = sharedPreferences.getString("address", null);
 
 
         toolbar = findViewById(R.id.edituserprofileToolbar);
@@ -129,7 +130,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
         user.setFullName(fullName);
         List<Uri> uri = new ArrayList<>();
         SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-        if (avaCheck){
+        if (avaCheck) {
             uri.add(avatarUri);
             firebaseImg.uploadImagesToFireBase(context, uri, null, null, user, authorization, USER_UPDATE_ACTION, editor);
         } else {

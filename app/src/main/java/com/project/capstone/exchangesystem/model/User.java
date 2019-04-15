@@ -32,6 +32,11 @@ public class User  implements Serializable {
     @Expose
     private String status;
 
+    @SerializedName("address")
+    @Expose
+    private String address;
+
+
     @SerializedName("roleByRoleId")
     @Expose
     private Role roleByRoleId;
@@ -76,6 +81,14 @@ public class User  implements Serializable {
         this.avatar = avatar;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -92,13 +105,13 @@ public class User  implements Serializable {
         this.roleByRoleId = roleByRoleId;
     }
 
-    public User(int id, String phone,  String fullName, String avatar, String status, Role roleByRoleId) {
+    public User(int id, String phone, String fullName, String avatar, String status, String address, Role roleByRoleId) {
         this.id = id;
         this.phone = phone;
-//        this.password = password;
         this.fullName = fullName;
         this.avatar = avatar;
         this.status = status;
+        this.address = address;
         this.roleByRoleId = roleByRoleId;
     }
 
