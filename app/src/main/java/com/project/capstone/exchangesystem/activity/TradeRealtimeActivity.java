@@ -1,11 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.adapter.ItemAdapter;
-
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +24,10 @@ import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -174,7 +171,6 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
                 }
             });
         }
-        socketServer.emitRoom(jsonObject);
     }
 
     private void loadAvailableItems(final int userId) {
