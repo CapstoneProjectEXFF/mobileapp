@@ -8,6 +8,16 @@
     android:background="@color/colorWhite"
     tools:context=".fragment.TradeTabFragment">
 
+    <TextView
+        android:id="@+id/txtNoti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="NOTI MESSAGE"
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/linearTradeList"
         android:layout_width="match_parent"

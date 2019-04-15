@@ -23,6 +23,10 @@ public class UserRoom implements Serializable {
     @Expose
     private String avatar;
 
+    @SerializedName("status")
+    @Expose
+    private int status;
+
     public int getUserId() {
         return userId;
     }
@@ -53,5 +57,13 @@ public class UserRoom implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

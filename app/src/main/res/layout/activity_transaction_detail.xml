@@ -13,6 +13,12 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary" />
 
+    <Button
+        android:id="@+id/btnRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đánh giá"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -161,6 +167,5 @@
         </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

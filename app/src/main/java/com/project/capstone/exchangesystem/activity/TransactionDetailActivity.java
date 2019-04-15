@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,9 +15,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -49,17 +52,18 @@ public class TransactionDetailActivity extends AppCompatActivity {
     ImageButton btnMaps;
     ConstraintLayout myItemLayout;
     Toolbar toolbar;
+    Button btnRating;
+    Dialog dialog;
 
     ArrayList<Item> myItems, yourItems;
     SelectedItemAdapter myItemAdapter, yourItemAdapter;
-    Transaction transaction;
     List<TransactionDetail> transDetailList;
     TransactionRequestWrapper dataInf;
 
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization, qrCode;
-    int myUserId, transactionId;
+    int myUserId, transactionId, rateStar = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,201 @@ public class TransactionDetailActivity extends AppCompatActivity {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
+            }
+        });
+
+        btnRating = findViewById(R.id.btnRating);
+        btnRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRatingDialog();
+            }
+        });
+    }
+
+    private void showRatingDialog() {
+        dialog = new Dialog(TransactionDetailActivity.this);
+        dialog.setContentView(R.layout.rating_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        setDialogComponents(dialog);
+    }
+
+    private void setDialogComponents(final Dialog dialog) {
+        final ImageButton btnStar1, btnStar2, btnStar3, btnStar4, btnStar5, btnSelectedStar1, btnSelectedStar2, btnSelectedStar3, btnSelectedStar4, btnSelectedStar5;
+        final Button btnSend, btnClose;
+
+        btnClose = dialog.findViewById(R.id.btnClose);
+        btnStar1 = dialog.findViewById(R.id.btnStar1);
+        btnStar2 = dialog.findViewById(R.id.btnStar2);
+        btnStar3 = dialog.findViewById(R.id.btnStar3);
+        btnStar4 = dialog.findViewById(R.id.btnStar4);
+        btnStar5 = dialog.findViewById(R.id.btnStar5);
+        btnSelectedStar1 = dialog.findViewById(R.id.btnSelectedStar1);
+        btnSelectedStar2 = dialog.findViewById(R.id.btnSelectedStar2);
+        btnSelectedStar3 = dialog.findViewById(R.id.btnSelectedStar3);
+        btnSelectedStar4 = dialog.findViewById(R.id.btnSelectedStar4);
+        btnSelectedStar5 = dialog.findViewById(R.id.btnSelectedStar5);
+        btnSend = dialog.findViewById(R.id.btnSend);
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 0;
+                btnSend.setEnabled(false);
+                dialog.dismiss();
+            }
+        });
+
+        btnStar1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 1;
+                btnStar1.setVisibility(View.GONE);
+                btnSelectedStar1.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnStar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 2;
+                btnStar2.setVisibility(View.GONE);
+                btnSelectedStar2.setVisibility(View.VISIBLE);
+
+                btnStar1.setVisibility(View.GONE);
+                btnSelectedStar1.setVisibility(View.VISIBLE);
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnStar3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 3;
+                btnStar3.setVisibility(View.GONE);
+                btnSelectedStar3.setVisibility(View.VISIBLE);
+
+                btnStar1.setVisibility(View.GONE);
+                btnSelectedStar1.setVisibility(View.VISIBLE);
+                btnStar2.setVisibility(View.GONE);
+                btnSelectedStar2.setVisibility(View.VISIBLE);
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnStar4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 4;
+                btnStar4.setVisibility(View.GONE);
+                btnSelectedStar4.setVisibility(View.VISIBLE);
+
+                btnStar1.setVisibility(View.GONE);
+                btnSelectedStar1.setVisibility(View.VISIBLE);
+                btnStar2.setVisibility(View.GONE);
+                btnSelectedStar2.setVisibility(View.VISIBLE);
+                btnStar3.setVisibility(View.GONE);
+                btnSelectedStar3.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnStar5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 5;
+                btnStar5.setVisibility(View.GONE);
+                btnSelectedStar5.setVisibility(View.VISIBLE);
+
+                btnStar1.setVisibility(View.GONE);
+                btnSelectedStar1.setVisibility(View.VISIBLE);
+                btnStar2.setVisibility(View.GONE);
+                btnSelectedStar2.setVisibility(View.VISIBLE);
+                btnStar3.setVisibility(View.GONE);
+                btnSelectedStar3.setVisibility(View.VISIBLE);
+                btnStar4.setVisibility(View.GONE);
+                btnSelectedStar4.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnSelectedStar1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 1;
+                btnSelectedStar2.setVisibility(View.GONE);
+                btnStar2.setVisibility(View.VISIBLE);
+                btnSelectedStar3.setVisibility(View.GONE);
+                btnStar3.setVisibility(View.VISIBLE);
+                btnSelectedStar4.setVisibility(View.GONE);
+                btnStar4.setVisibility(View.VISIBLE);
+                btnSelectedStar5.setVisibility(View.GONE);
+                btnStar5.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnSelectedStar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 2;
+                btnSelectedStar3.setVisibility(View.GONE);
+                btnStar3.setVisibility(View.VISIBLE);
+                btnSelectedStar4.setVisibility(View.GONE);
+                btnStar4.setVisibility(View.VISIBLE);
+                btnSelectedStar5.setVisibility(View.GONE);
+                btnStar5.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnSelectedStar3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 3;
+                btnSelectedStar4.setVisibility(View.GONE);
+                btnStar4.setVisibility(View.VISIBLE);
+                btnSelectedStar5.setVisibility(View.GONE);
+                btnStar5.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnSelectedStar4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 4;
+                btnSelectedStar5.setVisibility(View.GONE);
+                btnStar5.setVisibility(View.VISIBLE);
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+        btnSelectedStar5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateStar = 5;
+
+                btnSend.setEnabled(true);
+            }
+        });
+
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO call api
+                Toast.makeText(getApplicationContext(), "" + rateStar, Toast.LENGTH_SHORT).show();
             }
         });
     }
