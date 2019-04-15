@@ -14,6 +14,7 @@ import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +57,17 @@ public class ChangePassword extends AppCompatActivity {
         String newPass = txtNewPass.getText().toString();
         String confirmNewPass = txtConfirmPass.getText().toString();
 
+        System.out.println("old pass " + oldPass);
+        System.out.println("new pass " + newPass);
+        System.out.println("confirm pass " + confirmNewPass);
+
         SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
         String authorization = sharedPreferences.getString("authorization", null);
+        System.out.println("old pass " + oldPass);
+        System.out.println("new pass " + newPass);
+        System.out.println("confirm pass " + confirmNewPass);
+        System.out.println("authorization " + authorization);
 
 
         if (oldPass.length() < 6) {
@@ -102,7 +111,6 @@ public class ChangePassword extends AppCompatActivity {
 
         if (flag1 && flag2 && flag3 && flag4 && flag5) {
 
-
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", userPhoneNumber);
             jsonBody.put("oldPassword", oldPass);
@@ -114,20 +122,23 @@ public class ChangePassword extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-
+//                    System.out.println("old pass " + oldPass);
+//                    System.out.println("new pass " + newPass);
+//                    System.out.println("confirm pass " + confirmNewPass);
+//                    System.out.println("authorization " + authorization);
                     if (response.isSuccessful()) {
 
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("Authorization")) {
                             Toast.makeText(getApplicationContext(), R.string.change_pass_success, Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
-                            editor.putString("avatar", responeBody.get("Authorization").toString());
+                            editor.putString("authorization", responeBody.get("Authorization").toString());
                             editor.commit();
                         }
                     } else {
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
                         if (responeBody.containsKey("message")) {
-                            Toast.makeText(getApplicationContext(), responeBody.get("message").toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Wrong Old Password", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

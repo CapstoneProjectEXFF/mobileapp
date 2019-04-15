@@ -10,7 +10,6 @@
         android:id="@+id/userProfileToolbar"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        app:logo="@drawable/logo"
         app:theme="@style/menuitemcolor"
         app:layout_scrollFlags="scroll|enterAlways"
         app:layout_collapseMode="pin"
@@ -22,7 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/grad"
-        android:paddingBottom="20dp">
+        android:paddingBottom="20dp"
+        >
+
 
         <RelativeLayout
             android:id="@+id/testLayout"
@@ -72,7 +73,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15sp"
             android:fontFamily="sans-serif-light"
-            android:text="Joey Tribbiani"
+            android:text="Username"
             android:textColor="#ffffff"
             android:textSize="32sp" />
 
@@ -84,7 +85,7 @@
             android:layout_below="@+id/txtNameUserProfile"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
-            android:text="new york, usa"
+            android:text="address"
             android:textAllCaps="true"
             android:textColor="@color/address"
             android:textSize="14sp" />
@@ -98,7 +99,7 @@
             android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_settings"/>
+            android:src="@drawable/ic_settings" />
 
         <ImageButton
             android:id="@+id/btnQR"
@@ -106,7 +107,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/round_center_focus_weak_black_36"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="15dp" />
 
     </RelativeLayout>
 
@@ -325,6 +326,52 @@
             <!--</LinearLayout>-->
 
             <LinearLayout
+                android:id="@+id/linlay4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:text="Đăng Nhập Để Tiếp Tục"
+                    android:textAlignment="center"
+                    android:textColor="@color/headings"
+                    android:textSize="25sp" />
+
+
+                <Button
+                    android:id="@+id/btnLoginReminder"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Đăng Nhập"
+
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/custom_button"
+                    android:backgroundTint="#0c8974"
+                    android:onClick="toLoginReminder"
+                    android:textColor="@color/colorWhite"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/grey" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linlay3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -353,6 +400,7 @@
                     android:background="@color/grey" />
 
             </LinearLayout>
+
 
             <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->

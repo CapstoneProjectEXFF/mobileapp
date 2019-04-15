@@ -93,7 +93,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
         txtName.setText(name);
         txtAddress.setText(address);
         Picasso.with(getApplicationContext()).load(avatar)
-                .placeholder(R.drawable.no)
+                .placeholder(R.drawable.loadingimage)
                 .error(R.drawable.loadingimage)
                 .into(ivAvatar);
         resizeImage();

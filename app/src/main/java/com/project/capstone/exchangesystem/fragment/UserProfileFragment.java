@@ -15,19 +15,27 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class UserProfileFragment extends Fragment {
     String tempTransaction;
     String tempFriend;
-//    TextView txtNumberTransaction;
-
+    //    TextView txtNumberTransaction;
+    SharedPreferences sharedPreferences;
+    RmaAPIService rmaAPIService;
+    String authorization;
+    TextView txtNumberTransaction, txtNumberFriend, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
+    ImageView imageView;
+    ImageButton btnQR;
+    UserSession userSession;
 
     public static UserProfileFragment newInstance() {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -91,37 +99,88 @@ public class UserProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        ImageButton btnQR = view.findViewById(R.id.btnQR);
-        ImageView imageView = view.findViewById(R.id.imgUserProfile);
-        TextView txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
-        TextView txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
-        final TextView txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
-        final TextView txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
+        view.findViewById(R.id.linlay4).setVisibility(View.GONE);
+        btnQR = view.findViewById(R.id.btnQR);
+        imageView = view.findViewById(R.id.imgUserProfile);
+        txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
+        txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
+        txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
+        txtAddressProfile = view.findViewById(R.id.txtAddressUserProfile);
+        txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        userSession = new UserSession(getApplicationContext());
+        if (userSession.isUserLoggedIn()) {
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-        String avatar = "dsa";
-        if (sharedPreferences.contains("avatar")) {
-            avatar = avatar + sharedPreferences.getString("avatar", "");
+
+            sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
+            String avatar = "dsa";
+            if (sharedPreferences.contains("avatar")) {
+                avatar = avatar + sharedPreferences.getString("avatar", "");
+            }
+            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "");
+            String userName = sharedPreferences.getString("username", "");
+            String status = sharedPreferences.getString("status", "");
+            int id = sharedPreferences.getInt("userId", 0);
+            String address = sharedPreferences.getString("address", "");
+            authorization = sharedPreferences.getString("authorization", "");
+
+            txtNameUserProfile.setText(userName);
+            txtPhoneNumberProfile.setText(phoneNumber);
+            Picasso.with(view.getContext()).load(avatar)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imageView);
+            tempTransaction = "";
+            tempFriend = "";
+            rmaAPIService = RmaAPIUtils.getAPIService();
+            txtAddressProfile.setText(address);
+
+            getTransactionNumber();
+            getFriendNumber();
+            btnQR.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            view.findViewById(R.id.iconEdit).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay1).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay2).setVisibility(View.GONE);
+            view.findViewById(R.id.linlay3).setVisibility(View.GONE);
+            view.findViewById(R.id.btnQR).setVisibility(View.GONE);
+            view.findViewById(R.id.testLayout).setVisibility(View.GONE);
+            txtNameUserProfile.setVisibility(View.GONE);
+            txtAddressProfile.setVisibility(View.GONE);
+            view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
+
         }
-        String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
-        String userName = sharedPreferences.getString("username", null);
-        String status = sharedPreferences.getString("status", null);
-        int id = sharedPreferences.getInt("userId", 0);
-        String authorization = sharedPreferences.getString("authorization", null);
 
-        txtNameUserProfile.setText(userName);
-        txtPhoneNumberProfile.setText(phoneNumber);
-        Picasso.with(view.getContext()).load(avatar)
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
-                .into(imageView);
-        tempTransaction = "";
-        tempFriend = "";
+        return view;
+    }
 
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+    private void getFriendNumber() {
+        rmaAPIService.countFriendByUserId(authorization).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempFriend = response.body().toString();
+                    txtNumberFriend.setText(tempFriend);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+        txtNumberFriend.setText(tempFriend);
+    }
+
+    private void getTransactionNumber() {
         rmaAPIService.countAllTransactionByUserId(authorization).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -137,32 +196,6 @@ public class UserProfileFragment extends Fragment {
             }
         });
         txtNumberTransaction.setText(tempTransaction);
-        rmaAPIService.countFriendByUserId(authorization).enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if (response.isSuccessful()) {
-                    tempFriend = response.body().toString();
-                    txtNumberFriend.setText(tempFriend);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-
-            }
-        });
-
-        txtNumberFriend.setText(tempFriend);
-
-        btnQR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        return view;
     }
 
     public void toOwnInventory(View view) {
@@ -183,5 +216,10 @@ public class UserProfileFragment extends Fragment {
     public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(getContext(), OwnTransaction.class);
         startActivity(iOwnFriendList);
+    }
+
+    public void toLoginReminder(View view) {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
     }
 }
