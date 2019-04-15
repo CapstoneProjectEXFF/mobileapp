@@ -25,15 +25,11 @@ import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
-import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
 
 public class DonateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
@@ -229,7 +225,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
 
         if (authorization != null) {
             RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-            rmaAPIService.getItemsByUserIdWithPrivacy(authorization, userId).enqueue(new Callback<List<Item>>() {
+            rmaAPIService.getMyItems(authorization).enqueue(new Callback<List<Item>>() {
                 @Override
                 public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                     Log.i("loadAvailableItems", "" + response.body().size());

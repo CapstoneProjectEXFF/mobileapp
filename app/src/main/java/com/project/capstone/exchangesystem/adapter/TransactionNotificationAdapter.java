@@ -219,7 +219,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                         @Override
                         public void onFailure(Call<ExffMessage> call, Throwable t) {
 
-                            Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
                         }
                     });
 

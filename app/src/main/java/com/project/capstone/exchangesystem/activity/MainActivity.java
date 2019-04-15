@@ -52,24 +52,21 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
                         if (userSession.isUserLoggedIn()) {
                             selectedFragment = NOTIFICATION_FRAGMENT;
                         } else {
-                            LoginOptionDialog optionDialog = new LoginOptionDialog();
-                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                            selectedFragment = PROFILE_FRAGMENT;
                         }
                         break;
                     case R.id.bottombaritem_profile:
                         if (userSession.isUserLoggedIn()) {
                             selectedFragment = PROFILE_FRAGMENT;
                         } else {
-                            LoginOptionDialog optionDialog = new LoginOptionDialog();
-                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                            selectedFragment = PROFILE_FRAGMENT;
                         }
                         break;
                     case R.id.bottombaritem_message:
                         if (userSession.isUserLoggedIn()) {
                             selectedFragment = MESSENGER_FRAGMENT;
                         } else {
-                            LoginOptionDialog optionDialog = new LoginOptionDialog();
-                            optionDialog.show(getSupportFragmentManager(), "optionDialog");
+                            selectedFragment = PROFILE_FRAGMENT;
                         }
                         break;
                 }
@@ -111,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
     public void toOwnDonationPost(View view) {
         Intent iOwnFriendList = new Intent(this, OwnDonationPost.class);
         startActivity(iOwnFriendList);
+    }
+
+    public void toLoginReminder(View view) {
+        Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(signInActivity);
     }
 
     @Override

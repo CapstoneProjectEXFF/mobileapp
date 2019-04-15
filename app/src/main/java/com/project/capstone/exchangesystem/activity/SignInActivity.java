@@ -175,7 +175,7 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<AuthorizationUser> call, Throwable t) {
                     progressDialog.cancel();
-                    Toast toast = Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_SHORT);
                     System.out.println("message from failure: " + t.getMessage());
                     toast.show();
                 }

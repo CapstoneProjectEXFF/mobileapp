@@ -163,7 +163,7 @@ public interface RmaAPIService {
     @GET("/relationship/explore")
     Call<List<User>> getNewFriendToAdd(@Header("Authorization") String authorization);
 
-    @GET("/getdonationPost/{userId}")
+    @GET("/user/{userId}/donationPost")
     Call<List<DonationPost>> getDonationPostByUserId(@Path("userId") int userId);
 
     @DELETE("/item/{itemId}")
