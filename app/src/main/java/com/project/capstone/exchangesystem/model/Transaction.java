@@ -39,6 +39,10 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     @Expose
     private Timestamp modifyTime;
 
+    @SerializedName("qrCode")
+    @Expose
+    private String qrCode;
+
     @SerializedName("sender")
     @Expose
     private User sender;
@@ -120,7 +124,15 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         this.receiver = receiver;
     }
 
-    public Transaction(int id, int senderId, int receiverId, int donationPostId, String status, Timestamp createTime, Timestamp modifyTime) {
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
+    public Transaction(int id, int senderId, int receiverId, int donationPostId, String status, Timestamp createTime, Timestamp modifyTime, String qrCode) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -128,6 +140,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         this.status = status;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
+        this.qrCode = qrCode;
     }
 
     public Transaction() {

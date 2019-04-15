@@ -132,4 +132,9 @@ public class SocketServer {
     public void emitTradeUnconfirm(JSONObject data){
         mSocket.emit("unconfirm-trade", data);
     }
+
+    public void emitQRCode(JSONObject data){
+        mSocket.emit("qr-scan", data);
+    }
+
 }

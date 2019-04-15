@@ -110,4 +110,5 @@
     <string name="rating_ques">Đánh giá của bạn</string>
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
+    <string name="comment_hint">Thêm bình luận</string>
 </resources>

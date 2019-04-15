@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
+import com.project.capstone.exchangesystem.model.Rate;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
@@ -63,7 +65,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization, qrCode;
-    int myUserId, transactionId, rateStar = 0;
+    int myUserId, transactionId, rateStar = 0, yourUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
     private void setDialogComponents(final Dialog dialog) {
         final ImageButton btnStar1, btnStar2, btnStar3, btnStar4, btnStar5, btnSelectedStar1, btnSelectedStar2, btnSelectedStar3, btnSelectedStar4, btnSelectedStar5;
         final Button btnSend, btnClose;
+        final EditText edtContent;
 
         btnClose = dialog.findViewById(R.id.btnClose);
         btnStar1 = dialog.findViewById(R.id.btnStar1);
@@ -154,6 +157,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         btnSelectedStar4 = dialog.findViewById(R.id.btnSelectedStar4);
         btnSelectedStar5 = dialog.findViewById(R.id.btnSelectedStar5);
         btnSend = dialog.findViewById(R.id.btnSend);
+        edtContent = dialog.findViewById(R.id.edtContent);
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,7 +315,30 @@ public class TransactionDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO call api
-                Toast.makeText(getApplicationContext(), "" + rateStar, Toast.LENGTH_SHORT).show();
+                if (authorization != null){
+                    Rate rate = new Rate();
+                    rate.setReceiverId(yourUserId);
+                    rate.setContent(edtContent.getText().toString());
+                    rate.setRate(rateStar);
+
+                    rmaAPIService.createRating(authorization, rate).enqueue(new Callback<Rate>() {
+                        @Override
+                        public void onResponse(Call<Rate> call, Response<Rate> response) {
+                            if (response.body() != null){
+                                Toast.makeText(getApplicationContext(), "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            } else {
+                                Log.i("rating", "null");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Rate> call, Throwable t) {
+                            Log.i("rating", "failed");
+                        }
+                    });
+                }
+//                Toast.makeText(getApplicationContext(), "" + rateStar, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -320,7 +347,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         transactionId = (int) getIntent().getSerializableExtra("transactionId");
 //        qrCode = (String) getIntent().getSerializableExtra("qrCode");
 //        transactionId = 27;
-        qrCode = "nhi dễ thương";
+//        qrCode = "nhi dễ thương";
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         myUserId = sharedPreferences.getInt("userId", 0);
@@ -349,9 +376,11 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
     private void setUserInf() {
         if (myUserId == dataInf.getTransaction().getReceiverId()){
+            yourUserId = dataInf.getTransaction().getSenderId();
             txtReceiverName.setText(dataInf.getTransaction().getSender().getFullName());
             txtReceiverPhone.setText(dataInf.getTransaction().getSender().getPhone());
         } else if (myUserId != dataInf.getTransaction().getReceiverId()){
+            yourUserId = dataInf.getTransaction().getReceiverId();
             txtReceiverName.setText(dataInf.getTransaction().getReceiver().getFullName());
             txtReceiverPhone.setText(dataInf.getTransaction().getReceiver().getPhone());
         }
@@ -372,6 +401,9 @@ public class TransactionDetailActivity extends AppCompatActivity {
             }
         }
 
+        qrCode = dataInf.getTransaction().getQrCode();
+        createQRCode(qrCode);
+
         if (tmpMyItems.size() != 0){
             myItemAdapter.setfilter(tmpMyItems);
         } else {
@@ -381,11 +413,10 @@ public class TransactionDetailActivity extends AppCompatActivity {
         if (tmpYourItems.size() != 0){
             txtReceiverAddress.setText(tmpYourItems.get(0).getAddress());
             yourItemAdapter.setfilter(tmpYourItems);
-            createQRCode(qrCode);
         } else {
             txtReceiverAddress.setVisibility(View.GONE);
             btnMaps.setVisibility(View.GONE);
-            ivQRCode.setVisibility(View.GONE);
+//            ivQRCode.setVisibility(View.GONE);
             rvYourItems.setVisibility(View.GONE);
         }
     }
