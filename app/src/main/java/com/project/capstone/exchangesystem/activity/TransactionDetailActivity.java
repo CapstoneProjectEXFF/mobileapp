@@ -29,6 +29,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.model.Rate;
+import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
@@ -66,6 +67,8 @@ public class TransactionDetailActivity extends AppCompatActivity {
     RmaAPIService rmaAPIService;
     String authorization, qrCode;
     int myUserId, transactionId, rateStar = 0, yourUserId;
+
+    SocketServer socketServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

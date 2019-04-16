@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,15 +23,21 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
 
     BarcodeReader barcodeReader;
     SocketServer socketServer;
+    SharedPreferences sharedPreferences;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
 
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        userId = sharedPreferences.getInt("userId", 0);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.qr_scanner);
         socketServer = new SocketServer();
-        socketServer.mSocket.on("qr-scanned", qrCode);
+        socketServer.mSocket.on("scan-succeeded", succeededQRCode);
+        socketServer.mSocket.on("transaction-succeeded", succeededTransaction);
+
     }
 
     @Override
@@ -44,6 +51,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         JSONObject qrCode = new JSONObject();
         try {
             qrCode.put("qrCode", barcode.displayValue);
+            qrCode.put("userId", userId);
             socketServer.connect();
             socketServer.emitQRCode(qrCode);
         } catch (JSONException e) {
@@ -67,10 +75,10 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
 
     }
 
-    Emitter.Listener qrCode = new Emitter.Listener() {
+    Emitter.Listener succeededQRCode = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.i("qrCode", args[0].toString());
+            Log.i("succeededQRCode", args[0].toString());
             JSONObject data = (JSONObject) args[0];
             runOnUiThread(new Runnable() {
                 @Override
@@ -81,6 +89,21 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
                 }
             });
 
+        }
+    };
+
+    Emitter.Listener succeededTransaction = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i("succeededTransaction", args[0].toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), QRCodeResultActivity.class);
+                    intent.putExtra("result", "done");
+                    startActivity(intent);
+                }
+            });
         }
     };
 }

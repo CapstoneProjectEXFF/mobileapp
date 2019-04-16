@@ -76,11 +76,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         if (appLinkData == null) { //check if app was opened from link or not
             GetInformation(-1);
         } else {
-            int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/donation-post.html?id=", ""));
+            int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace("http://35.247.191.68/donation-post.html?id=", ""));
             GetInformation(uriDonationPostId);
         }
-        showDonators();
-        ActionToolbar();
     }
 
     private void ActionToolbar() {
@@ -224,7 +222,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote("Test").setContentUrl(Uri.parse("https://exff-104b8.firebaseapp.com/donation-post.html?id=" + donationPost.getId())).build();
+                        .setQuote("Test").setContentUrl(Uri.parse("http://35.247.191.68/donation-post.html?id=" + donationPost.getId())).build();
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     shareDialog.show(shareLinkContent);
                 }
@@ -311,6 +309,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                             if (response.body() != null) {
                                 donationPost = response.body();
                                 setDonationPostInf(donationPost);
+
                             } else {
                                 Log.i("Donation", "null");
                             }
@@ -353,6 +352,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         if (donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
             btnShare.setVisibility(View.GONE);
         }
+
+        showDonators();
+        ActionToolbar();
     }
 
     public void showNoticeDialog() {
