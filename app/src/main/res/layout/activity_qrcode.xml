@@ -6,18 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".activity.QRCodeActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/qr_title"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <fragment
         android:id="@+id/qr_scanner"
         android:name="info.androidhive.barcode.BarcodeReader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:auto_focus="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbToolbar"
         app:use_flash="false" />
 
     <info.androidhive.barcode.ScannerOverlay
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#44000000"
+        app:layout_constraintBottom_toBottomOf="@+id/qr_scanner"
+        app:layout_constraintTop_toBottomOf="@+id/tbToolbar"
         app:line_color="#7323DC"
         app:line_speed="6"
         app:line_width="4"

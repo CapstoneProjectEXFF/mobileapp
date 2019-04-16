@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -25,6 +27,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
     SocketServer socketServer;
     SharedPreferences sharedPreferences;
     int userId;
+    Toolbar tbToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         userId = sharedPreferences.getInt("userId", 0);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.qr_scanner);
+        tbToolbar = findViewById(R.id.tbToolbar);
+
+        setToolbar();
         socketServer = new SocketServer();
         socketServer.mSocket.on("scan-succeeded", succeededQRCode);
         socketServer.mSocket.on("transaction-succeeded", succeededTransaction);
@@ -80,15 +86,21 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         public void call(Object... args) {
             Log.i("succeededQRCode", args[0].toString());
             JSONObject data = (JSONObject) args[0];
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+            try {
+                int transactionId = Integer.parseInt(data.getString("transactionId"));
+                int tmpUserId = Integer.parseInt(data.getString("userId"));
+                //TODO move to transactionDetail
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 //                    Intent intent = new Intent(getApplicationContext(), QRCodeResultActivity.class);
 //                    intent.putExtra("result", barcode.displayValue);
 //                    startActivity(intent);
-                }
-            });
-
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -96,9 +108,12 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         @Override
         public void call(Object... args) {
             Log.i("succeededTransaction", args[0].toString());
+            int transactionId = Integer.parseInt(args[0].toString());
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    //TODO move to transactionDetail
                     Intent intent = new Intent(getApplicationContext(), QRCodeResultActivity.class);
                     intent.putExtra("result", "done");
                     startActivity(intent);
@@ -106,4 +121,15 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
             });
         }
     };
+
+    private void setToolbar() {
+        setSupportActionBar(tbToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        tbToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 }
