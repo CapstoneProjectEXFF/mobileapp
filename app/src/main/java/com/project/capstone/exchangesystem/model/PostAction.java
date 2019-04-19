@@ -17,6 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,27 +122,19 @@ public class PostAction {
         }
     }
 
-    public void manageDonation(DonationPost donationPost, List<String> urlList, String authorization, final Context context, int action) {
+    public void manageDonation(DonationPostWrapper donationPostWrapper, List<String> urlList, String authorization, final Context context, int action) {
 
         setDialog(context);
 
-        String content = donationPost.getContent();
-        String address = donationPost.getAddress();
-        String title = donationPost.getTitle();
-        final Map<String, Object> jsonBody = new HashMap<String, Object>();
-
-        jsonBody.put("content", content);
-        jsonBody.put("address", address);
-        jsonBody.put("title", title);
 //        jsonBody.put("urls", urlList);
 
         if (authorization != null) {
             if (action == DONATION_CREATE_ACTION) {
-                jsonBody.put("urls", urlList);
-                rmaAPIService.createDonationPost(jsonBody, authorization).enqueue(new Callback<DonationPost>() {
+                donationPostWrapper.setUrls(urlList);
+                rmaAPIService.createDonationPost(donationPostWrapper, authorization).enqueue(new Callback<DonationPostWrapper>() {
 
                     @Override
-                    public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
+                    public void onResponse(Call<DonationPostWrapper> call, Response<DonationPostWrapper> response) {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 progressDialog.dismiss();
@@ -163,16 +156,17 @@ public class PostAction {
                     }
 
                     @Override
-                    public void onFailure(Call<DonationPost> call, Throwable t) {
+                    public void onFailure(Call<DonationPostWrapper> call, Throwable t) {
                         progressDialog.dismiss();
                         Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
                         Log.i("PostAction", "donation create failed");
                     }
                 });
             } else if (action == DONATION_UPDATE_ACTION) {
-                jsonBody.put("newUrls", urlList);
-                jsonBody.put("removedUrlIds", donationPost.getImageIds());
-                rmaAPIService.updateDonationPost(jsonBody, authorization, donationPost.getId()).enqueue(new Callback<Object>() {
+                donationPostWrapper.setNewUrls(urlList);
+//                jsonBody.put("newUrls", urlList);
+//                jsonBody.put("removedUrlIds", donationPost.getImageIds());
+                rmaAPIService.updateDonationPost(donationPostWrapper, donationPostWrapper.getDonationPost().getId(), authorization).enqueue(new Callback<Object>() {
 
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {

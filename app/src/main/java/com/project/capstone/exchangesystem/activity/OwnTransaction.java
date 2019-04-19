@@ -62,29 +62,6 @@ public class OwnTransaction extends AppCompatActivity {
         transactionHistoryAdapter = new TransactionHistoryAdapter(this, transactions);
 
         listView.setAdapter(transactionHistoryAdapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                rmaAPIService.getTransactionByTransID(authorization, transactions.get(position).getId()).enqueue(new Callback<TransactionRequestWrapper>() {
-//                    @Override
-//                    public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-//                        if (response.isSuccessful()) {
-//                            TransactionRequestWrapper temp = response.body();
-//                            Intent intent = new Intent(OwnTransaction.this, TransactionDetailActivity.class);
-//                            intent.putExtra("transactionDetail", temp);
-//                            startActivity(intent);
-//                        } else {
-//                            Toast.makeText(getApplicationContext(), "Error in data!! Try Again", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-//                        System.out.println("fail in daa");
-//                    }
-//                });
-//            }
-//        });
     }
 
     private void actionToolbar() {

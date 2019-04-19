@@ -9,6 +9,7 @@ public class AppStatus {
     public static final int EXTERNAL_STORAGE_REQUEST = 0;
     public static final int CAMERA_REQUEST = 1;
     public static final int GALLERY_REQUEST = 2;
+    public static final int CATEGORY_REQUEST = 3;
     public static final int CHANGE_IMAGE_FLAG = 0;
     public static final int ADD_IMAGE_FLAG = 1;
     public static final int DONATE_ACTIVITY_IMAGE_FLAG = 2;

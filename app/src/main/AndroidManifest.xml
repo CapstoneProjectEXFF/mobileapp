@@ -20,11 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.ChooseCategoryActivity"></activity>
 
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
-  
+
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -36,7 +37,7 @@
         </activity>
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.SignUpAcitivity" />
-        <activity android:name=".activity.SignInActivity"/>
+        <activity android:name=".activity.SignInActivity" />
         <activity android:name=".activity.ForgetPasswordActivity" />
         <activity android:name=".activity.CreateSuccessActivity" />
         <activity android:name=".activity.MainActivity" />
@@ -52,17 +53,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!--<data-->
-                    <!--android:host="exff-104b8.firebaseapp.com"-->
-                    <!--android:pathPrefix="/item.html"-->
-                    <!--android:scheme="https" />-->
+                <!-- <data -->
+                <!-- android:host="exff-104b8.firebaseapp.com" -->
+                <!-- android:pathPrefix="/item.html" -->
+                <!-- android:scheme="https" /> -->
                 <data
                     android:host="35.247.191.68"
                     android:pathPrefix="/item.html"
                     android:scheme="http" />
             </intent-filter>
         </activity>
-      
         <activity
             android:name=".activity.CreateItemActivity"
             android:screenOrientation="portrait" />
@@ -75,11 +75,9 @@
         <activity
             android:name=".activity.UpdateDonationPostActivity"
             android:screenOrientation="portrait" />
-      
         <activity android:name=".activity.OwnInventory" />
         <activity android:name=".activity.ChangePassword" />
         <activity android:name=".activity.EditUserProfileActivity" />
-      
         <activity android:name=".activity.DescriptionDonationPostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -93,7 +91,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-      
         <activity android:name=".activity.TransactionDetailActivity" />
         <activity android:name=".activity.ChooseItemActivity" />
         <activity android:name=".activity.DonateItemActivity" />
@@ -106,10 +103,8 @@
         <activity android:name=".activity.ExploreFriendActivity" />
         <activity android:name=".activity.OwnDonationPost" />
         <activity android:name=".activity.UserProfileActivity" />
-        <activity android:name=".activity.QRCodeResultActivity"/>
-        <activity android:name=".activity.QRCodeActivity" />
-
-        <!-- Facebook -->
+        <activity android:name=".activity.QRCodeResultActivity" />
+        <activity android:name=".activity.QRCodeActivity" /> <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -119,4 +114,5 @@
             android:authorities="com.facebook.app.FacebookContentProvider293758374637458"
             android:exported="true" />
     </application>
+
 </manifest>

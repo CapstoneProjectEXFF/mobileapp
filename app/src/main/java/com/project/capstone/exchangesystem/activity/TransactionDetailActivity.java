@@ -37,6 +37,7 @@ import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -317,8 +318,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO call api
-                if (authorization != null){
+                if (authorization != null) {
                     Rate rate = new Rate();
                     rate.setReceiverId(yourUserId);
                     rate.setContent(edtContent.getText().toString());
@@ -327,7 +327,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
                     rmaAPIService.createRating(authorization, rate).enqueue(new Callback<Rate>() {
                         @Override
                         public void onResponse(Call<Rate> call, Response<Rate> response) {
-                            if (response.body() != null){
+                            if (response.body() != null) {
                                 Toast.makeText(getApplicationContext(), "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             } else {
@@ -341,27 +341,23 @@ public class TransactionDetailActivity extends AppCompatActivity {
                         }
                     });
                 }
-//                Toast.makeText(getApplicationContext(), "" + rateStar, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getData() {
         transactionId = (int) getIntent().getSerializableExtra("transactionId");
-//        qrCode = (String) getIntent().getSerializableExtra("qrCode");
-//        transactionId = 27;
-//        qrCode = "nhi dễ thương";
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         myUserId = sharedPreferences.getInt("userId", 0);
 
         rmaAPIService = RmaAPIUtils.getAPIService();
 
-        if (authorization != null){
+        if (authorization != null) {
             rmaAPIService.getTransactionByTransID(authorization, transactionId).enqueue(new Callback<TransactionRequestWrapper>() {
                 @Override
                 public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                    if (response.body() != null){
+                    if (response.body() != null) {
                         dataInf = response.body();
                         setUserInf();
                     } else {
@@ -378,14 +374,16 @@ public class TransactionDetailActivity extends AppCompatActivity {
     }
 
     private void setUserInf() {
-        if (myUserId == dataInf.getTransaction().getReceiverId()){
+        if (myUserId == dataInf.getTransaction().getReceiverId()) {
             yourUserId = dataInf.getTransaction().getSenderId();
             txtReceiverName.setText(dataInf.getTransaction().getSender().getFullName());
             txtReceiverPhone.setText(dataInf.getTransaction().getSender().getPhone());
-        } else if (myUserId != dataInf.getTransaction().getReceiverId()){
+            txtReceiverAddress.setText(dataInf.getTransaction().getSender().getAddress());
+        } else if (myUserId != dataInf.getTransaction().getReceiverId()) {
             yourUserId = dataInf.getTransaction().getReceiverId();
             txtReceiverName.setText(dataInf.getTransaction().getReceiver().getFullName());
             txtReceiverPhone.setText(dataInf.getTransaction().getReceiver().getPhone());
+            txtReceiverAddress.setText(dataInf.getTransaction().getReceiver().getAddress());
         }
 
         setToolbar();
@@ -395,9 +393,9 @@ public class TransactionDetailActivity extends AppCompatActivity {
         ArrayList<Item> tmpMyItems = new ArrayList<>();
         ArrayList<Item> tmpYourItems = new ArrayList<>();
 
-        for (int i = 0; i < transDetailList.size(); i++){
+        for (int i = 0; i < transDetailList.size(); i++) {
             Item tmpItem = transDetailList.get(i).getItem();
-            if (tmpItem.getUser().getId() == myUserId){
+            if (tmpItem.getUser().getId() == myUserId) {
                 tmpMyItems.add(tmpItem);
             } else {
                 tmpYourItems.add(tmpItem);
@@ -405,26 +403,25 @@ public class TransactionDetailActivity extends AppCompatActivity {
         }
 
         qrCode = dataInf.getTransaction().getQrCode();
-        createQRCode(qrCode);
+        if (qrCode != null) {
+            createQRCode(qrCode);
+        }
 
-        if (tmpMyItems.size() != 0){
+        if (tmpMyItems.size() != 0) {
             myItemAdapter.setfilter(tmpMyItems);
         } else {
             myItemLayout.setVisibility(View.GONE);
         }
 
-        if (tmpYourItems.size() != 0){
-            txtReceiverAddress.setText(tmpYourItems.get(0).getAddress());
+        if (tmpYourItems.size() != 0) {
             yourItemAdapter.setfilter(tmpYourItems);
         } else {
-            txtReceiverAddress.setVisibility(View.GONE);
             btnMaps.setVisibility(View.GONE);
-//            ivQRCode.setVisibility(View.GONE);
             rvYourItems.setVisibility(View.GONE);
         }
     }
 
-    private void createQRCode(String qrCode){
+    private void createQRCode(String qrCode) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, 250, 250);

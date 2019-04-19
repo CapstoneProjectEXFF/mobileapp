@@ -66,10 +66,10 @@ public interface RmaAPIService {
     Call<Item> getItemById(@Header("Authorization") String authorization, @Path("id") int itemId);
 
     @POST("/donationPost")
-    Call<DonationPost> createDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization);
+    Call<DonationPostWrapper> createDonationPost(@Body DonationPostWrapper body, @Header("Authorization") String authorization);
 
     @PUT("/donationPost/{id}")
-    Call<Object> updateDonationPost(@Body Map<String, Object> body, @Header("Authorization") String authorization, @Path("id") int donationPostId);
+    Call<Object> updateDonationPost(@Body DonationPostWrapper body, @Path("id") int donationPostId, @Header("Authorization") String authorization);
 
     @GET("/donationPost/{id}")
     Call<DonationPost> getDonationPostById(@Header("Authorization") String authorization, @Path("id") int donationPostId);

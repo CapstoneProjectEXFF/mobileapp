@@ -20,11 +20,14 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.adapter.DonationTargetAdapter;
 import com.project.capstone.exchangesystem.adapter.DonatorAdapter;
 import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.dialog.LoginDialogFragment;
 import com.project.capstone.exchangesystem.model.DonationPost;
+import com.project.capstone.exchangesystem.model.DonationPostTarget;
 import com.project.capstone.exchangesystem.model.Donator;
+import com.project.capstone.exchangesystem.model.TargetStatus;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
@@ -40,7 +43,7 @@ import java.util.List;
 public class DescriptionDonationPostActivity extends AppCompatActivity implements LoginDialogFragment.LoginDialogListener {
     Toolbar toolbar;
     ImageView imgUserDonation, imgDescriptionDonationPost;
-    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators;
+    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators, txtDonators, txtTargets;
     ImageButton btnShare;
     Button btnDonate;
     UserSession userSession;
@@ -55,12 +58,15 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
 
     DonationPost donationPost;
     int userId;
-    ArrayList<Donator> donators, tmpDonators;
+    ArrayList<Donator> donators;
     DonatorAdapter donatorAdapter;
-    RecyclerView rvDonators;
+    RecyclerView rvDonators, rvTargets;
     private static final int UPDATE_CODE = 1;
     private static final int ADD_CODE = 2;
-    private boolean reloadNeed = true;
+    private boolean reloadNeed = true, checkDonatorClick = false, checkTargetClick = false;
+    List<DonationPostTarget> targets;
+    ArrayList<TargetStatus> targetStatusList;
+    DonationTargetAdapter donationTargetAdapter;
 
 
     @Override
@@ -162,7 +168,8 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.editpost) {
             Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
-            intent.putExtra("donationPostId", donationPost.getId());
+//            intent.putExtra("donationPostId", donationPost.getId());
+            intent.putExtra("donationPost", donationPost);
             startActivityForResult(intent, UPDATE_CODE);
         } else if (item.getItemId() == R.id.deletepost) {
             // TODO dialog choose options
@@ -178,8 +185,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), R.string.lock_donation, Toast.LENGTH_LONG).show();
-//                    Intent returnIntent = new Intent();
-//                    setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
@@ -212,7 +217,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         userId = sharedPreferences.getInt("userId", 0);
         txtNoDonators = findViewById(R.id.txtNoDonators);
         rvDonators = findViewById(R.id.rvDonators);
-        tmpDonators = new ArrayList<>();
+        txtDonators = findViewById(R.id.txtDonators);
+        txtTargets = findViewById(R.id.txtTargets);
+        rvTargets = findViewById(R.id.rvTargets);
 
         //share facebook
         callbackManager = CallbackManager.Factory.create();
@@ -241,10 +248,44 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                 }
             }
         });
+
+        txtDonators.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!checkDonatorClick){
+                    checkDonatorClick = true;
+                    txtDonators.setCompoundDrawablesWithIntrinsicBounds(0, 0 , R.drawable.round_keyboard_arrow_down_black_24, 0);
+                    if (donators.size() > 0) {
+                        rvDonators.setVisibility(View.VISIBLE);
+                    } else {
+                        txtNoDonators.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    checkDonatorClick = false;
+                    txtDonators.setCompoundDrawablesWithIntrinsicBounds(0, 0 , R.drawable.round_keyboard_arrow_right_black_24, 0);
+                    rvDonators.setVisibility(View.GONE);
+                    txtNoDonators.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        txtTargets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!checkDonatorClick){
+                    checkDonatorClick = true;
+                    txtTargets.setCompoundDrawablesWithIntrinsicBounds(0, 0 , R.drawable.round_keyboard_arrow_down_black_24, 0);
+                    rvTargets.setVisibility(View.VISIBLE);
+                } else {
+                    checkDonatorClick = false;
+                    txtTargets.setCompoundDrawablesWithIntrinsicBounds(0, 0 , R.drawable.round_keyboard_arrow_right_black_24, 0);
+                    rvTargets.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void showDonators() {
-        rvDonators = findViewById(R.id.rvDonators);
         donators = new ArrayList<>();
         donatorAdapter = new DonatorAdapter(getApplicationContext(), donators, new DonatorAdapter.OnItemClickListener() {
             @Override
@@ -265,6 +306,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                 @Override
                 public void onResponse(Call<List<TransactionRequestWrapper>> call, Response<List<TransactionRequestWrapper>> response) {
                     if (response.body() != null) {
+                        List<Donator> tmpDonators = new ArrayList<>();
                         for (int i = 0; i < response.body().size(); i++) {
                             List<TransactionRequestWrapper> transactionList = response.body();
                             Donator donator = new Donator();
@@ -274,6 +316,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                             List<String> itemNames = new ArrayList<>();
                             for (int j = 0; j < transactionList.get(i).getDetails().size(); j++) {
                                 itemNames.add(transactionList.get(i).getDetails().get(j).getItem().getName());
+                                donator.setItem(transactionList.get(i).getDetails().get(j).getItem());
                             }
                             donator.setItemNames(itemNames);
                             tmpDonators.add(donator);
@@ -281,10 +324,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                         donators.clear();
                         donators.addAll(tmpDonators);
                         donatorAdapter.notifyDataSetChanged();
-                        if (donators.size() > 0) {
-                            rvDonators.setVisibility(View.VISIBLE);
-                            txtNoDonators.setVisibility(View.GONE);
-                        }
+                        showTargets();
                     }
                 }
 
@@ -354,7 +394,35 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         }
 
         showDonators();
+
         ActionToolbar();
+    }
+
+    private void showTargets() {
+        getTargetStatusList();
+        targets = donationPost.getDonationPostTargets();
+        donationTargetAdapter = new DonationTargetAdapter(getApplicationContext(), targets, targetStatusList);
+        rvTargets.setHasFixedSize(true);
+        rvTargets.setLayoutManager(new GridLayoutManager(this, 1));
+        rvTargets.setAdapter(donationTargetAdapter);
+    }
+
+    private void getTargetStatusList() {
+        targetStatusList = new ArrayList<>();
+        for (int i = 0; i < donationPost.getDonationPostTargets().size(); i++){
+            DonationPostTarget tmpTarget = donationPost.getDonationPostTargets().get(i);
+            TargetStatus targetStatus = new TargetStatus();
+            targetStatus.setCategoryId(tmpTarget.getCategoryId());
+            targetStatus.setCount(0);
+            for (int j = 0; j < donators.size(); j++){
+                if (donators.get(j).getItem().getCategory().getId() == tmpTarget.getCategoryId()){
+                    int tmpCount = targetStatus.getCount();
+                    tmpCount++;
+                    targetStatus.setCount(tmpCount);
+                }
+            }
+            targetStatusList.add(targetStatus);
+        }
     }
 
     public void showNoticeDialog() {

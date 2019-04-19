@@ -19,6 +19,7 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.*;
 import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
 import com.project.capstone.exchangesystem.model.Rate;
+import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.utils.UserSession;
@@ -49,6 +50,7 @@ public class UserProfileFragment extends Fragment {
     RecyclerView rvReviewers;
     ReviewerAdapter reviewerAdapter;
     ArrayList<Rate> ratingList;
+    List<Transaction> transactions;
     int userId;
 
     public static UserProfileFragment newInstance() {
@@ -164,12 +166,18 @@ public class UserProfileFragment extends Fragment {
               @Override
               public void onClick(View v) {
                   Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
+                  ArrayList<Integer> transactionIds = new ArrayList<>();
+                  for (int i = 0; i < transactions.size(); i++){
+                      transactionIds.add(transactions.get(i).getId());
+                  }
+                  intent.putExtra("transactionIds", transactionIds);
                   startActivity(intent);
               }
             });
 
             //load reviewers
             showReviewers(view);
+            getTransactionData();
         } else {
             view.findViewById(R.id.iconEdit).setVisibility(View.GONE);
             view.findViewById(R.id.linlay1).setVisibility(View.GONE);
@@ -180,7 +188,6 @@ public class UserProfileFragment extends Fragment {
             txtNameUserProfile.setVisibility(View.GONE);
             txtAddressProfile.setVisibility(View.GONE);
             view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
-
         }
 
         return view;
@@ -285,6 +292,27 @@ public class UserProfileFragment extends Fragment {
     public void toLoginReminder(View view) {
         Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(signInActivity);
+
+    }
+
+    private void getTransactionData() {
+        transactions = new ArrayList<>();
+        if (authorization != null){
+            rmaAPIService.getAllTransactionByUserID(authorization).enqueue(new Callback<List<Transaction>>() {
+                @Override
+                public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
+                    if (response.isSuccessful()) {
+                        transactions = response.body();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                    System.out.println("Fail rồi");
+                    Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
     }
 }

@@ -19,6 +19,10 @@ public class Category  implements Serializable {
     @Expose
     private int supercategoryId;
 
+    private boolean checkSelectedCategory = false;
+
+    private int numOfItem = 0;
+
     public int getId() {
         return id;
     }
@@ -47,5 +51,21 @@ public class Category  implements Serializable {
         this.id = id;
         this.name = name;
         this.supercategoryId = supercategoryId;
+    }
+
+    public boolean isCheckSelectedCategory() {
+        return checkSelectedCategory;
+    }
+
+    public void setCheckSelectedCategory(boolean checkSelectedCategory) {
+        this.checkSelectedCategory = checkSelectedCategory;
+    }
+
+    public int getNumOfItem() {
+        return numOfItem;
+    }
+
+    public void setNumOfItem(int numOfItem) {
+        this.numOfItem = numOfItem;
     }
 }
