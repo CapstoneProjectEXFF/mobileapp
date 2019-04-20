@@ -45,7 +45,7 @@ public class UserProfileFragment extends Fragment {
     String authorization;
     TextView txtNumberTransaction, txtNumberFriend, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
     ImageView imageView;
-    ImageButton btnQR;
+    ImageButton btnQR, iconPhone;
     UserSession userSession;
     RecyclerView rvReviewers;
     ReviewerAdapter reviewerAdapter;
@@ -128,6 +128,7 @@ public class UserProfileFragment extends Fragment {
         txtAddressProfile = view.findViewById(R.id.txtAddressUserProfile);
         txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
         rvReviewers = view.findViewById(R.id.rvReviewers);
+        iconPhone = view.findViewById(R.id.iconPhone);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -188,6 +189,8 @@ public class UserProfileFragment extends Fragment {
             view.findViewById(R.id.testLayout).setVisibility(View.GONE);
             txtNameUserProfile.setVisibility(View.GONE);
             txtAddressProfile.setVisibility(View.GONE);
+            txtPhoneNumberProfile.setVisibility(View.GONE);
+            iconPhone.setVisibility(View.GONE);
             view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
         }
 

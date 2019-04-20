@@ -192,6 +192,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .into(imgProfileUser);
         } else if (c.getClass() == Room.class) {
             final Room room = (Room) c;
+            String otherUserName = "";
             final ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
             final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
             TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);

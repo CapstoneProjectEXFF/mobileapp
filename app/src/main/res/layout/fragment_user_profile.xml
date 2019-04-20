@@ -59,10 +59,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/testLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15sp"
+            android:layout_marginTop="10sp"
             android:text="Username"
             android:textColor="@color/colorWhite"
-            android:textSize="13pt" />
+            android:textSize="14pt"
+            android:textStyle="bold"/>
 
 
         <TextView
@@ -72,9 +73,29 @@
             android:layout_below="@+id/txtNameUserProfile"
             android:layout_centerHorizontal="true"
             android:text="address"
-            android:textAllCaps="true"
             android:textColor="@color/address"
-            android:textSize="14sp" />
+            android:textSize="9pt" />
+
+        <TextView
+            android:id="@+id/txtPhoneNumberProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAddressUserProfile"
+            android:layout_centerHorizontal="true"
+            android:text="phone"
+            android:textColor="@color/address"
+            android:textSize="9pt" />
+
+        <ImageButton
+            android:id="@+id/iconPhone"
+            android:layout_width="9pt"
+            android:layout_height="9pt"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="6dp"
+            android:layout_toLeftOf="@id/txtPhoneNumberProfile"
+            android:layout_below="@id/txtAddressUserProfile"
+            android:background="@drawable/round_perm_phone_msg_black_18"
+            android:backgroundTint="@color/address"/>
 
         <ImageView
             android:id="@+id/iconEdit"
@@ -269,11 +290,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -281,7 +301,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -322,28 +343,28 @@
                 android:id="@+id/linlay3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/info_PhoneNumber"
+                    android:text="@string/rating_title_profile"
                     android:textColor="@color/app_icon_color_start"
-                    android:textSize="13sp" />
+                    android:textSize="10pt"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"/>
 
-                <TextView
-                    android:id="@+id/txtPhoneNumberProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+1-202-555-0157"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/txtPhoneNumberProfile"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="+1-202-555-0157"-->
+                    <!--android:textColor="#000000"-->
+                    <!--android:textSize="18sp" />-->
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
                     android:background="@color/grey" />
 
             </LinearLayout>

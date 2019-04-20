@@ -34,20 +34,35 @@
 
         <!--</android.support.v7.widget.Toolbar>-->
 
-        <TextView
-            android:id="@+id/btnAddCharityPost"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="8dp"
-            android:text="Thêm bài viết"
-            android:gravity="right"
-            android:textSize="10pt"
-            android:textColor="@color/white"
-            android:background="@drawable/bg_gradient_dark"
+            android:orientation="horizontal"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            android:drawableRight="@drawable/round_create_black_18"
-            android:drawablePadding="8dp"
-            android:drawableTint="@color/colorWhite"/>
+            android:background="@drawable/bg_gradient_dark"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/btnAddCharityPost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm bài viết"
+                android:gravity="right"
+                android:textSize="10pt"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/white"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/round_create_black_18"
+                android:backgroundTint="@color/colorWhite"/>
+
+        </LinearLayout>
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
