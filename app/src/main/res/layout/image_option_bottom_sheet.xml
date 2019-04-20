@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edt_whitebg"
-            android:text="Hủy"
+            android:text="@string/cancel_btn"
             android:textColor="@color/colorRed"
             android:textSize="22dp"/>
 

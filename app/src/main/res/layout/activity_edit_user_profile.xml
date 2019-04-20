@@ -154,7 +154,7 @@
             android:background="@drawable/custom_button"
             android:backgroundTint="#f9b43d"
             android:onClick="signUpUser"
-            android:text="Submit"
+            android:text="THAY ĐỔI"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -92,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
         adapter = new ListAdapter(arrayList);
 //        activitySearchBinding.listView.setAdapter(adapter);
         activitySearchBinding.search.setActivated(true);
-        activitySearchBinding.search.setQueryHint("Type your keyword here");
+        activitySearchBinding.search.setQueryHint(getString(R.string.keyword_hint));
         activitySearchBinding.search.onActionViewExpanded();
         activitySearchBinding.search.setIconified(false);
         activitySearchBinding.search.clearFocus();
