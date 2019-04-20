@@ -133,7 +133,7 @@
             android:layout_weight="1"
             android:layout_marginRight="2dp"
             android:background="@drawable/custom_button"
-            android:text="Hủy"/>
+            android:text="@string/cancel_btn"/>
 
         <Button
             android:id="@+id/btnSend"

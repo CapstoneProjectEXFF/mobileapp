@@ -39,9 +39,11 @@ public class NotificationFragment extends Fragment {
     TransactionNotificationAdapter transactionNotificationAdapter;
     ArrayList<Object> transactions;
     Toolbar toolbar;
-    RmaAPIService rmaRealtimeService;
+    RmaAPIService rmaRealtimeService, rmaAPIService;
+    SharedPreferences sharedPreferences;
+    String authorization;
+    int userId;
 
-    int userID;
 
     public NotificationFragment() {
     }
@@ -63,14 +65,11 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
-
-        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-
+        rmaAPIService = RmaAPIUtils.getAPIService();
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-        final String authorization = sharedPreferences.getString("authorization", null);
-        userID = sharedPreferences.getInt("userId", 0);
+        sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
+        userId = sharedPreferences.getInt("userId", 0);
         listView = (ListView) view.findViewById(R.id.notificationListview);
         transactions = new ArrayList<>();
         transactionNotificationAdapter = new TransactionNotificationAdapter(view.getContext(), transactions);
@@ -80,7 +79,7 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Intent intent = new Intent(getActivity(), TransactionDetailActivity.class);
-                if (transactions.get(position) == Transaction.class) {
+                if (transactions.get(position).getClass() == Transaction.class) {
                     Transaction tempTrans = (Transaction) transactions.get(position);
                     rmaAPIService.getTransactionByTransID(authorization, tempTrans.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
 
@@ -96,10 +95,10 @@ public class NotificationFragment extends Fragment {
 
                         }
                     });
-                } else if (transactions.get(position) == Room.class) {
+                } else if (transactions.get(position).getClass() == Room.class) {
                     Room room = (Room) transactions.get(position);
                     Intent intent2 = new Intent(view.getContext(), TradeRealtimeActivity.class);
-                    intent.putExtra("room", room);
+                    intent2.putExtra("room", room);
                     startActivity(intent2);
                 }
 
@@ -120,11 +119,11 @@ public class NotificationFragment extends Fragment {
 
     private void getDataFromTransaction() {
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-        String authorization = sharedPreferences.getString("authorization", null);
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+//        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
+//        String authorization = sharedPreferences.getString("authorization", null);
+//        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
 
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getTransactionsByReceiverID(authorization).enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
@@ -134,14 +133,14 @@ public class NotificationFragment extends Fragment {
                     temp = response.body();
                     transactions.addAll(temp);
                     transactionNotificationAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
-                System.out.println("Fail rồi");
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -190,10 +189,10 @@ public class NotificationFragment extends Fragment {
     }
 
     private void getDataFromRelationship() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-        String authorization = sharedPreferences.getString("authorization", null);
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
+//        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
+//        String authorization = sharedPreferences.getString("authorization", null);
+//        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         rmaAPIService.getFriendRequest(authorization, 0, 10).enqueue(new Callback<List<Relationship>>() {
             @Override
             public void onResponse(Call<List<Relationship>> call, Response<List<Relationship>> response) {
@@ -215,7 +214,7 @@ public class NotificationFragment extends Fragment {
     }
 
     private void getDataFromRoom() {
-        rmaRealtimeService.loadRoomByUserId(userID).enqueue(new Callback<List<Room>>() {
+        rmaRealtimeService.loadRoomByUserId(userId).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.body() != null) {

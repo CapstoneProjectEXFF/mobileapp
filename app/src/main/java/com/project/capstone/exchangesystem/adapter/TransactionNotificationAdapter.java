@@ -27,6 +27,10 @@ public class TransactionNotificationAdapter extends BaseAdapter {
     Context context;
     //    ArrayList<Transaction> transactions;
     ArrayList<Object> notifications;
+    int idMe, yourUserId;
+    String authorization;
+    SharedPreferences sharedPreferences;
+    RmaAPIService rmaAPIService;
 
 
     public TransactionNotificationAdapter(Context context, ArrayList<Object> notifications) {
@@ -120,11 +124,10 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-
-        SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
-        final int idMe = sharedPreferences.getInt("userId", 0);
-        final String authorization = sharedPreferences.getString("authorization", null);
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
+        idMe = sharedPreferences.getInt("userId", 0);
+        authorization = sharedPreferences.getString("authorization", null);
 
         View view = convertView;
         int type = getItemViewType(position);
@@ -236,25 +239,37 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .error(R.drawable.ic_no_image)
                     .into(imgProfileUser);
         } else if (c.getClass() == Room.class) {
-            Room room = (Room) c;
-            String otherUserName = "";
-            ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
-            TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
+            final Room room = (Room) c;
+            final ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
+            final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
             TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
-            List<UserRoom> listUser = room.getUsers();
-            for (int i = 0; i < listUser.size(); i++) {
-                if (listUser.get(i).getUserId() != idMe) {
-                    Picasso.with(context).load(listUser.get(i).getAvatar())
-                            .placeholder(R.drawable.ic_no_image)
-                            .error(R.drawable.ic_no_image)
-                            .into(imgSender);
-                    otherUserName = otherUserName + listUser.get(i).getUserName();
+            for (int i = 0; i < room.getUsers().size(); i++) {
+                if (room.getUsers().get(i).getUserId() != idMe) {
+                    yourUserId = room.getUsers().get(i).getUserId();
+
+
+                    break;
                 }
             }
-            txtNotification.setText("Phòng Trao Đổi của bạn và " + otherUserName + " đang hoạt động");
+            rmaAPIService.getUserById(yourUserId).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        User user = response.body();
+                        Picasso.with(context).load(user.getAvatar())
+                                .placeholder(R.drawable.ic_no_image)
+                                .error(R.drawable.ic_no_image)
+                                .into(imgSender);
+                        txtNotification.setText("Phòng Trao Đổi của bạn và " + user.getFullName() + " đang hoạt động");
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
         }
         return view;
     }
-
 }

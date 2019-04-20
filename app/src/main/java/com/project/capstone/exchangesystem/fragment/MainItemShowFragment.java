@@ -102,13 +102,13 @@ public class MainItemShowFragment extends Fragment {
                             intent.putExtra("resultList", result);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.no_item_found, Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
                     }
                 });
 

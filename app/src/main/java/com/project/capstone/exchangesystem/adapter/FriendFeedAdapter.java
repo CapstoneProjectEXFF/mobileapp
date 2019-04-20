@@ -101,13 +101,14 @@ public class FriendFeedAdapter extends BaseAdapter {
                             finalViewHolder.btnAddFriend.setVisibility(View.GONE);
                             finalViewHolder.btnDeclineRequest.setVisibility(View.VISIBLE);
                         } else {
-                            System.out.println("Fail Add Friend Request");
+
+                            System.out.println(context.getString(R.string.add_friend_error));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Relationship> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "Error Server", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), context.getString(R.string.error_request), Toast.LENGTH_LONG).show();
                     }
                 });
             }
