@@ -127,6 +127,11 @@
     <string name="share">Chia sẻ</string>
     <string name="category">Danh mục</string>
     <string name="add_image">Thêm hình ảnh</string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="donation_default_title">Bài quyên góp</string>
+    <string name="error_category">Vui lòng chọn danh mục.</string>
+    <string name="select_item">Chọn đồ dùng</string>
+  
     <string name="no_item_found">Không tìm thấy đồ vật</string>
     <string name="keyword_hint">Nhập từ khóa</string>
     <string name="edit_profile_btn">THAY ĐỔI</string>

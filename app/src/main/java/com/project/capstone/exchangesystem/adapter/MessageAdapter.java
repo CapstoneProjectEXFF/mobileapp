@@ -41,7 +41,7 @@ public class MessageAdapter extends BaseAdapter {
 
     Context context;
     List<Message> messages;
-    int myUserId, senderId, itemId;
+    int myUserId, senderId;
     User friendAccount;
 
     public MessageAdapter(Context context, List<Message> messages, int myUserId, User friendAccount) {
@@ -67,7 +67,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        TextView txtName, txtMessage;
+        TextView txtMessage;
         ImageView ivAvatar;
     }
 
@@ -88,7 +88,6 @@ public class MessageAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.send_message_layout, null);
         } else {
             convertView = layoutInflater.inflate(R.layout.receive_message_layout, null);
-            viewHolder.txtName = convertView.findViewById(R.id.txtName);
             viewHolder.ivAvatar = convertView.findViewById(R.id.ivAvatar);
         }
 
@@ -122,7 +121,6 @@ public class MessageAdapter extends BaseAdapter {
             viewHolder.txtMessage.setText(message.getMsg());
 
             if (myUserId != senderId) {
-                viewHolder.txtName.setText(friendAccount.getFullName());
                 Picasso.with(context).load(friendAccount.getAvatar())
                         .placeholder(R.drawable.ic_profile)
                         .error(R.drawable.ic_profile)

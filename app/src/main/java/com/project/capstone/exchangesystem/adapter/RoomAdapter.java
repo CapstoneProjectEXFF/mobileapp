@@ -3,24 +3,35 @@ package com.project.capstone.exchangesystem.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.Room;
+import com.project.capstone.exchangesystem.model.User;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     Context context;
     ArrayList<Room> rooms;
+    int userId;
     private final OnItemClickListener listener;
 
-    public RoomAdapter(Context context, ArrayList<Room> rooms, OnItemClickListener listener) {
+    public RoomAdapter(Context context, ArrayList<Room> rooms, int userId, OnItemClickListener listener) {
         this.context = context;
         this.rooms = rooms;
+        this.userId = userId;
         this.listener = listener;
     }
 
@@ -49,15 +60,35 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtRoomName;
+        public TextView txtRoomName, txtLastMsg;
+        public ImageView imgUser;
 
         public ViewHolder(@NonNull View view) {
             super(view);
             txtRoomName = view.findViewById(R.id.txtRoomName);
+            txtLastMsg = view.findViewById(R.id.txtLastMsg);
+            imgUser = view.findViewById(R.id.imgUser);
         }
 
         public void bind(final Room room, final OnItemClickListener listener) {
-            txtRoomName.setText(room.getRoom());
+
+            for (int i = 0; i < room.getUsers().size(); i++){
+                if (room.getUsers().get(i).getUserId() != userId){
+                    txtRoomName.setText(room.getUsers().get(i).getFullName());
+                    Picasso.with(context).load(room.getUsers().get(i).getAvatar())
+                            .placeholder(R.drawable.ic_no_image)
+                            .error(R.drawable.ic_no_image)
+                            .into(imgUser);
+                    break;
+                }
+            }
+
+            if (room.getMessages().size() > 0){
+                txtLastMsg.setText(room.getMessages().get(room.getMessages().size() - 1).getMsg());
+            } else {
+                txtLastMsg.setText("");
+            }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

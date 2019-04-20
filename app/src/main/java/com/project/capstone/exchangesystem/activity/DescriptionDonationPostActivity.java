@@ -37,13 +37,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DescriptionDonationPostActivity extends AppCompatActivity implements LoginDialogFragment.LoginDialogListener {
     Toolbar toolbar;
     ImageView imgUserDonation, imgDescriptionDonationPost;
-    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators, txtDonators, txtTargets;
+    TextView txtDescriptionDonationContent, txtAddressDonation, txtTimestampDonation, txtUserNameDonation, txtNoDonators, txtDonators, txtTargets, txtDonationName;
     ImageButton btnShare;
     Button btnDonate;
     UserSession userSession;
@@ -90,7 +93,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
     private void ActionToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(donationPost.getTitle());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,6 +222,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         txtDonators = findViewById(R.id.txtDonators);
         txtTargets = findViewById(R.id.txtTargets);
         rvTargets = findViewById(R.id.rvTargets);
+        txtDonationName = findViewById(R.id.txtDonationName);
 
         //share facebook
         callbackManager = CallbackManager.Factory.create();
@@ -370,8 +373,19 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
     private void setDonationPostInf(DonationPost donationPost) {
         txtDescriptionDonationContent.setText(donationPost.getContent());
         txtAddressDonation.setText(donationPost.getAddress());
-        txtTimestampDonation.setText(donationPost.getCreateTime().toString());
+
+        Date date = new Date();
+        date.setTime(donationPost.getCreateTime().getTime());
+        String formattedDate = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(date);
+
+        txtTimestampDonation.setText(formattedDate);
         txtUserNameDonation.setText(donationPost.getUser().getFullName());
+
+        if (donationPost.getTitle() != null){
+            txtDonationName.setText(donationPost.getTitle());
+        } else {
+            txtDonationName.setText(getString(R.string.donation_default_title));
+        }
 
         if (donationPost.getImages().size() > 0) {
             Picasso.with(getApplicationContext()).load(donationPost.getImages().get(0).getUrl())
@@ -409,19 +423,21 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
 
     private void getTargetStatusList() {
         targetStatusList = new ArrayList<>();
-        for (int i = 0; i < donationPost.getDonationPostTargets().size(); i++){
-            DonationPostTarget tmpTarget = donationPost.getDonationPostTargets().get(i);
-            TargetStatus targetStatus = new TargetStatus();
-            targetStatus.setCategoryId(tmpTarget.getCategoryId());
-            targetStatus.setCount(0);
-            for (int j = 0; j < donators.size(); j++){
-                if (donators.get(j).getItem().getCategory().getId() == tmpTarget.getCategoryId()){
-                    int tmpCount = targetStatus.getCount();
-                    tmpCount++;
-                    targetStatus.setCount(tmpCount);
+        if (donationPost.getDonationPostTargets() != null){
+            for (int i = 0; i < donationPost.getDonationPostTargets().size(); i++){
+                DonationPostTarget tmpTarget = donationPost.getDonationPostTargets().get(i);
+                TargetStatus targetStatus = new TargetStatus();
+                targetStatus.setCategoryId(tmpTarget.getCategoryId());
+                targetStatus.setCount(0);
+                for (int j = 0; j < donators.size(); j++){
+                    if (donators.get(j).getItem().getCategory().getId() == tmpTarget.getCategoryId()){
+                        int tmpCount = targetStatus.getCount();
+                        tmpCount++;
+                        targetStatus.setCount(tmpCount);
+                    }
                 }
+                targetStatusList.add(targetStatus);
             }
-            targetStatusList.add(targetStatus);
         }
     }
 

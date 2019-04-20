@@ -11,20 +11,36 @@
         android:id="@+id/inventoryToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/bg_gradient_dark"
         app:title="Kho của bạn"
         app:titleTextColor="@color/colorWhite">
 
     </android.support.v7.widget.Toolbar>
-    <Button
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:paddingHorizontal="16dp"-->
+        <!--android:background="@drawable/custom_button"-->
+        <!--android:onClick="toAddItemActivity"-->
+        <!--android:text="Thêm đồ dùng" />-->
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_margin="8dp"
-        android:paddingHorizontal="16dp"
-        android:background="@drawable/custom_button"
+        android:paddingRight="8dp"
         android:onClick="toAddItemActivity"
-        android:text="Thêm đồ dùng" />
+        android:textSize="10pt"
+        android:textStyle="bold"
+        android:textColor="@color/app_icon_color_start"
+        android:text="Thêm đồ dùng"
+        android:drawableRight="@drawable/round_add_to_photos_black_18"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/app_icon_color_start"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inventoryRecyclerView"
         android:layout_width="match_parent"

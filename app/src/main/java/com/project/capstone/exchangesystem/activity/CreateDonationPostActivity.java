@@ -68,6 +68,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     ProgressDialog progressDialog;
     DonationPostWrapper donationPostWrapper;
     ArrayList<DonationPostTarget> donationPostTargetList;
+    boolean checkSelectedCategory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +175,11 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
         String title = edtTitle.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
+        setDonationPostTargetList();
+
+        if (!checkSelectedCategory){
+            Toast.makeText(context, getString(R.string.error_category), Toast.LENGTH_SHORT).show();
+        } else if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length(), title.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -185,7 +190,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void setDonationPostData(String address, String content, String title) {
-        setDonationPostTargetList();
 
         DonationPost newPost = new DonationPost();
         newPost.setAddress(address);
@@ -211,6 +215,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         for (int i = 0; i < selectedCategoryList.size(); i++) {
             Category tmpCategory = selectedCategoryList.get(i);
             if (tmpCategory.isCheckSelectedCategory()) {
+                checkSelectedCategory = true;
                 DonationPostTarget donationPostTarget = new DonationPostTarget();
                 donationPostTarget.setCategoryId(tmpCategory.getId());
                 donationPostTarget.setTarget(tmpCategory.getNumOfItem());

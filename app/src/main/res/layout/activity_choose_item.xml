@@ -8,6 +8,14 @@
     android:background="@color/colorGrayWhite"
     tools:context=".activity.ChooseItemActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tbToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/select_item"
+        android:background="@drawable/bg_gradient_dark"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"/>
+
     <GridView
         android:id="@+id/grideviewChoose"
         android:layout_width="match_parent"
@@ -19,11 +27,20 @@
 
     <Button
         android:id="@+id/add"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textAlignment="center"
-        android:background="@drawable/custom_button"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_gradient_dark"
+        android:textSize="10pt"
+        android:textStyle="bold"
         android:onClick="addItem"
-        android:text="Add" />
+        android:text="@string/continuous"
+        android:textAllCaps="false"/>
 </LinearLayout>
