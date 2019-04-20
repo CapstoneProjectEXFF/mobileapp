@@ -156,8 +156,8 @@ public class TradeTabFragment extends Fragment {
         socketServer.setTradeTabFragment(this);
         getComponents();
 
-        setItemAdapter(MY_ITEM_TAG, 2);
-        setItemAdapter(YOUR_ITEM_TAG, 2);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         loadRoomData();
 
@@ -473,8 +473,8 @@ public class TradeTabFragment extends Fragment {
         myItemAdapter = tradeRealtimeActivity.getMyFinalItemAdapter();
         yourItemAdapter = tradeRealtimeActivity.getYourFinalItemAdapter();
 
-        setItemAdapter(MY_ITEM_TAG, 1);
-        setItemAdapter(YOUR_ITEM_TAG, 1);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         linearFinalList.setVisibility(View.VISIBLE);
         btnSendRequest.setVisibility(View.GONE);
@@ -753,8 +753,8 @@ public class TradeTabFragment extends Fragment {
         myItemAdapter = tradeRealtimeActivity.getMyItemAdapter();
         yourItemAdapter = tradeRealtimeActivity.getYourItemAdapter();
 
-        setItemAdapter(MY_ITEM_TAG, 2);
-        setItemAdapter(YOUR_ITEM_TAG, 2);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         linearTradeList.setVisibility(View.VISIBLE);
         btnSendRequest.setVisibility(View.VISIBLE);

@@ -30,6 +30,7 @@ import retrofit2.Response;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMINDER;
@@ -37,7 +38,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMI
 public class DescriptionItemActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener, LoginDialogFragment.LoginDialogListener {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
     ImageView imgDescriptionItem, imgAvatar;
-    TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
+    TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem, txtItemName, txtAddress;
     Button btnTrade;
     ImageButton btnShare;
     UserSession userSession;
@@ -164,8 +165,15 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
 
     private void setItemInf() {
         txtNameUserDescriotionItem.setText(item.getUser().getFullName());
-        txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
+
+        Date date = new Date();
+        date.setTime(item.getCreateTime().getTime());
+        String formattedDate = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(date);
+
+        txtDateDescriptionItem.setText(formattedDate);
         txtViewDescriptionItem.setText(item.getDescription());
+        txtItemName.setText(item.getName());
+        txtAddress.setText(item.getUser().getAddress());
 
         String url = "";
         if (item.getImage().size() > 0) {
@@ -195,7 +203,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     }
 
     private void actionToolbar() {
-        toolbarDescriptionItem.setTitle(item.getName());
+//        toolbarDescriptionItem.setTitle(item.getName());
         setSupportActionBar(toolbarDescriptionItem);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarDescriptionItem.setNavigationOnClickListener(new View.OnClickListener() {
@@ -221,6 +229,8 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         btnShare = findViewById(R.id.btnShare);
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
+        txtItemName = findViewById(R.id.txtItemName);
+        txtAddress = findViewById(R.id.txtAddress);
 
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override

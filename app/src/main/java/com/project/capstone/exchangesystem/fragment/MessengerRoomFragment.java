@@ -18,8 +18,10 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.TradeRealtimeActivity;
 import com.project.capstone.exchangesystem.adapter.RoomAdapter;
 import com.project.capstone.exchangesystem.model.Room;
+import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.squareup.picasso.Picasso;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -34,15 +36,17 @@ import static com.project.capstone.exchangesystem.constants.AppApi.WEBSERVER;
 
 public class MessengerRoomFragment extends Fragment {
 
-    RmaAPIService rmaRealtimeService;
+    RmaAPIService rmaRealtimeService, rmaAPIService;
     SharedPreferences sharedPreferences;
-    int userId;
+    int userId, yourUserId;
+    ;
     String authorization;
     List<String> nameRoomList;
     RecyclerView rvRoomList;
     RoomAdapter roomAdapter;
     ArrayList<Room> rooms;
     View view;
+    ArrayList<User> userAccountList;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,13 +68,41 @@ public class MessengerRoomFragment extends Fragment {
         authorization = sharedPreferences.getString("authorization", null);
 
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
+        rmaAPIService = RmaAPIUtils.getAPIService();
         rooms = new ArrayList<>();
+        userAccountList = new ArrayList<>();
+    }
 
-        if (authorization != null){
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_messenger_room, container, false);
+        rvRoomList = view.findViewById(R.id.rvRoomList);
+
+        roomAdapter = new RoomAdapter(view.getContext(), rooms, userId, new RoomAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Room room) {
+                Intent intent = new Intent(view.getContext(), TradeRealtimeActivity.class);
+                intent.putExtra("room", room);
+                startActivity(intent);
+            }
+        });
+
+        rvRoomList.setHasFixedSize(true);
+        rvRoomList.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 1));
+        rvRoomList.setAdapter(roomAdapter);
+
+        loadListRoom();
+
+        return view;
+    }
+
+    private void loadListRoom() {
+        if (authorization != null) {
             rmaRealtimeService.loadRoomByUserId(userId).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                    if (response.body() != null){
+                    if (response.body() != null) {
                         Log.i("room size: ", "" + response.body().size());
                         List<Room> tmpRooms = response.body();
                         rooms.clear();
@@ -85,30 +117,8 @@ public class MessengerRoomFragment extends Fragment {
 
                 }
             });
-//            mSocket.connect();
         }
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_messenger_room, container, false);
-        rvRoomList = view.findViewById(R.id.rvRoomList);
-
-        roomAdapter = new RoomAdapter(view.getContext(), rooms, new RoomAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Room room) {
-                Intent intent = new Intent(view.getContext(), TradeRealtimeActivity.class);
-                intent.putExtra("room", room);
-                startActivity(intent);
-            }
-        });
-        rvRoomList.setHasFixedSize(true);
-        rvRoomList.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 1));
-        rvRoomList.setAdapter(roomAdapter);
-
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

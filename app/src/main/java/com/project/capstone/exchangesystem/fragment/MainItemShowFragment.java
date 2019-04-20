@@ -80,7 +80,7 @@ public class MainItemShowFragment extends Fragment {
         authorization = sharedPreferences.getString("authorization", null);
         final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         final View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
-        gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(view.getContext(), 1);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         footerView = layoutInflater.inflate(R.layout.progressbar, null);

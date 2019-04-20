@@ -248,7 +248,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                             .placeholder(R.drawable.ic_no_image)
                             .error(R.drawable.ic_no_image)
                             .into(imgSender);
-                    otherUserName = otherUserName + listUser.get(i).getUserName();
+                    otherUserName = otherUserName + listUser.get(i).getFullName();
                 }
             }
             txtNotification.setText("Phòng Trao Đổi của bạn và " + otherUserName + " đang hoạt động");

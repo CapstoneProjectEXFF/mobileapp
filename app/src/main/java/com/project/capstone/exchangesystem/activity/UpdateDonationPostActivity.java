@@ -73,6 +73,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     ArrayList<DonationPostTarget> donationPostTargetList;
     DonationPostWrapper donationPostWrapper;
     ArrayList<Integer> removedTargetIds;
+    boolean checkSelectedCategory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +145,11 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     public boolean onOptionsItemSelected(MenuItem item) {
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0) {
+        setDonationPostTargetList();
+
+        if (!checkSelectedCategory){
+            Toast.makeText(context, getString(R.string.error_category), Toast.LENGTH_SHORT).show();
+        } else if (address.trim().length() == 0 || content.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -155,7 +160,6 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void setDonationPostData(String address, String content) {
-        setDonationPostTargetList();
 
         DonationPost tmpDonationPost = new DonationPost();
         tmpDonationPost.setId(donationPost.getId());
@@ -186,6 +190,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
         for (int i = 0; i < selectedCategoryList.size(); i++) {
             Category tmpCategory = selectedCategoryList.get(i);
             if (tmpCategory.isCheckSelectedCategory()) {
+                checkSelectedCategory = true;
                 DonationPostTarget donationPostTarget = new DonationPostTarget();
                 donationPostTarget.setCategoryId(tmpCategory.getId());
                 donationPostTarget.setTarget(tmpCategory.getNumOfItem());

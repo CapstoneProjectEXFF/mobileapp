@@ -136,10 +136,11 @@ public class UserProfileFragment extends Fragment {
 
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-            String avatar = "dsa";
-            if (sharedPreferences.contains("avatar")) {
-                avatar = avatar + sharedPreferences.getString("avatar", "");
-            }
+//            String avatar = "";
+            String avatar = sharedPreferences.getString("avatar", "");
+//            if (sharedPreferences.contains("avatar")) {
+//                avatar = avatar + sharedPreferences.getString("avatar", "");
+//            }
             String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "");
             String userName = sharedPreferences.getString("username", "");
             String status = sharedPreferences.getString("status", "");

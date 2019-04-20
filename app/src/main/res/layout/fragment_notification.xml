@@ -10,15 +10,14 @@
         android:id="@+id/notificationToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/bg_gradient_dark"
         app:title="@string/notification_title"
-        app:titleTextColor="@color/colorWhite">
+        app:titleTextColor="@color/colorWhite"/>
 
-    </android.support.v7.widget.Toolbar>
     <ListView
         android:id="@+id/notificationListview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </LinearLayout>
