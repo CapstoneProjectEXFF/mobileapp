@@ -235,7 +235,12 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
                         List<Item> tmpAvailableItems = new ArrayList<>();
                         for (int i = 0; i < result.size(); i++) {
                             if (result.get(i).getStatus().equals(ITEM_ENABLE)) {
-                                tmpAvailableItems.add(result.get(i));
+                                for (int j = 0; j < donationPost.getDonationPostTargets().size(); j++){
+                                    DonationPostTarget tmpTarget = donationPost.getDonationPostTargets().get(j);
+                                    if (result.get(i).getCategory().getId() == tmpTarget.getCategoryId()){
+                                        tmpAvailableItems.add(result.get(i));
+                                    }
+                                }
                             }
                         }
                         if (tmpAvailableItems.size() > 0) {

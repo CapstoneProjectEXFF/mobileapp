@@ -2,83 +2,98 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:title="Title">
-    </android.support.v7.widget.Toolbar>
+        app:title="Title" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
             <include
                 android:id="@+id/include"
-                layout="@layout/add_image_toolbar"
-                tools:layout_editor_absoluteX="8dp" />
+                layout="@layout/add_image_toolbar" />
 
             <EditText
                 android:id="@+id/edtTitle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
-                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/edt_whitebg"
-                android:hint="Tiêu đề"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="9dp"
+                android:hint="@string/donation_post_title"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
+                android:singleLine="true"
                 android:textColor="#000000"
                 android:textColorHint="#808080"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/edtAddress"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
+                android:layout_height="wrap_content"
                 android:background="@drawable/edt_whitebg"
-                android:hint="Địa chỉ"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="9dp"
+                android:hint="@string/donation_post_address"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
+                android:singleLine="true"
                 android:textColor="#000000"
                 android:textColorHint="#808080"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/round_keyboard_arrow_right_black_36"
+                android:drawableLeft="@drawable/round_format_list_bulleted_black_24"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
+                android:text="@string/donation_post_category"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/txtError"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/txt_nor_height"
+                android:layout_height="wrap_content"
                 android:background="@drawable/edt_whitebg"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="9dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
                 android:text="Mô tả"
                 android:textColor="@color/colorRed"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/edtContent"
                 android:layout_width="match_parent"
-                android:layout_height="550dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="350dp"
                 android:gravity="top"
-                android:hint="Mô tả chi tiết"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
+                android:hint="@string/donation_post_description"
+                android:paddingLeft="15dp"
+                android:paddingTop="9dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
                 android:textColor="#000000"
                 android:textColorHint="#808080"
-                android:textSize="20dp" />
-        </LinearLayout>
-    </ScrollView>
+                android:textSize="20sp" />
+
+    </LinearLayout>
 </LinearLayout>

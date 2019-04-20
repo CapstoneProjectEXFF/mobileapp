@@ -70,10 +70,11 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         if (appLinkData == null) { //check if app was opened from link or not
             GetInformation(-1);
         } else {
-            int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
+//            int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
+            int uriItemId = Integer.parseInt(appLinkData.toString().replace("http://35.247.191.68/item.html?id=", ""));
             GetInformation(uriItemId);
         }
-        actionToolbar();
+//        actionToolbar();
     }
 
     @Override
@@ -129,7 +130,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     private void GetInformation(int uriItemId) {
         if (uriItemId == -1) {
             item = (Item) getIntent().getSerializableExtra("descriptionItem");
-            setItemInf(item);
+            setItemInf();
         } else {
             sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
             authorization = sharedPreferences.getString("authorization", null);
@@ -142,7 +143,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 item = response.body();
-                                setItemInf(item);
+                                setItemInf();
                             } else {
                                 Log.i("Item", "null");
                                 Toast.makeText(getApplicationContext(), "exe", Toast.LENGTH_LONG).show();
@@ -161,8 +162,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         }
     }
 
-    private void setItemInf(Item item) {
-        toolbarDescriptionItem.setTitle(item.getName());
+    private void setItemInf() {
         txtNameUserDescriotionItem.setText(item.getUser().getFullName());
         txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
         txtViewDescriptionItem.setText(item.getDescription());
@@ -190,9 +190,12 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         if (item.getUser().getId() == idMe) {
             btnTrade.setVisibility(View.GONE);
         }
+
+        actionToolbar();
     }
 
     private void actionToolbar() {
+        toolbarDescriptionItem.setTitle(item.getName());
         setSupportActionBar(toolbarDescriptionItem);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarDescriptionItem.setNavigationOnClickListener(new View.OnClickListener() {
@@ -222,8 +225,11 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+//                        .setQuote("Test").setContentUrl(Uri.parse("https://exff-104b8.firebaseapp.com/item.html?id=" + item.getId())).build();
+
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote("Test").setContentUrl(Uri.parse("https://exff-104b8.firebaseapp.com/item.html?id=" + item.getId())).build();
+                        .setQuote("Test").setContentUrl(Uri.parse("http://35.247.191.68/item.html?id=" + item.getId())).build();
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     shareDialog.show(shareLinkContent);
                 }
@@ -236,7 +242,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     public void toTradeActivity(View view) {
         if (userSession.isUserLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
-            Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
+//            Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
             intent.putExtra("descriptionItem", item);
             startActivity(intent);
         } else {

@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,20 +26,29 @@ import android.widget.*;
 
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
+import com.project.capstone.exchangesystem.model.Category;
+import com.project.capstone.exchangesystem.model.DonationPostTarget;
+import com.project.capstone.exchangesystem.model.DonationPostWrapper;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.PostAction;
+import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.util.*;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    TextView txtError;
+    TextView txtError, txtCategory;
     LinearLayout btnAddImage;
     EditText edtContent, edtAddress, edtTitle;
     Context context;
@@ -52,15 +63,22 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     Image tmpImage;
     RecyclerView rvSelectedImages;
     List<Uri> listUri;
+    ArrayList<Category> selectedCategoryList;
+    RmaAPIService rmaAPIService;
+    ProgressDialog progressDialog;
+    DonationPostWrapper donationPostWrapper;
+    ArrayList<DonationPostTarget> donationPostTargetList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_donation_post);
         context = this;
+        loadProgressDialog();
         getComponents();
         setToolbar();
         setImageAdapter();
+        getCategoryData();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +87,50 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
                 optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+
+        txtCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChooseCategoryActivity.class);
+                intent.putExtra("selectedCategory", selectedCategoryList);
+                startActivityForResult(intent, CATEGORY_REQUEST);
+            }
+        });
+    }
+
+    private void loadProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+    }
+
+    private void getCategoryData() {
+        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        List<Category> tmpCategoryList;
+                        tmpCategoryList = response.body();
+                        for (int i = 0; i < tmpCategoryList.size(); i++) {
+                            selectedCategoryList.add(tmpCategoryList.get(i));
+                        }
+                        progressDialog.dismiss();
+                    } else {
+                        Log.i("loadCategory", "category null");
+                    }
+                } else {
+                    Log.i("loadCategory", "response unsucceed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.i("loadCategory", "failed on calling API");
             }
         });
     }
@@ -112,7 +174,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
         String title = edtTitle.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0){
+        if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length(), title.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -123,32 +185,51 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void setDonationPostData(String address, String content, String title) {
+        setDonationPostTargetList();
+
         DonationPost newPost = new DonationPost();
         newPost.setAddress(address);
         newPost.setContent(content);
         newPost.setTitle(title);
-        if (imageList.size() != 0){
+
+        donationPostWrapper.setDonationPost(newPost);
+        donationPostWrapper.setTargets(donationPostTargetList);
+
+        if (imageList.size() != 0) {
             listUri = new ArrayList<>();
-            for (int i = 0; i < imageList.size(); i++){
+            for (int i = 0; i < imageList.size(); i++) {
                 listUri.add(imageList.get(i).getUri());
             }
-            firebaseImg.uploadImagesToFireBase(context, listUri, null, newPost, null, authorization, DONATION_CREATE_ACTION, null);
+            firebaseImg.uploadImagesToFireBase(context, listUri, null, donationPostWrapper, null, authorization, DONATION_CREATE_ACTION, null);
         } else {
             List<String> listUrl = new ArrayList<>();
-            new PostAction().manageDonation(newPost, listUrl, authorization, context, DONATION_CREATE_ACTION);
+            new PostAction().manageDonation(donationPostWrapper, listUrl, authorization, context, DONATION_CREATE_ACTION);
+        }
+    }
+
+    private void setDonationPostTargetList() {
+        for (int i = 0; i < selectedCategoryList.size(); i++) {
+            Category tmpCategory = selectedCategoryList.get(i);
+            if (tmpCategory.isCheckSelectedCategory()) {
+                DonationPostTarget donationPostTarget = new DonationPostTarget();
+                donationPostTarget.setCategoryId(tmpCategory.getId());
+                donationPostTarget.setTarget(tmpCategory.getNumOfItem());
+
+                donationPostTargetList.add(donationPostTarget);
+            }
         }
     }
 
     private void notifyError(int addressLength, int contentLength, int titleLength) {
-        if (addressLength == 0){
+        if (addressLength == 0) {
             edtAddress.setHint(R.string.error_input_address);
             edtAddress.setHintTextColor(Color.RED);
         }
-        if (contentLength == 0){
+        if (contentLength == 0) {
             txtError.setText(R.string.error_input_content);
             txtError.setVisibility(View.VISIBLE);
         }
-        if (titleLength == 0){
+        if (titleLength == 0) {
             edtTitle.setText(R.string.error_input_title);
             edtTitle.setHintTextColor(Color.RED);
         }
@@ -171,7 +252,13 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && data != null){
+        if (requestCode == CATEGORY_REQUEST) {
+            //selected items but not add to recycleview yet
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");
+            }
+        } else if (resultCode == RESULT_OK && data != null) {
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
@@ -217,7 +304,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private Uri getUriFromCaptureImage(Intent data) {
-        Bitmap captureImg = (Bitmap)data.getExtras().get("data");
+        Bitmap captureImg = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         captureImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), captureImg, "CaptureIMG", null);
@@ -237,6 +324,11 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         authorization = sharedPreferences.getString("authorization", null);
         firebaseImg = new FirebaseImg();
         edtTitle = findViewById(R.id.edtTitle);
+        txtCategory = findViewById(R.id.txtCategory);
+        selectedCategoryList = new ArrayList<>();
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        donationPostWrapper = new DonationPostWrapper();
+        donationPostTargetList = new ArrayList<>();
     }
 
     @Override
@@ -258,7 +350,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
 
     private void takePhoto() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
             } else {
                 setCameraPermission();
@@ -299,7 +391,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     private void removeImage() {
         tmpImageList.remove(tmpImage);
         imageAdapter.setfilter(tmpImageList);
-        if (imageList.size() == 0){
+        if (imageList.size() == 0) {
             rvSelectedImages.setVisibility(View.GONE);
         }
     }

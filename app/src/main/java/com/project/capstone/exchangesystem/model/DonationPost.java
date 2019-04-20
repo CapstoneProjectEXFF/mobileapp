@@ -49,6 +49,10 @@ public class DonationPost implements Serializable {
     @Expose
     private List<Image> images;
 
+    @SerializedName("targets")
+    @Expose
+    private List<DonationPostTarget> donationPostTargets;
+
     private List<Integer> imageIds;
 
     public int getId() {
@@ -137,6 +141,14 @@ public class DonationPost implements Serializable {
 
     public void setImageIds(List<Integer> imageIds) {
         this.imageIds = imageIds;
+    }
+
+    public List<DonationPostTarget> getDonationPostTargets() {
+        return donationPostTargets;
+    }
+
+    public void setDonationPostTargets(List<DonationPostTarget> donationPostTargets) {
+        this.donationPostTargets = donationPostTargets;
     }
 }
 

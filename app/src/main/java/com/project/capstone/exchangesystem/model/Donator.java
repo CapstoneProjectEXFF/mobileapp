@@ -7,6 +7,7 @@ public class Donator implements Serializable {
     private int id;
     private String donatorName, avatarUrl;
     private List<String> itemNames;
+    private Item item;
 
     public Donator() {
     }
@@ -41,5 +42,13 @@ public class Donator implements Serializable {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }

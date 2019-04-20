@@ -86,8 +86,8 @@
     <string name="delete_item">Xóa</string>
     <string name="update_item">Chỉnh sửa thông tin</string>
     <string name="delete_item_noti">Xóa Thành Công</string>
-    <string name="error_server">Error Server</string>
-    <string name="error_request">Error Request</string>
+    <string name="error_server">Lỗi server!</string>
+    <string name="error_request">Xảy ra lỗi!</string>
     <string name="lock_donation">Khóa Thành Công</string>
     <string name="signup_error">Đăng Nhập Lại</string>
     <string name="edit_profile_success">Change User Profile Succesfully</string>
@@ -110,4 +110,22 @@
     <string name="rating_ques">Đánh giá của bạn</string>
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
+    <string name="comment_hint">Thêm bình luận</string>
+
+    <!--qrCode-->
+    <string name="qr_title">Quét mã QR</string>
+
+    <!--donationPost/item-->
+    <string name="donation_post_title">Tiêu đề</string>
+    <string name="donation_post_address">Địa chỉ</string>
+    <string name="donation_post_description">Mô tả chi tiết</string>
+    <string name="donation_post_category">Lựa chọn danh mục</string>
+    <string name="donation_post_number_of_item">Số lượng</string>
+    <string name="category_title">Tên danh mục</string>
+    <string name="donation_post_target">Mục tiêu</string>
+    <string name="donation_post_donators">Danh sách quyên góp</string>
+    <string name="item_name">Tên đồ dùng</string>
+    <string name="share">Chia sẻ</string>
+    <string name="category">Danh mục</string>
+    <string name="add_image">Thêm hình ảnh</string>
 </resources>
