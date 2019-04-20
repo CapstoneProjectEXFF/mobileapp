@@ -61,7 +61,7 @@ public class OwnDonationPost extends AppCompatActivity {
         authorization = sharedPreferences.getString("authorization", null);
 //        toolbar = findViewById(R.id.ownDonationToolbar);
         btnAddCharityPost = findViewById(R.id.btnAddCharityPost);
-        btnAddCharityPost.setVisibility(View.GONE);
+//        btnAddCharityPost.setVisibility(View.GONE);
         Intent intent = this.getIntent();
         if (intent.hasExtra("userDetail")) {
             userDetail = (User) intent.getSerializableExtra("userDetail");

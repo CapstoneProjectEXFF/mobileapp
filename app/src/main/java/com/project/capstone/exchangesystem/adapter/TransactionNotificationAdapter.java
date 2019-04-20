@@ -27,6 +27,10 @@ public class TransactionNotificationAdapter extends BaseAdapter {
     Context context;
     //    ArrayList<Transaction> transactions;
     ArrayList<Object> notifications;
+    int idMe, yourUserId;
+    String authorization;
+    SharedPreferences sharedPreferences;
+    RmaAPIService rmaAPIService;
 
 
     public TransactionNotificationAdapter(Context context, ArrayList<Object> notifications) {
@@ -70,61 +74,12 @@ public class TransactionNotificationAdapter extends BaseAdapter {
         return 3;
     }
 
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//
-//
-//        SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
-//        final int idMe = sharedPreferences.getInt("userId", 0);
-//
-//        TransactionNotificationAdapter.ViewHolder viewHolder = null;
-//        if (convertView == null) {
-//            viewHolder = new ViewHolder();
-//            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            convertView = layoutInflater.inflate(R.layout.transaction_notification, null);
-//            viewHolder.txtNotification = (TextView) convertView.findViewById(R.id.txtNotification);
-//            viewHolder.txtDateNoti = (TextView) convertView.findViewById(R.id.txtDateNoti);
-//            viewHolder.imgSender = (ImageView) convertView.findViewById(R.id.imgSender);
-//            convertView.setTag(viewHolder);
-//
-//        } else {
-//            viewHolder = (TransactionNotificationAdapter.ViewHolder) convertView.getTag();
-//        }
-//        Transaction transactions = (Transaction) getItem(position);
-//        String notification = "";
-//        if (transactions.getSenderId() == idMe && transactions.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
-//            notification = transactions.getReceiver().getFullName() + "đã đồng ý yêu cầu của bạn";
-//        } else if (transactions.getReceiverId() == idMe && transactions.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
-//            notification = transactions.getSender().getFullName() + " vừa gửi yêu cầu";
-//        } else if (transactions.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
-//            if (transactions.getReceiverId() == idMe) {
-//                notification = transactions.getSender().getFullName() + " vừa cập nhật yêu cầu";
-//            } else {
-//                notification = transactions.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
-//            }
-//        }
-//
-//        viewHolder.txtNotification.setText(notification);
-//
-//        Date date = new Date();
-//        date.setTime(transactions.getCreateTime().getTime());
-//        String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
-//        viewHolder.txtDateNoti.setText(formattedDate);
-//
-//        Picasso.with(context).load(transactions.getSender().getAvatar())
-//                .placeholder(R.drawable.ic_no_image)
-//                .error(R.drawable.ic_no_image)
-//                .into(viewHolder.imgSender);
-//        return convertView;
-//    }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
-
-        SharedPreferences sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
-        final int idMe = sharedPreferences.getInt("userId", 0);
-        final String authorization = sharedPreferences.getString("authorization", null);
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        sharedPreferences = ((Activity) context).getSharedPreferences("localData", MODE_PRIVATE);
+        idMe = sharedPreferences.getInt("userId", 0);
+        authorization = sharedPreferences.getString("authorization", null);
 
         View view = convertView;
         int type = getItemViewType(position);
@@ -236,11 +191,11 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .error(R.drawable.ic_no_image)
                     .into(imgProfileUser);
         } else if (c.getClass() == Room.class) {
-            Room room = (Room) c;
-            String otherUserName = "";
-            ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
-            TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
+            final Room room = (Room) c;
+            final ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
+            final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
             TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
+          
             List<UserRoom> listUser = room.getUsers();
             for (int i = 0; i < listUser.size(); i++) {
                 if (listUser.get(i).getUserId() != idMe) {
@@ -249,12 +204,11 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                             .error(R.drawable.ic_no_image)
                             .into(imgSender);
                     otherUserName = otherUserName + listUser.get(i).getFullName();
+
                 }
             }
             txtNotification.setText("Phòng Trao Đổi của bạn và " + otherUserName + " đang hoạt động");
-
         }
         return view;
     }
-
 }

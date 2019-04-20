@@ -104,8 +104,8 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     }
 
     private void deleteItem() {
-        System.out.println("test authorization " + authorization);
-        System.out.println("test id " + item.getId());
+
+
         rmaAPIService.deleteItemWithId(authorization, item.getId()).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {

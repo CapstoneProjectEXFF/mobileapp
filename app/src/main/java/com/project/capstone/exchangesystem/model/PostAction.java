@@ -17,7 +17,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,6 +142,9 @@ public class PostAction {
                                 //go to main screen
                                 Intent intent = new Intent(context, MainActivity.class);
                                 context.startActivity(intent);
+
+                                //TODO on activity result
+
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
