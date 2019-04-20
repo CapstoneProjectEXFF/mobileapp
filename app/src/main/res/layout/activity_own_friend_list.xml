@@ -19,19 +19,19 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:background="@drawable/round_perm_contact_calendar_black_24"
+                android:background="@drawable/round_perm_contact_calendar_white_18"
                 android:id="@+id/btnSyncContact"
-                android:layout_width="@dimen/feed_item_profile_pic"
-                android:layout_height="@dimen/feed_item_profile_pic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:onClick="toSyncContact"
                 app:layout_constraintEnd_toStartOf="@+id/btnExploreFriend"
                 android:theme="@style/Widget.AppCompat.Button" />
 
             <ImageButton
-                android:background="@drawable/round_explore_black_24"
+                android:background="@drawable/round_explore_white_18"
                 android:id="@+id/btnExploreFriend"
-                android:layout_width="@dimen/feed_item_profile_pic"
-                android:layout_height="@dimen/feed_item_profile_pic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:onClick="toExploreFriend"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:theme="@style/Widget.AppCompat.Button" />
