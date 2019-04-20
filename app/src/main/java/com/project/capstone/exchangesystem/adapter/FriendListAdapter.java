@@ -93,7 +93,6 @@ public class FriendListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Map<String, String> bodyUnfriend = new HashMap<String, String>();
                 bodyUnfriend.put("id", String.valueOf(relationshipItem.getId()));
-                System.out.println("test " + relationshipItem.getId());
 
                 rmaAPIService.unfriend(authorization, bodyUnfriend).enqueue(new Callback<ExffMessage>() {
                     @Override

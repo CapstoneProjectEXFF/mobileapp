@@ -27,6 +27,9 @@ import android.widget.*;
 
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
+import com.project.capstone.exchangesystem.model.Category;
+import com.project.capstone.exchangesystem.model.DonationPostTarget;
+import com.project.capstone.exchangesystem.model.DonationPostWrapper;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
 import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.PostAction;
@@ -35,6 +38,7 @@ import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.squareup.picasso.Picasso;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,7 +51,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class UpdateDonationPostActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    TextView txtError;
+    TextView txtError, txtCategory;
     RmaAPIService rmaAPIService;
     List<Integer> removedImageIds;
     LinearLayout btnAddImage;
@@ -63,16 +67,25 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     ArrayList<Image> imageList, tmpImageList;
     Image tmpImage;
     RecyclerView rvSelectedImages;
+    DonationPost donationPost;
+    ArrayList<Category> selectedCategoryList;
+    List<DonationPostTarget> targets;
+    ArrayList<DonationPostTarget> donationPostTargetList;
+    DonationPostWrapper donationPostWrapper;
+    ArrayList<Integer> removedTargetIds;
+    boolean checkSelectedCategory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_donation_post);
         context = this;
+        loadProgressDialog();
         getComponents();
         setToolbar();
         setImageAdapter();
         loadDonationPost();
+        getCategoryData();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +94,15 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
                 optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+
+        txtCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChooseCategoryActivity.class);
+                intent.putExtra("selectedCategory", selectedCategoryList);
+                startActivityForResult(intent, CATEGORY_REQUEST);
             }
         });
     }
@@ -123,7 +145,11 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     public boolean onOptionsItemSelected(MenuItem item) {
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0){
+        setDonationPostTargetList();
+
+        if (!checkSelectedCategory){
+            Toast.makeText(context, getString(R.string.error_category), Toast.LENGTH_SHORT).show();
+        } else if (address.trim().length() == 0 || content.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -134,86 +160,77 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void setDonationPostData(String address, String content) {
-        DonationPost donationPost = new DonationPost();
-        donationPost.setId(donationPostId);
-        donationPost.setTitle(donationPostTitle);
-        donationPost.setContent(content);
-        donationPost.setAddress(address);
-        donationPost.setImageIds(removedImageIds);
+
+        DonationPost tmpDonationPost = new DonationPost();
+        tmpDonationPost.setId(donationPost.getId());
+        tmpDonationPost.setTitle(donationPostTitle);
+        tmpDonationPost.setContent(content);
+        tmpDonationPost.setAddress(address);
+
+        donationPostWrapper.setDonationPost(tmpDonationPost);
+        donationPostWrapper.setRemovedUrlIds(removedImageIds);
+        donationPostWrapper.setTargets(donationPostTargetList);
+        donationPostWrapper.setRemoveTargets(removedTargetIds);
 
         List<Uri> listUri = new ArrayList<>();
-        for (int i = 0; i < imageList.size(); i++){
-            if (imageList.get(i).getUri() != null){
+        for (int i = 0; i < imageList.size(); i++) {
+            if (imageList.get(i).getUri() != null) {
                 listUri.add(imageList.get(i).getUri());
             }
         }
-        if (listUri.size() != 0){
-            firebaseImg.uploadImagesToFireBase(context, listUri, null, donationPost, null, authorization, ITEM_UPDATE_ACTION, null);
+        if (listUri.size() != 0) {
+            firebaseImg.uploadImagesToFireBase(context, listUri, null, donationPostWrapper, null, authorization, DONATION_UPDATE_ACTION, null);
         } else {
             List<String> listUrl = new ArrayList<>();
-            new PostAction().manageDonation(donationPost, listUrl, authorization, context, DONATION_UPDATE_ACTION);
+            new PostAction().manageDonation(donationPostWrapper, listUrl, authorization, context, DONATION_UPDATE_ACTION);
+        }
+    }
+
+    private void setDonationPostTargetList() {
+        for (int i = 0; i < selectedCategoryList.size(); i++) {
+            Category tmpCategory = selectedCategoryList.get(i);
+            if (tmpCategory.isCheckSelectedCategory()) {
+                checkSelectedCategory = true;
+                DonationPostTarget donationPostTarget = new DonationPostTarget();
+                donationPostTarget.setCategoryId(tmpCategory.getId());
+                donationPostTarget.setTarget(tmpCategory.getNumOfItem());
+
+                for (int j = 0; j < targets.size(); j++) {
+                    if (tmpCategory.getId() == targets.get(j).getCategoryId()) {
+                        donationPostTarget.setDonationPostId(donationPost.getId());
+                        donationPostTarget.setId(targets.get(j).getId());
+                    }
+                }
+                donationPostTargetList.add(donationPostTarget);
+            }
         }
     }
 
     private void notifyError(int addressLength, int contentLength) {
-        if (addressLength == 0){
+        if (addressLength == 0) {
             edtAddress.setHint(R.string.error_input_address);
             edtAddress.setHintTextColor(Color.RED);
         }
-        if (contentLength == 0){
+        if (contentLength == 0) {
             txtError.setText(R.string.error_input_content);
             txtError.setVisibility(View.VISIBLE);
         }
     }
 
     private void loadDonationPost() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(R.string.data_loading_noti);
-        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-        if (authorization != null) {
-            rmaAPIService.getDonationPostById(authorization, donationPostId).enqueue(new Callback<DonationPost>() {
-                @Override
-                public void onResponse(Call<DonationPost> call, Response<DonationPost> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            edtTitle.setText(response.body().getTitle());
-                            donationPostTitle = response.body().getTitle();
-                            edtTitle.setEnabled(false);
-                            edtContent.setText(response.body().getContent());
-                            edtAddress.setText(response.body().getAddress());
-                            for (int i = 0; i < response.body().getImages().size(); i++) {
-                                Image newImage = new Image();
-                                newImage.setUrl(response.body().getImages().get(i).getUrl());
-                                newImage.setId(response.body().getImages().get(i).getId());
-                                tmpImageList.add(newImage);
-                            }
-                            imageAdapter.setfilter(tmpImageList);
-                            rvSelectedImages.setVisibility(View.VISIBLE);
-                            progressDialog.dismiss();
-                        } else {
-                            notifyLoadingError("loadDonationPost", "httpstatus " + response.code());
-                        }
-                    } else {
-                        notifyLoadingError("loadDonationPost", "cannot load donation post");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DonationPost> call, Throwable t) {
-                    notifyLoadingError("loadDonationPost", "failed on calling API");
-                }
-            });
+        edtTitle.setText(donationPost.getTitle());
+        donationPostTitle = donationPost.getTitle();
+        edtTitle.setEnabled(false);
+        edtContent.setText(donationPost.getContent());
+        edtAddress.setText(donationPost.getAddress());
+        for (int i = 0; i < donationPost.getImages().size(); i++) {
+            Image newImage = new Image();
+            newImage.setUrl(donationPost.getImages().get(i).getUrl());
+            newImage.setId(donationPost.getImages().get(i).getId());
+            tmpImageList.add(newImage);
         }
-    }
-
-    private void notifyLoadingError(String tag, String msg) {
-        progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
-        Log.i(tag, msg);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        imageAdapter.setfilter(tmpImageList);
+        rvSelectedImages.setVisibility(View.VISIBLE);
     }
 
     private void getImageFromGallery() {
@@ -233,7 +250,21 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && data != null){
+        if (requestCode == CATEGORY_REQUEST) {
+            //selected items but not add to recycleview yet
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");
+                for (int i = 0; i < selectedCategoryList.size(); i++) {
+                    Category tmpCategory = selectedCategoryList.get(i);
+                    for (int j = 0; j < targets.size(); j++) {
+                        if (tmpCategory.getId() == targets.get(j).getCategoryId() && !tmpCategory.isCheckSelectedCategory()) {
+                            removedTargetIds.add(tmpCategory.getId());
+                        }
+                    }
+                }
+            }
+        } else if (resultCode == RESULT_OK && data != null) {
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
@@ -289,7 +320,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private Uri getUriFromCaptureImage(Intent data) {
-        Bitmap captureImg = (Bitmap)data.getExtras().get("data");
+        Bitmap captureImg = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         captureImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), captureImg, "CaptureIMG", null);
@@ -313,8 +344,13 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
         edtTitle = findViewById(R.id.edtTitle);
         btnAddImage = findViewById(R.id.btnAddImage);
 
-        Intent intent = getIntent();
-        donationPostId = intent.getIntExtra("donationPostId", 0);
+        donationPost = (DonationPost) getIntent().getSerializableExtra("donationPost");
+        selectedCategoryList = new ArrayList<>();
+        targets = donationPost.getDonationPostTargets();
+        txtCategory = findViewById(R.id.txtCategory);
+        donationPostTargetList = new ArrayList<>();
+        donationPostWrapper = new DonationPostWrapper();
+        removedTargetIds = new ArrayList<>();
     }
 
     @Override
@@ -336,7 +372,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
 
     private void takePhoto() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
             } else {
                 setCameraPermission();
@@ -361,14 +397,14 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST);
             }
         }
-        if(requestCode == EXTERNAL_STORAGE_REQUEST){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == EXTERNAL_STORAGE_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setCameraPermission();
             }
         }
@@ -379,8 +415,50 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
         firebaseImg.deleteImageOnFirebase(tmpImage.getUrl());
         tmpImageList.remove(tmpImage);
         imageAdapter.setfilter(tmpImageList);
-        if (imageList.size() == 0){
+        if (imageList.size() == 0) {
             rvSelectedImages.setVisibility(View.GONE);
         }
+    }
+
+    private void getCategoryData() {
+        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        List<Category> tmpCategoryList;
+                        tmpCategoryList = response.body();
+                        for (int i = 0; i < tmpCategoryList.size(); i++) {
+                            Category tmpCategory = tmpCategoryList.get(i);
+                            for (int j = 0; j < targets.size(); j++) {
+                                if (tmpCategory.getId() == targets.get(j).getCategoryId()) {
+                                    tmpCategory.setCheckSelectedCategory(true);
+                                    tmpCategory.setNumOfItem(targets.get(j).getTarget());
+                                }
+                            }
+                            selectedCategoryList.add(tmpCategory);
+                        }
+                        progressDialog.dismiss();
+                    } else {
+                        Log.i("loadCategory", "category null");
+                    }
+                } else {
+                    Log.i("loadCategory", "response unsucceed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.i("loadCategory", "failed on calling API");
+            }
+        });
+    }
+
+    private void loadProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 }

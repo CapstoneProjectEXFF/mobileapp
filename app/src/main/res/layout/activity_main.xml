@@ -24,9 +24,10 @@
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@color/colorPrimaryLight"
-        app:itemTextColor="@color/colorPrimaryLight"
+        android:background="@drawable/bg_gradient_dark"
+
+        app:itemIconTint="@color/grey"
+        app:itemTextColor="@color/grey"
         app:menu="@menu/menu_bottombar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

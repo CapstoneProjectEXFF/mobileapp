@@ -80,7 +80,7 @@ public class MainItemShowFragment extends Fragment {
         authorization = sharedPreferences.getString("authorization", null);
         final RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
         final View view = inflater.inflate(R.layout.fragment_main_item_show, container, false);
-        gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(view.getContext(), 1);
         marker_progress = (ProgressBar) view.findViewById(R.id.marker_progress);
         LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         footerView = layoutInflater.inflate(R.layout.progressbar, null);
@@ -102,13 +102,13 @@ public class MainItemShowFragment extends Fragment {
                             intent.putExtra("resultList", result);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.no_item_found, Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "No Item is found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_request, Toast.LENGTH_LONG).show();
                     }
                 });
 

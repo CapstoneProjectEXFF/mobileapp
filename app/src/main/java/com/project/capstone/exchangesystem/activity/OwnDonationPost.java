@@ -27,7 +27,7 @@ import java.util.List;
 public class OwnDonationPost extends AppCompatActivity {
 
     public int idUser;
-    Toolbar toolbar;
+//    Toolbar toolbar;
     ListView listView;
     TextView btnAdd;
     MainCharityPostAdapter mainCharityPostAdapter;
@@ -52,16 +52,16 @@ public class OwnDonationPost extends AppCompatActivity {
         setContentView(R.layout.fragment_main_charity_post);
         direct();
         getData();
-        actionToolbar();
+//        actionToolbar();
     }
 
     private void direct() {
         rmaAPIService = RmaAPIUtils.getAPIService();
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
-        toolbar = findViewById(R.id.ownDonationToolbar);
+//        toolbar = findViewById(R.id.ownDonationToolbar);
         btnAddCharityPost = findViewById(R.id.btnAddCharityPost);
-        btnAddCharityPost.setVisibility(View.GONE);
+//        btnAddCharityPost.setVisibility(View.GONE);
         Intent intent = this.getIntent();
         if (intent.hasExtra("userDetail")) {
             userDetail = (User) intent.getSerializableExtra("userDetail");
@@ -103,16 +103,16 @@ public class OwnDonationPost extends AppCompatActivity {
         this.reloadNeed = false;
     }
 
-    private void actionToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
+//    private void actionToolbar() {
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+//    }
 
     private void getData() {
         rmaAPIService.getDonationPostByUserId(idUser).enqueue(new Callback<List<DonationPost>>() {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,8 +15,10 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.TradeRealtimeActivity;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Message;
+import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +41,14 @@ public class MessageAdapter extends BaseAdapter {
 
     Context context;
     List<Message> messages;
-    int myUserId, senderId, itemId;
-    String yourName;
+    int myUserId, senderId;
+    User friendAccount;
 
-    public MessageAdapter(Context context, List<Message> messages, int myUserId, String yourName) {
+    public MessageAdapter(Context context, List<Message> messages, int myUserId, User friendAccount) {
         this.context = context;
         this.messages = messages;
         this.myUserId = myUserId;
-        this.yourName = yourName;
+        this.friendAccount = friendAccount;
     }
 
     @Override
@@ -64,7 +67,8 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        TextView txtName, txtMessage;
+        TextView txtMessage;
+        ImageView ivAvatar;
     }
 
     @Override
@@ -84,7 +88,7 @@ public class MessageAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.send_message_layout, null);
         } else {
             convertView = layoutInflater.inflate(R.layout.receive_message_layout, null);
-            viewHolder.txtName = convertView.findViewById(R.id.txtName);
+            viewHolder.ivAvatar = convertView.findViewById(R.id.ivAvatar);
         }
 
         viewHolder.txtMessage = convertView.findViewById(R.id.txtMessage);
@@ -99,9 +103,9 @@ public class MessageAdapter extends BaseAdapter {
                 case USER_CANCELED_TRADE_CONFIRM_MESSAGE:
                     setNoti(message, context.getString(R.string.user_canceled_confirm_trade), viewHolder);
                     break;
-                case USER_RESET_TRADE_MESSAGE:
-                    setNoti(message, context.getString(R.string.user_reseted_trade), viewHolder);
-                    break;
+//                case USER_RESET_TRADE_MESSAGE:
+//                    setNoti(message, context.getString(R.string.user_reseted_trade), viewHolder);
+//                    break;
                 case TRADE_DONE_MESSAGE:
                     viewHolder.txtMessage.setText(context.getString(R.string.trade_done));
                     break;
@@ -117,7 +121,10 @@ public class MessageAdapter extends BaseAdapter {
             viewHolder.txtMessage.setText(message.getMsg());
 
             if (myUserId != senderId) {
-                viewHolder.txtName.setText(message.getSender());
+                Picasso.with(context).load(friendAccount.getAvatar())
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.ic_profile)
+                        .into(viewHolder.ivAvatar);
             }
         }
 
@@ -156,7 +163,7 @@ public class MessageAdapter extends BaseAdapter {
         if (tmpUserId == myUserId) {
             noti = context.getString(R.string.me_confirmed) + " " + content;
         } else {
-            noti = yourName + " " + content;
+            noti = friendAccount.getFullName() + " " + content;
         }
 
         viewHolder.txtMessage.setText(noti);

@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.CategoryAdapter;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
@@ -35,6 +36,7 @@ import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,7 +52,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     TextView txtError;
     Spinner spCategory;
     LinearLayout btnAddImage;
-    EditText edtItemName, edtItemDes, edtItemAddress;
+    EditText edtItemName, edtItemDes;
     Spinner spPrivacy;
     Context context;
     String authorization;
@@ -127,46 +129,41 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String itemName = edtItemName.getText().toString();
-        String itemAddress = edtItemAddress.getText().toString();
         String itemDes = edtItemDes.getText().toString();
-        if (itemName.trim().length() == 0 || itemAddress.trim().length() == 0 || itemDes.trim().length() == 0 || imageList.size() == 0) {
-            notifyError(itemName.trim().length(), itemAddress.trim().length(), itemDes.trim().length());
+
+        if (itemName.trim().length() == 0 || itemDes.trim().length() == 0 || imageList.size() == 0) {
+            notifyError(itemName.trim().length(), itemDes.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
-                setItemData(itemName, itemAddress, itemDes);
+                setItemData(itemName, itemDes);
             }
         }
         return true;
     }
 
-    private void setItemData(String itemName, String itemAddress, String itemDes) {
+    private void setItemData(String itemName, String itemDes) {
         Item item = new Item();
         item.setName(itemName);
-        item.setAddress(itemAddress);
         item.setDescription(itemDes);
         item.setPrivacy("" + spPrivacy.getSelectedItemPosition());
         item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
         List<Uri> listUri = new ArrayList<>();
-        for (int i = 0; i < imageList.size(); i++){
+        for (int i = 0; i < imageList.size(); i++) {
             listUri.add(imageList.get(i).getUri());
         }
         firebaseImg.uploadImagesToFireBase(context, listUri, item, null, null, authorization, ITEM_CREATE_ACTION, null);
     }
 
-    private void notifyError(int nameLength, int addressLength, int desLength) {
+    private void notifyError(int nameLength, int desLength) {
         if (nameLength == 0) {
             edtItemName.setHint(R.string.error_input_itemName);
             edtItemName.setHintTextColor(Color.RED);
-        }
-        if (addressLength == 0) {
-            edtItemAddress.setHint(R.string.error_input_address);
-            edtItemAddress.setHintTextColor(Color.RED);
         }
         if (desLength == 0) {
             txtError.setText(R.string.error_input_itemDesciption);
             txtError.setVisibility(View.VISIBLE);
         }
-        if (imageList.size() == 0){
+        if (imageList.size() == 0) {
             Toast.makeText(getApplicationContext(), R.string.error_input_image, Toast.LENGTH_LONG).show();
         }
     }
@@ -188,7 +185,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && data != null){
+        if (resultCode == RESULT_OK && data != null) {
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
@@ -234,7 +231,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private Uri getUriFromCaptureImage(Intent data) {
-        Bitmap captureImg = (Bitmap)data.getExtras().get("data");
+        Bitmap captureImg = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         captureImg.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), captureImg, "CaptureIMG", null);
@@ -258,11 +255,9 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
                         for (int i = 0; i < tmpCategoryList.size(); i++) {
                             categoryList.add(tmpCategoryList.get(i).getName());
                         }
-//                        setDataForSpinner(spCategory, categoryList);
 
                         categoryAdapter = new CategoryAdapter(context, tmpCategoryList);
                         spCategory.setAdapter(categoryAdapter);
-//                        setDataForCategorySpinner(spCategory, categoryList);
                         progressDialog.dismiss();
                     } else {
                         notifyLoadingError("loadCategory", "httpstatus" + response.code());
@@ -294,7 +289,6 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
-        edtItemAddress = findViewById(R.id.edtItemAddress);
         spPrivacy = findViewById(R.id.spPrivacy);
         spPrivacy.setPopupBackgroundResource(R.color.white);
         rmaAPIService = RmaAPIUtils.getAPIService();
@@ -322,7 +316,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         spinner.setAdapter(dataAdapter);
     }
 
-    private void setDataForCategorySpinner(Spinner spinner, List<String> dataArray){
+    private void setDataForCategorySpinner(Spinner spinner, List<String> dataArray) {
 
     }
 
@@ -345,7 +339,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
 
     private void takePhoto() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
             } else {
                 setCameraPermission();
@@ -370,14 +364,14 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST);
             }
         }
-        if(requestCode == EXTERNAL_STORAGE_REQUEST){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == EXTERNAL_STORAGE_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setCameraPermission();
             }
         }
@@ -386,7 +380,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     private void removeImage() {
         tmpImageList.remove(tmpImage);
         imageAdapter.setfilter(tmpImageList);
-        if (imageList.size() == 0){
+        if (imageList.size() == 0) {
             rvSelectedImages.setVisibility(View.GONE);
         }
     }

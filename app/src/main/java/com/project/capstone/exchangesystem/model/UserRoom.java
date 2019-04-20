@@ -11,9 +11,9 @@ public class UserRoom implements Serializable {
     @Expose
     private int userId;
 
-    @SerializedName("userName")
+    @SerializedName("fullName")
     @Expose
-    private String userName;
+    private String fullName;
 
     @SerializedName("item")
     @Expose
@@ -33,14 +33,6 @@ public class UserRoom implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public List<String> getItem() {
@@ -65,5 +57,13 @@ public class UserRoom implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

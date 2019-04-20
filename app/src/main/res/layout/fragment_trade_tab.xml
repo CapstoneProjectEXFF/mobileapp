@@ -23,29 +23,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:weightSum="2"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="2">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:paddingBottom="4dp"
             android:layout_weight="1"
             android:background="@drawable/bg_border_trade"
+            android:paddingBottom="4dp"
             tools:ignore="NestedWeights">
 
             <TextView
+                android:id="@+id/textView5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/trade_receive_item"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/rvYourItems"
+                android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,15 +52,17 @@
                 android:id="@+id/btnChooseYourItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:background="@drawable/round_add_to_photos_black_36"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:background="@drawable/round_add_to_photos_black_36"
                 android:text="@string/trade_add_receive_item"
+                app:layout_constraintBottom_toBottomOf="@+id/textView5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/textView5" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvYourItems"
@@ -70,32 +71,32 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/colorGrayWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnChooseYourItems" />
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="4dp"
-            android:paddingBottom="4dp"
-            android:background="@drawable/bg_border_trade">
+            android:layout_weight="1"
+            android:background="@drawable/bg_border_trade"
+            android:paddingBottom="4dp">
 
             <TextView
+                android:id="@+id/textView4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/trade_send_item"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/rvMyItems"
+                android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,30 +104,31 @@
                 android:id="@+id/btnChooseMyItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/round_add_to_photos_black_36"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:background="@drawable/round_add_to_photos_black_36"
                 android:text="@string/trade_add_send_item"
+                app:layout_constraintBottom_toBottomOf="@+id/textView4"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/textView4" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvMyItems"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/colorGrayWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnChooseMyItems" />
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 
@@ -158,7 +160,8 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/trade_receive_item"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="24sp"
+                android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -194,7 +197,8 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/trade_send_item"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="24sp"
+                android:textSize="10pt"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/rvMyFinalItems"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -230,8 +234,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="2.5dp"
+            android:paddingBottom="7dp"
             android:layout_weight="1"
-            android:background="@drawable/custom_button"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_gradient_dark"
+            android:textAppearance="@style/text_toolbar"
             android:text="@string/cancel" />
 
         <Button
@@ -239,8 +246,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2.5dp"
+            android:paddingBottom="7dp"
             android:layout_weight="1"
-            android:background="@drawable/custom_button"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_gradient_dark"
+            android:textAppearance="@style/text_toolbar"
             android:text="@string/finish" />
 
     </LinearLayout>

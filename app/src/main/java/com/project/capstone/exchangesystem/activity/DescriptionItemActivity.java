@@ -30,6 +30,7 @@ import retrofit2.Response;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
 import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMINDER;
@@ -37,7 +38,7 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.LOGIN_REMI
 public class DescriptionItemActivity extends AppCompatActivity implements LoginOptionDialog.LoginOptionListener, LoginDialogFragment.LoginDialogListener {
     android.support.v7.widget.Toolbar toolbarDescriptionItem;
     ImageView imgDescriptionItem, imgAvatar;
-    TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem;
+    TextView txtDateDescriptionItem, txtNameUserDescriotionItem, txtViewDescriptionItem, txtItemName, txtAddress;
     Button btnTrade;
     ImageButton btnShare;
     UserSession userSession;
@@ -70,10 +71,11 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         if (appLinkData == null) { //check if app was opened from link or not
             GetInformation(-1);
         } else {
-            int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
+//            int uriItemId = Integer.parseInt(appLinkData.toString().replace("https://exff-104b8.firebaseapp.com/item.html?id=", ""));
+            int uriItemId = Integer.parseInt(appLinkData.toString().replace("http://35.247.191.68/item.html?id=", ""));
             GetInformation(uriItemId);
         }
-        actionToolbar();
+//        actionToolbar();
     }
 
     @Override
@@ -102,8 +104,8 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     }
 
     private void deleteItem() {
-        System.out.println("test authorization " + authorization);
-        System.out.println("test id " + item.getId());
+
+
         rmaAPIService.deleteItemWithId(authorization, item.getId()).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
@@ -129,7 +131,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     private void GetInformation(int uriItemId) {
         if (uriItemId == -1) {
             item = (Item) getIntent().getSerializableExtra("descriptionItem");
-            setItemInf(item);
+            setItemInf();
         } else {
             sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
             authorization = sharedPreferences.getString("authorization", null);
@@ -142,7 +144,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 item = response.body();
-                                setItemInf(item);
+                                setItemInf();
                             } else {
                                 Log.i("Item", "null");
                                 Toast.makeText(getApplicationContext(), "exe", Toast.LENGTH_LONG).show();
@@ -161,11 +163,17 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         }
     }
 
-    private void setItemInf(Item item) {
-        toolbarDescriptionItem.setTitle(item.getName());
+    private void setItemInf() {
         txtNameUserDescriotionItem.setText(item.getUser().getFullName());
-        txtDateDescriptionItem.setText(convertDatetime(item.getCreateTime()));
+
+        Date date = new Date();
+        date.setTime(item.getCreateTime().getTime());
+        String formattedDate = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(date);
+
+        txtDateDescriptionItem.setText(formattedDate);
         txtViewDescriptionItem.setText(item.getDescription());
+        txtItemName.setText(item.getName());
+        txtAddress.setText(item.getUser().getAddress());
 
         String url = "";
         if (item.getImage().size() > 0) {
@@ -190,9 +198,12 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         if (item.getUser().getId() == idMe) {
             btnTrade.setVisibility(View.GONE);
         }
+
+        actionToolbar();
     }
 
     private void actionToolbar() {
+//        toolbarDescriptionItem.setTitle(item.getName());
         setSupportActionBar(toolbarDescriptionItem);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarDescriptionItem.setNavigationOnClickListener(new View.OnClickListener() {
@@ -218,12 +229,17 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
         btnShare = findViewById(R.id.btnShare);
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
+        txtItemName = findViewById(R.id.txtItemName);
+        txtAddress = findViewById(R.id.txtAddress);
 
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+//                        .setQuote("Test").setContentUrl(Uri.parse("https://exff-104b8.firebaseapp.com/item.html?id=" + item.getId())).build();
+
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote("Test").setContentUrl(Uri.parse("https://exff-104b8.firebaseapp.com/item.html?id=" + item.getId())).build();
+                        .setQuote("Test").setContentUrl(Uri.parse("http://35.247.191.68/item.html?id=" + item.getId())).build();
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     shareDialog.show(shareLinkContent);
                 }
@@ -236,7 +252,7 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
     public void toTradeActivity(View view) {
         if (userSession.isUserLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), TradeRealtimeActivity.class);
-            Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
+//            Item item = (Item) getIntent().getSerializableExtra("descriptionItem");
             intent.putExtra("descriptionItem", item);
             startActivity(intent);
         } else {

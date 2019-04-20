@@ -96,7 +96,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         public void bind(final Item item, final OnItemClickListener listener) {
             Date date = new Date();
             date.setTime(item.getCreateTime().getTime());
-            String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+            String formattedDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
             txtDateItem.setText(formattedDate);
             txtNameItem.setText(item.getName());
             String url = "";

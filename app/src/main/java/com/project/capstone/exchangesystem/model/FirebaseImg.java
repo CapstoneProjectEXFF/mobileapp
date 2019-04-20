@@ -37,10 +37,11 @@ public class FirebaseImg {
     public FirebaseImg() {
     }
 
-    public void uploadImagesToFireBase(final Context context, final List<Uri> selectedImages, final Item item, final DonationPost donationPost, final User user, final String authorization, final int action, final SharedPreferences.Editor editor) {
+    public void uploadImagesToFireBase(final Context context, final List<Uri> selectedImages, final Item item, final DonationPostWrapper donationPostWrapper, final User user, final String authorization, final int action, final SharedPreferences.Editor editor) {
         final List<String> urlList = new ArrayList<>();
         progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Đang tải hình ảnh...");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
         for (int i = 0; i < selectedImages.size(); i++) {
@@ -59,8 +60,8 @@ public class FirebaseImg {
                                         progressDialog.dismiss();
                                         if (item != null){
                                             postAction.manageItem(item, urlList, authorization, context, action);
-                                        } else if (donationPost != null) {
-                                            postAction.manageDonation(donationPost, urlList, authorization, context, action);
+                                        } else if (donationPostWrapper != null) {
+                                            postAction.manageDonation(donationPostWrapper, urlList, authorization, context, action);
                                         } else if (user != null) {
                                             postAction.manageUser(user, urlList.get(0), authorization, context, action, editor);
                                         }

@@ -1,21 +1,18 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.adapter.TradePagerAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
-import com.project.capstone.exchangesystem.fragment.TradeTabFragment;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Room;
 import com.project.capstone.exchangesystem.model.User;
@@ -24,17 +21,14 @@ import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.project.capstone.exchangesystem.constants.AppStatus.DELETE_IMAGE_OPTION;
-import static com.project.capstone.exchangesystem.constants.AppStatus.DONATE_ACTIVITY_IMAGE_FLAG;
-import static com.project.capstone.exchangesystem.constants.AppStatus.ITEM_ENABLE;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class TradeRealtimeActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
@@ -146,6 +140,7 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
             for (int i = 0; i < room.getUsers().size(); i++) {
                 if (room.getUsers().get(i).getUserId() != myUserId) {
                     yourUserId = room.getUsers().get(i).getUserId();
+                    System.out.println("test "+yourUserId);
                     break;
                 }
             }
@@ -288,6 +283,10 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
 
     public String getYourName() {
         return friendAccount.getFullName();
+    }
+
+    public User getFriendAccount() {
+        return friendAccount;
     }
 
     private Emitter.Listener onRoomReady = new Emitter.Listener() {

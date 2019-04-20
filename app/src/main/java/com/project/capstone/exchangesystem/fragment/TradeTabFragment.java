@@ -35,6 +35,7 @@ import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Room;
+import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.model.UserRoom;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -86,7 +87,7 @@ public class TradeTabFragment extends Fragment {
     String roomName, tmpRoomName, authorization, yourName;
     View view;
     Room room;
-    Boolean checkTradeConfirm = false, checkAddedItem = false;
+    Boolean checkTradeConfirm = false, checkAddedItem = false, checkTradeDone = false;
     Item item;
 
     SocketServer socketServer;
@@ -140,7 +141,6 @@ public class TradeTabFragment extends Fragment {
         socketServer.mSocket.on("trade-done", tradeDoneData);
         socketServer.mSocket.on("trade-reseted", tradeResetedData);
         socketServer.mSocket.on("trade-unconfirmed", unconfirmedTradeData);
-        //ko vo duoc trade done
     }
 
     @Override
@@ -156,8 +156,8 @@ public class TradeTabFragment extends Fragment {
         socketServer.setTradeTabFragment(this);
         getComponents();
 
-        setItemAdapter(MY_ITEM_TAG, 2);
-        setItemAdapter(YOUR_ITEM_TAG, 2);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         loadRoomData();
 
@@ -258,8 +258,9 @@ public class TradeTabFragment extends Fragment {
                         tmpYourSelectedItems.add(tmpItem);
                         yourItemAdapter.setfilter(tmpYourSelectedItems);
 
-                        if (checkAddedItem){
-                            setNotiByUserIdAndItemId(getString(R.string.user_added_item), tmpItem);;
+                        if (checkAddedItem) {
+                            setNotiByUserIdAndItemId(getString(R.string.user_added_item), tmpItem);
+                            ;
                             checkAddedItem = false;
                         }
 //                        }
@@ -344,9 +345,7 @@ public class TradeTabFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(getActivity().getApplicationContext(), "hello", Toast.LENGTH_SHORT).show();
                 } else {
-
                     JSONObject data = new JSONObject();
                     try {
                         data.put("room", roomName);
@@ -474,8 +473,8 @@ public class TradeTabFragment extends Fragment {
         myItemAdapter = tradeRealtimeActivity.getMyFinalItemAdapter();
         yourItemAdapter = tradeRealtimeActivity.getYourFinalItemAdapter();
 
-        setItemAdapter(MY_ITEM_TAG, 1);
-        setItemAdapter(YOUR_ITEM_TAG, 1);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         linearFinalList.setVisibility(View.VISIBLE);
         btnSendRequest.setVisibility(View.GONE);
@@ -493,6 +492,7 @@ public class TradeTabFragment extends Fragment {
                 transactionId = Integer.parseInt(tradeData.getString("transactionId"));
 
                 if (tmpRoomName.equals(roomName)) {
+                    checkTradeDone = true;
                     if (getActivity() == null) {
                         return;
                     } else {
@@ -500,23 +500,15 @@ public class TradeTabFragment extends Fragment {
                             @Override
                             public void run() {
                                 if (authorization != null) {
-                                    rmaRealtimeService.loadRoom(tmpRoomName).enqueue(new Callback<Room>() {
+                                    rmaAPIService.getTransactionByTransID(authorization, transactionId).enqueue(new Callback<TransactionRequestWrapper>() {
                                         @Override
-                                        public void onResponse(Call<Room> call, Response<Room> response) {
+                                        public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
                                             if (response.body() != null) {
-                                                JSONObject data = new JSONObject();
-                                                try {
-                                                    data.put("room", roomName);
-                                                    data.put("userId", myUserId);
-                                                    socketServer.emitTradeReset(data);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-//                                    String qrCode = response.body().getQrCode();
+                                                String qrCode = response.body().getTransaction().getQrCode();
 //                                    Log.i("tradeDone QRCode", qrCode);
 //                                    createQRCode(qrCode);
                                                 Intent intent = new Intent(getActivity().getApplicationContext(), TransactionDetailActivity.class);
-//                                    intent.putExtra("qrCode", qrCode);
+                                                intent.putExtra("qrCode", qrCode);
                                                 intent.putExtra("transactionId", transactionId);
                                                 startActivity(intent);
                                             } else {
@@ -525,7 +517,7 @@ public class TradeTabFragment extends Fragment {
                                         }
 
                                         @Override
-                                        public void onFailure(Call<Room> call, Throwable t) {
+                                        public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
                                             Log.i("tradeDoneData", t.getMessage());
                                         }
                                     });
@@ -671,43 +663,45 @@ public class TradeTabFragment extends Fragment {
         public void call(Object... args) {
             Log.i("tradeResetedData", args[0].toString());
 
-            JSONObject data = (JSONObject) args[0];
-            try {
-                tmpRoomName = data.getString("room");
-                final int userId = Integer.parseInt(data.getString("userId"));
+            if (!checkTradeDone) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    tmpRoomName = data.getString("room");
+                    final int userId = Integer.parseInt(data.getString("userId"));
 
-                if (tmpRoomName.equals(roomName)) {
-                    if (getActivity() == null) {
-                        return;
-                    } else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int i = 0; i < tmpMySelectedItems.size(); i++) {
-                                    myAvailableItems.add(tmpMySelectedItems.get(i));
-                                }
-                                tmpMySelectedItems.clear();
-                                myItemAdapter.setfilter(tmpMySelectedItems);
+                    if (tmpRoomName.equals(roomName)) {
+                        if (getActivity() == null) {
+                            return;
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for (int i = 0; i < tmpMySelectedItems.size(); i++) {
+                                        myAvailableItems.add(tmpMySelectedItems.get(i));
+                                    }
+                                    tmpMySelectedItems.clear();
+                                    myItemAdapter.setfilter(tmpMySelectedItems);
 
-                                for (int i = 0; i < tmpYourSelectedItems.size(); i++) {
-                                    if (tmpYourSelectedItems.get(i).isCheckPrivacy()) {
-                                        yourAvailableItems.add(tmpYourSelectedItems.get(i));
+                                    for (int i = 0; i < tmpYourSelectedItems.size(); i++) {
+                                        if (tmpYourSelectedItems.get(i).isCheckPrivacy()) {
+                                            yourAvailableItems.add(tmpYourSelectedItems.get(i));
+                                        }
+                                    }
+                                    tmpYourSelectedItems.clear();
+                                    yourItemAdapter.setfilter(tmpMySelectedItems);
+
+                                    if (userId == yourUserId) {
+                                        setNoti(getString(R.string.user_reseted_trade));
+                                    } else {
+                                        txtNoti.setVisibility(View.GONE);
                                     }
                                 }
-                                tmpYourSelectedItems.clear();
-                                yourItemAdapter.setfilter(tmpMySelectedItems);
-
-                                if (userId == yourUserId) {
-                                    setNoti(getString(R.string.user_reseted_trade));
-                                } else {
-                                    txtNoti.setVisibility(View.GONE);
-                                }
-                            }
-                        });
+                            });
+                        }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
     };
@@ -733,6 +727,8 @@ public class TradeTabFragment extends Fragment {
                                 if (userId == myUserId) {
                                     setRoomAfterUnconfirm();
                                     txtNoti.setVisibility(View.GONE);
+                                } else if (userId == yourUserId && checkTradeConfirm) {
+                                    setRoomAfterUnconfirm();
                                 } else {
                                     setNoti(getString(R.string.user_canceled_confirm_trade));
                                 }
@@ -757,8 +753,8 @@ public class TradeTabFragment extends Fragment {
         myItemAdapter = tradeRealtimeActivity.getMyItemAdapter();
         yourItemAdapter = tradeRealtimeActivity.getYourItemAdapter();
 
-        setItemAdapter(MY_ITEM_TAG, 2);
-        setItemAdapter(YOUR_ITEM_TAG, 2);
+        setItemAdapter(MY_ITEM_TAG, 3);
+        setItemAdapter(YOUR_ITEM_TAG, 3);
 
         linearTradeList.setVisibility(View.VISIBLE);
         btnSendRequest.setVisibility(View.VISIBLE);
