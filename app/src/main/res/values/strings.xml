@@ -142,4 +142,6 @@
     <string name="cancel_btn">Hủy</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
+
+    <string name="rating_title_profile">Đánh giá</string>
 </resources>

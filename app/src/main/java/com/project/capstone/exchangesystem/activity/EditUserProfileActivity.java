@@ -109,10 +109,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String fullName = txtName.getText().toString();
-                if (fullName.trim().length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Your Name is not long enough\n", Toast.LENGTH_LONG).show();
+                String address = txtAddress.getText().toString();
+                if (fullName.trim().length() < 6){
+                    Toast.makeText(getApplicationContext(), "Tên của bạn quá ngắn.", Toast.LENGTH_LONG).show();
+                } else if (address.trim().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Vui lòng nhập địa chỉ.", Toast.LENGTH_LONG).show();
                 } else {
-                    setUserData(fullName);
+                    setUserData(fullName, address);
                 }
             }
         });
@@ -125,9 +128,10 @@ public class EditUserProfileActivity extends AppCompatActivity {
         ivAvatar.setLayoutParams(layoutParams);
     }
 
-    private void setUserData(String fullName) {
+    private void setUserData(String fullName, String address) {
         User user = new User();
         user.setFullName(fullName);
+        user.setAddress(address);
         List<Uri> uri = new ArrayList<>();
         SharedPreferences.Editor editor = getSharedPreferences("localData", MODE_PRIVATE).edit();
         if (avaCheck) {
