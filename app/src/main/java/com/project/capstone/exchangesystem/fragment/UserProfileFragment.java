@@ -138,24 +138,27 @@ public class UserProfileFragment extends Fragment {
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
 //            String avatar = "";
-            String avatar = sharedPreferences.getString("avatar", "");
+            String avatar = sharedPreferences.getString("avatar", null);
 //            if (sharedPreferences.contains("avatar")) {
 //                avatar = avatar + sharedPreferences.getString("avatar", "");
 //            }
-            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "");
-            String userName = sharedPreferences.getString("username", "");
-            String status = sharedPreferences.getString("status", "");
+            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
+            String userName = sharedPreferences.getString("username", null);
+            String status = sharedPreferences.getString("status", null);
             int id = sharedPreferences.getInt("userId", 0);
-            String address = sharedPreferences.getString("address", "");
-            authorization = sharedPreferences.getString("authorization", "");
+            String address = sharedPreferences.getString("address", null);
+            authorization = sharedPreferences.getString("authorization", null);
             userId = sharedPreferences.getInt("userId", 0);
 
             txtNameUserProfile.setText(userName);
             txtPhoneNumberProfile.setText(phoneNumber);
-            Picasso.with(view.getContext()).load(avatar)
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
-                    .into(imageView);
+
+            if (avatar != null){
+                Picasso.with(view.getContext()).load(avatar)
+                        .placeholder(R.drawable.ic_no_image)
+                        .error(R.drawable.ic_no_image)
+                        .into(imageView);
+            }
             tempTransaction = "";
             tempFriend = "";
             rmaAPIService = RmaAPIUtils.getAPIService();
