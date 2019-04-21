@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/grad"
+    android:background="@drawable/bg_gradient_login"
     tools:context=".activity.SignInActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đăng nhập"
-            android:textColor="@color/app_icon_color_start_dark"
+            android:textColor="@color/colorWhite"
             android:textSize="48dp"
             android:elevation="4dp"
             android:textStyle="bold"
@@ -81,7 +81,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/btn_app_color_start_dark"
+            android:background="@drawable/custom_button"
             android:text="Đăng nhập"
             android:textAllCaps="false"
             android:elevation="4dp"
@@ -104,7 +104,8 @@
             android:layout_marginTop="10dp"
             android:background="#00ff973b"
             android:text="Tạo tài khoản mới?"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

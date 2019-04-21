@@ -11,7 +11,7 @@
         android:id="@+id/transactionToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/bg_gradient_dark"
         app:title="@string/transaction_history">
 
     </android.support.v7.widget.Toolbar>
