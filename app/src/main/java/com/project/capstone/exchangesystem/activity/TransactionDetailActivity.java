@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,10 +55,10 @@ public class TransactionDetailActivity extends AppCompatActivity {
     RecyclerView rvYourItems, rvMyItems;
     TextView txtReceiverName, txtReceiverPhone, txtReceiverAddress;
     ImageView ivQRCode;
-    ImageButton btnMaps;
-    ConstraintLayout myItemLayout;
+//    ImageButton btnMaps;
+    LinearLayout myItemLayout;
     Toolbar toolbar;
-    Button btnRating;
+//    Button btnRating;
     Dialog dialog;
 
     ArrayList<Item> myItems, yourItems;
@@ -66,7 +68,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
-    String authorization, qrCode;
+    String authorization, qrCode, checkScanQRCode;
     int myUserId, transactionId, rateStar = 0, yourUserId;
 
     SocketServer socketServer;
@@ -89,7 +91,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         });
 
         rvMyItems.setHasFixedSize(true);
-        rvMyItems.setLayoutManager(new GridLayoutManager(this, 1));
+        rvMyItems.setLayoutManager(new GridLayoutManager(this, 2));
         rvMyItems.setAdapter(myItemAdapter);
 
         yourItems = new ArrayList<>();
@@ -100,7 +102,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         });
 
         rvYourItems.setHasFixedSize(true);
-        rvYourItems.setLayoutManager(new GridLayoutManager(this, 1));
+        rvYourItems.setLayoutManager(new GridLayoutManager(this, 2));
         rvYourItems.setAdapter(yourItemAdapter);
     }
 
@@ -112,33 +114,34 @@ public class TransactionDetailActivity extends AppCompatActivity {
         txtReceiverPhone = findViewById(R.id.txtReceiverPhone);
         txtReceiverAddress = findViewById(R.id.txtReceiverAddress);
         ivQRCode = findViewById(R.id.ivQRCode);
-        btnMaps = findViewById(R.id.btnMaps);
+//        btnMaps = findViewById(R.id.btnMaps);
         myItemLayout = findViewById(R.id.myItemLayout);
         toolbar = findViewById(R.id.tbToolbar);
 
-        btnMaps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txtReceiverAddress.getText().toString());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
-            }
-        });
+//        btnMaps.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txtReceiverAddress.getText().toString());
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//                mapIntent.setPackage("com.google.android.apps.maps");
+//                startActivity(mapIntent);
+//            }
+//        });
 
-        btnRating = findViewById(R.id.btnRating);
-        btnRating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showRatingDialog();
-            }
-        });
+//        btnRating = findViewById(R.id.btnRating);
+//        btnRating.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showRatingDialog();
+//            }
+//        });
     }
 
     private void showRatingDialog() {
         dialog = new Dialog(TransactionDetailActivity.this);
         dialog.setContentView(R.layout.rating_dialog);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
         setDialogComponents(dialog);
@@ -350,6 +353,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         myUserId = sharedPreferences.getInt("userId", 0);
+        checkScanQRCode = (String) getIntent().getSerializableExtra("scannedQRCode");
 
         rmaAPIService = RmaAPIUtils.getAPIService();
 
@@ -367,7 +371,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-
+                    Log.i("transDetail", "failed");
                 }
             });
         }
@@ -416,15 +420,19 @@ public class TransactionDetailActivity extends AppCompatActivity {
         if (tmpYourItems.size() != 0) {
             yourItemAdapter.setfilter(tmpYourItems);
         } else {
-            btnMaps.setVisibility(View.GONE);
+//            btnMaps.setVisibility(View.GONE);
             rvYourItems.setVisibility(View.GONE);
+        }
+
+        if (checkScanQRCode != null){
+            showRatingDialog();
         }
     }
 
     private void createQRCode(String qrCode) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, 250, 250);
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, 220, 220);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -435,6 +443,7 @@ public class TransactionDetailActivity extends AppCompatActivity {
             }
 
             ivQRCode.setImageBitmap(bitmap);
+            ivQRCode.setVisibility(View.VISIBLE);
 
         } catch (WriterException e) {
             e.printStackTrace();
