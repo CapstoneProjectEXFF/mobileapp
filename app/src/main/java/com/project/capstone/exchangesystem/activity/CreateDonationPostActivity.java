@@ -174,7 +174,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         setDonationPostTargetList();
 
         if (!checkSelectedCategory){
-            Toast.makeText(context, getString(R.string.error_request), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.error_category), Toast.LENGTH_SHORT).show();
         } else if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length(), title.trim().length());
         } else {
