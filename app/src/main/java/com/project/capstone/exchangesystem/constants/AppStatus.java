@@ -13,6 +13,7 @@ public class AppStatus {
     public static final int CHANGE_IMAGE_FLAG = 0;
     public static final int ADD_IMAGE_FLAG = 1;
     public static final int DONATE_ACTIVITY_IMAGE_FLAG = 2;
+    public static final int TRANSACTION_DONATIOM = 3;
     public static final int LOGIN_REMINDER = 0;
     public static final String ITEM_ENABLE = "1";
     public static final String ITEM_FRAGMENT_FLAG = "0";

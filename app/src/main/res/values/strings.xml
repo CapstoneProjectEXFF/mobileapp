@@ -93,8 +93,12 @@
     <string name="edit_profile_success">Thay đổi thông tin cá nhân thành công</string>
     <string name="login">Đăng Nhập</string>
     <string name="cancle">Hủy</string>
-    <string name="waiting_transaction">Đang chờ xử lý</string>
-    <string name="done_transaction">Giao dịch thành công</string>
+    <string name="waiting_transaction">Giao dịch được xác nhận</string>
+    <string name="done_transaction">Giao dịch đã thành công</string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="donation_default_title">Bài quyên góp</string>
+    <string name="error_category">Vui lòng chọn danh mục.</string>
+    <string name="select_item">Chọn đồ dùng</string>
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt.</string>
@@ -103,13 +107,14 @@
     <string name="user_added_item">đã được thêm vào.</string>
     <string name="user_removed_item">đã bị xóa.</string>
     <string name="trade_done">Xác nhận trao đổi.</string>
-    <string name="me_confirmed">Bạn</string>
+    <string name="me_confirmed">Bạn</string>API
 
     <!--rating-->
     <string name="rating_ques">Đánh giá của bạn</string>
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
     <string name="comment_hint">Thêm bình luận</string>
+    <string name="rating_title_profile">Đánh giá</string>
 
     <!--qrCode-->
     <string name="qr_title">Quét mã QR</string>
@@ -127,11 +132,6 @@
     <string name="share">Chia sẻ</string>
     <string name="category">Danh mục</string>
     <string name="add_image">Thêm hình ảnh</string>
-    <string name="introduction">Giới thiệu</string>
-    <string name="donation_default_title">Bài quyên góp</string>
-    <string name="error_category">Vui lòng chọn danh mục.</string>
-    <string name="select_item">Chọn đồ dùng</string>
-  
     <string name="no_item_found">Không tìm thấy đồ vật</string>
     <string name="keyword_hint">Nhập từ khóa</string>
     <string name="edit_profile_btn">THAY ĐỔI</string>
@@ -142,6 +142,5 @@
     <string name="cancel_btn">Hủy</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
-
-    <string name="rating_title_profile">Đánh giá</string>
+    <string name="donation_transaction">Giao Dịch Từ Thiện</string>
 </resources>
