@@ -11,7 +11,7 @@
         android:id="@+id/tbToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/bg_gradient_dark"
         app:title="Quyên góp">
 
     </android.support.v7.widget.Toolbar>
@@ -24,8 +24,9 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/txt_padding"
             android:text="Người nhận"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/textSize" />
+            android:textColor="@color/colorGrayDark"
+            android:textSize="9pt"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/txtReceiverName"
@@ -34,8 +35,8 @@
             android:layout_weight="4"
             android:padding="@dimen/txt_padding"
             android:text="Tên"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/textSize" />
+            android:textColor="@color/colorGrayDark"
+            android:textSize="9pt" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,15 +47,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/txt_padding"
-            android:text="Danh sách món đồ quyên góp"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/textSize" />
+            android:text="Danh sách đồ quyên góp"
+            android:textColor="@color/colorGrayDark"
+            android:textSize="9pt"
+            android:textStyle="bold"/>
 
         <ImageButton
             android:id="@+id/btnAddItems"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/round_add_to_photos_black_36"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_add_to_photos_black_48"/>
     </LinearLayout>
 
     <TextView

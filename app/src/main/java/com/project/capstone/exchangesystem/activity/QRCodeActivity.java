@@ -170,6 +170,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
                     Intent intent = new Intent(context, TransactionDetailActivity.class);
                     intent.putExtra("qrCode", tmpQrCode);
                     intent.putExtra("transactionId", transactionId);
+                    intent.putExtra("scannedQRCode", "scanned");
                     startActivity(intent);
                 } else {
                     dialog.dismiss();
