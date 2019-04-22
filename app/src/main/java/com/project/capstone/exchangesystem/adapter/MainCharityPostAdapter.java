@@ -90,13 +90,15 @@ public class MainCharityPostAdapter extends BaseAdapter {
 
         Date date = new Date();
         date.setTime(donationPost.getCreateTime().getTime());
-        String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        String formattedDate = new SimpleDateFormat("dd.MM.yyyy").format(date);
         viewHolder.txtTimestamp.setText(formattedDate);
         if (donationPost.getImages().size() > 0){
             Picasso.with(context).load(donationPost.getImages().get(0).getUrl())
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
                     .into(viewHolder.imgCharityPost);
+        } else {
+            viewHolder.imgCharityPost.setVisibility(View.GONE);
         }
         Picasso.with(context).load(donationPost.getUser().getAvatar())
                 .placeholder(R.drawable.ic_profile)

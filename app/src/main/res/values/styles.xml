@@ -10,7 +10,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@drawable/app_background</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
-
+        <item name="android:fontFamily">@font/utmavo</item>
     </style>
     <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -59,4 +59,9 @@
         <item name="android:textSize">5sp</item>
     </style>
 
+    <style name="text_toolbar">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12pt</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
 </resources>

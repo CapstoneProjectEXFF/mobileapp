@@ -34,7 +34,8 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_gradient_dark">
 
                     <EditText
                         android:id="@+id/txtSearch"
@@ -50,8 +51,9 @@
                         android:background="@drawable/custom_input"
                         android:hint="Tên đồ dùng"
                         android:inputType="text"
+                        android:textSize="8pt"
                         android:textColor="@color/tranparentBlack"
-                        android:textColorHint="@color/colorGrayDark"
+                        android:textColorHint="@color/tranparentBlack"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

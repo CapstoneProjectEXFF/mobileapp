@@ -45,7 +45,7 @@ public class UserProfileFragment extends Fragment {
     String authorization;
     TextView txtNumberTransaction, txtNumberFriend, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
     ImageView imageView;
-    ImageButton btnQR;
+    ImageButton btnQR, iconPhone;
     UserSession userSession;
     RecyclerView rvReviewers;
     ReviewerAdapter reviewerAdapter;
@@ -128,6 +128,7 @@ public class UserProfileFragment extends Fragment {
         txtAddressProfile = view.findViewById(R.id.txtAddressUserProfile);
         txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
         rvReviewers = view.findViewById(R.id.rvReviewers);
+        iconPhone = view.findViewById(R.id.iconPhone);
         Toolbar toolbar = view.findViewById(R.id.userProfileToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -136,24 +137,28 @@ public class UserProfileFragment extends Fragment {
 
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-            String avatar = "dsa";
-            if (sharedPreferences.contains("avatar")) {
-                avatar = avatar + sharedPreferences.getString("avatar", "");
-            }
-            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", "");
-            String userName = sharedPreferences.getString("username", "");
-            String status = sharedPreferences.getString("status", "");
+//            String avatar = "";
+            String avatar = sharedPreferences.getString("avatar", null);
+//            if (sharedPreferences.contains("avatar")) {
+//                avatar = avatar + sharedPreferences.getString("avatar", "");
+//            }
+            String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
+            String userName = sharedPreferences.getString("username", null);
+            String status = sharedPreferences.getString("status", null);
             int id = sharedPreferences.getInt("userId", 0);
-            String address = sharedPreferences.getString("address", "");
-            authorization = sharedPreferences.getString("authorization", "");
+            String address = sharedPreferences.getString("address", null);
+            authorization = sharedPreferences.getString("authorization", null);
             userId = sharedPreferences.getInt("userId", 0);
 
             txtNameUserProfile.setText(userName);
             txtPhoneNumberProfile.setText(phoneNumber);
-            Picasso.with(view.getContext()).load(avatar)
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
-                    .into(imageView);
+
+            if (avatar != null){
+                Picasso.with(view.getContext()).load(avatar)
+                        .placeholder(R.drawable.ic_no_image)
+                        .error(R.drawable.ic_no_image)
+                        .into(imageView);
+            }
             tempTransaction = "";
             tempFriend = "";
             rmaAPIService = RmaAPIUtils.getAPIService();
@@ -187,6 +192,8 @@ public class UserProfileFragment extends Fragment {
             view.findViewById(R.id.testLayout).setVisibility(View.GONE);
             txtNameUserProfile.setVisibility(View.GONE);
             txtAddressProfile.setVisibility(View.GONE);
+            txtPhoneNumberProfile.setVisibility(View.GONE);
+            iconPhone.setVisibility(View.GONE);
             view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
         }
 

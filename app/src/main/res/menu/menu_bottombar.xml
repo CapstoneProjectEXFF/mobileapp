@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/bottombaritem_charity"
-        android:icon="@drawable/ic_charity"
+        android:icon="@drawable/round_favorite_black_36"
         android:title="@string/nav_bar_charity"
         app:showAsAction="ifRoom"/>
 

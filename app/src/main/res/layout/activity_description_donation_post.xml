@@ -17,7 +17,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="@color/toolbar_des"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -28,20 +28,20 @@
                 android:src="@drawable/ic_no_image"
                 app:layout_collapseMode="parallax" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bg_gradient_toolbar_item"
-                app:layout_collapseMode="parallax" />
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@drawable/bg_gradient_toolbar_item"-->
+                <!--app:layout_collapseMode="parallax" />-->
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/descriptionDonationToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:title=" "
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Quyên góp">
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -61,19 +61,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imgUserDonation"
-                    android:layout_width="@dimen/feed_item_profile_pic"
-                    android:layout_height="@dimen/feed_item_profile_pic"
+                <!--<ImageView-->
+                    <!--android:id="@+id/imgUserDonation"-->
+                    <!--android:layout_width="@dimen/feed_item_profile_pic"-->
+                    <!--android:layout_height="@dimen/feed_item_profile_pic"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginLeft="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:background="@drawable/img_circle"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/view2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/img_circle"
-                    android:scaleType="centerCrop"
+                    android:elevation="5dp"
+                    app:cardCornerRadius="25dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imgUserDonation"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_user" />
+                </android.support.v7.widget.CardView>
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -88,7 +112,7 @@
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnShare"
-                    app:layout_constraintStart_toEndOf="@+id/imgUserDonation"
+                    app:layout_constraintStart_toEndOf="@+id/view2"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
@@ -96,8 +120,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tên người đăng"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="24sp"
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="12pt"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="16dp"
                         tools:layout_editor_absoluteY="8dp" />
@@ -108,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:text="Ngày đăng"
                         android:textColor="@color/colorGrayDark"
-                        android:textSize="20sp" />
+                        android:textSize="7pt" />
 
                 </LinearLayout>
 
@@ -126,48 +150,62 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="@string/donation_post_address"
-                    android:textColor="@color/colorGrayDark"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtDonationName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Tiêu đề"
+                        android:textColor="@color/colorGrayDark"
+                        android:textSize="10pt"
+                        android:textStyle="bold"
+                        android:singleLine="true"/>
+
+                    <TextView
+                        android:id="@+id/txtAddressDonation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:textColor="@color/colorGrayDark"
+                        android:text="Địa chỉ"
+                        android:textSize="7pt"
+                        android:singleLine="true"/>
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/btnDonate"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_marginVertical="4dp"
-                    android:background="@drawable/custom_button"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:background="@drawable/btn_gradient_dark"
                     android:text="Quyên góp"
                     android:textColor="@color/colorWhite"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="8pt"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"/>
 
-            </android.support.constraint.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/txtAddressDonation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="10dp"
-                android:text="Địa chỉ"
-                android:textColor="@color/colorGrayDark"
-                android:textSize="20sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/txtDescriptionDonationContent"
@@ -179,7 +217,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="Nội dung"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="20dp" />
+                android:textSize="8pt" />
 
             <TextView
                 android:id="@+id/txtTargets"
@@ -192,7 +230,7 @@
                 android:gravity="left"
                 android:textStyle="bold"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="20sp"
+                android:textSize="10pt"
                 android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"/>
 
             <android.support.v7.widget.RecyclerView
@@ -215,7 +253,7 @@
                 android:gravity="left"
                 android:textStyle="bold"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="20sp"
+                android:textSize="10pt"
                 android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"/>
 
             <TextView

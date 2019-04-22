@@ -95,6 +95,10 @@
     <string name="cancle">Hủy</string>
     <string name="waiting_transaction">Giao dịch được xác nhận</string>
     <string name="done_transaction">Giao dịch đã thành công</string>
+    <string name="select_item"></string>
+    <string name="rating_title_profile"></string>
+    <string name="donation_default_title"></string>
+    <string name="error_category"></string>
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt.</string>
@@ -103,7 +107,7 @@
     <string name="user_added_item">đã được thêm vào.</string>
     <string name="user_removed_item">đã bị xóa.</string>
     <string name="trade_done">Xác nhận trao đổi.</string>
-    <string name="me_confirmed">Bạn</string>
+    <string name="me_confirmed">Bạn</string>API
 
     <!--rating-->
     <string name="rating_ques">Đánh giá của bạn</string>

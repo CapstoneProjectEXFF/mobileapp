@@ -10,11 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,27 +22,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
-import com.project.capstone.exchangesystem.model.Category;
-import com.project.capstone.exchangesystem.model.DonationPostTarget;
-import com.project.capstone.exchangesystem.model.DonationPostWrapper;
-import com.project.capstone.exchangesystem.model.FirebaseImg;
-import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.model.DonationPost;
-import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.model.PostAction;
+import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.util.*;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
@@ -68,6 +64,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     ProgressDialog progressDialog;
     DonationPostWrapper donationPostWrapper;
     ArrayList<DonationPostTarget> donationPostTargetList;
+    boolean checkSelectedCategory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +171,11 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         String address = edtAddress.getText().toString();
         String content = edtContent.getText().toString();
         String title = edtTitle.getText().toString();
-        if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
+        setDonationPostTargetList();
+
+        if (!checkSelectedCategory){
+            Toast.makeText(context, getString(R.string.error_request), Toast.LENGTH_SHORT).show();
+        } else if (address.trim().length() == 0 || content.trim().length() == 0 || title.trim().length() == 0) {
             notifyError(address.trim().length(), content.trim().length(), title.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -185,7 +186,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
     }
 
     private void setDonationPostData(String address, String content, String title) {
-        setDonationPostTargetList();
 
         DonationPost newPost = new DonationPost();
         newPost.setAddress(address);
@@ -211,6 +211,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         for (int i = 0; i < selectedCategoryList.size(); i++) {
             Category tmpCategory = selectedCategoryList.get(i);
             if (tmpCategory.isCheckSelectedCategory()) {
+                checkSelectedCategory = true;
                 DonationPostTarget donationPostTarget = new DonationPostTarget();
                 donationPostTarget.setCategoryId(tmpCategory.getId());
                 donationPostTarget.setTarget(tmpCategory.getNumOfItem());

@@ -47,6 +47,10 @@
     <color name="grey">#e2e9f1</color>
     <color name="lavendar">#E3E4FA</color>
     <color name="superlightblue">#b9e1f8</color>
-
+    <color name="app_icon_color_start">#0a78ff</color>
+    <color name="app_icon_color_end">#0DFFB7</color>
+    <color name="app_icon_color_start_dark">#0839a5</color>
+    <color name="toolbar_des">#0792ff</color>
+    <color name="yellow">#FFDE07</color>
 
 </resources>
