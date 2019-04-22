@@ -27,6 +27,7 @@ public class AppStatus {
     public static final int CANCEL_IMAGE_OPTION = 3;
     public static final String TRANSACTION_SEND = "1";
     public static final String TRANSACTION_DONE = "2";
+    public static final String TRANSACTION_DONATIOM = "3";
     public static final String TRANSACTION_RESEND = "4";
     public static final int SEND_MSG = 0;
     public static final int RECEIVE_MSG = 1;

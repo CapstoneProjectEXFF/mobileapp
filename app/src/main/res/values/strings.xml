@@ -93,8 +93,8 @@
     <string name="edit_profile_success">Thay đổi thông tin cá nhân thành công</string>
     <string name="login">Đăng Nhập</string>
     <string name="cancle">Hủy</string>
-    <string name="waiting_transaction">Đang chờ xử lý</string>
-    <string name="done_transaction">Giao dịch thành công</string>
+    <string name="waiting_transaction">Giao dịch được xác nhận</string>
+    <string name="done_transaction">Giao dịch đã thành công</string>
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt.</string>
@@ -137,4 +137,5 @@
     <string name="cancel_btn">Hủy</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
+    <string name="donation_transaction">Giao Dịch Từ Thiện</string>
 </resources>
