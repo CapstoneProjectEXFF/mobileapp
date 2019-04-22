@@ -145,6 +145,11 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        this.getSupportActionBar().setNavigationOnClickListener
+
+
     }
 
     private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
@@ -162,5 +167,11 @@ public class SearchActivity extends AppCompatActivity {
         Log.i(tag, msg);
         Intent intent = new Intent(getApplicationContext(), OwnInventory.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
