@@ -95,10 +95,10 @@
     <string name="cancle">Hủy</string>
     <string name="waiting_transaction">Giao dịch được xác nhận</string>
     <string name="done_transaction">Giao dịch đã thành công</string>
-    <string name="select_item"></string>
-    <string name="rating_title_profile"></string>
-    <string name="donation_default_title"></string>
-    <string name="error_category"></string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="donation_default_title">Bài quyên góp</string>
+    <string name="error_category">Vui lòng chọn danh mục.</string>
+    <string name="select_item">Chọn đồ dùng</string>
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt.</string>
@@ -114,6 +114,7 @@
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
     <string name="comment_hint">Thêm bình luận</string>
+    <string name="rating_title_profile">Đánh giá</string>
 
     <!--qrCode-->
     <string name="qr_title">Quét mã QR</string>
