@@ -1,14 +1,3 @@
-<!--<?xml version="1.0" encoding="utf-8"?>--><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:orientation="horizontal">-->
-
-<!--<ImageView--><!--android:id="@+id/imgSender"--><!--android:layout_width="55dp"--><!--android:layout_height="55dp" />--><!----><!---->
-
-<!--<LinearLayout--><!--android:id="@+id/infoItem"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:orientation="vertical"--><!--android:paddingHorizontal="5dp"--><!--android:paddingTop="10dp"--><!--android:paddingBottom="5dp"--><!--android:layout_alignParentBottom="true"--><!--android:background="@drawable/bg_gradient_info_item">-->
-
-<!--<TextView--><!--android:id="@+id/txtNotification"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:ellipsize="end"--><!--android:gravity="left"--><!--android:maxLines="1"--><!--android:text="XXX vừa gửi yêu cầu trao đổi đồ"--><!--android:textColor="@color/colorWhite"--><!--android:textSize="15sp" />-->
-
-<!--<TextView--><!--android:id="@+id/txtDateNoti"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:ellipsize="end"--><!--android:gravity="left"--><!--android:maxLines="1"--><!--android:text="Ngày gửi"--><!--android:textColor="@color/colorWhite"--><!--android:textSize="12dp" />--><!--</LinearLayout>-->
-
-<!--</LinearLayout>--><!--<?xml version="1.0" encoding="utf-8"?>-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

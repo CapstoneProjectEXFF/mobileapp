@@ -137,11 +137,7 @@ public class UserProfileFragment extends Fragment {
 
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-//            String avatar = "";
-            String avatar = sharedPreferences.getString("avatar", "");
-//            if (sharedPreferences.contains("avatar")) {
-//                avatar = avatar + sharedPreferences.getString("avatar", "");
-//            }
+            String avatar = sharedPreferences.getString("avatar", "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png");
             String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
             String userName = sharedPreferences.getString("username", "");
             String status = sharedPreferences.getString("status", "");
@@ -149,16 +145,13 @@ public class UserProfileFragment extends Fragment {
             String address = sharedPreferences.getString("address", "");
             authorization = sharedPreferences.getString("authorization", "");
             userId = sharedPreferences.getInt("userId", 0);
-
             txtNameUserProfile.setText(userName);
             txtPhoneNumberProfile.setText(phoneNumber);
+            Picasso.with(view.getContext()).load(avatar)
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imageView);
 
-            if (avatar != null) {
-                Picasso.with(view.getContext()).load(avatar)
-                        .placeholder(R.drawable.ic_no_image)
-                        .error(R.drawable.ic_no_image)
-                        .into(imageView);
-            }
             tempTransaction = "";
             tempFriend = "";
             tempInventory = "";
