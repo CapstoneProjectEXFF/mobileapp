@@ -2,89 +2,101 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="4dp">
 
-        <ImageView
-            android:id="@+id/imgProfileUser"
-            android:layout_width="@dimen/feed_item_profile_pic"
-            android:layout_height="@dimen/feed_item_profile_pic"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintCircleRadius="50dp"
-            android:contentDescription="@string/app_name"
-            android:scaleType="fitCenter"
-            android:background="@drawable/ic_profile"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            android:background="@color/colorWhite">
 
-        <LinearLayout
-            android:layout_width="314dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/feed_item_profile_info_padd"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imgProfileCharity"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/linearLayout2">
+            <ImageView
+                android:id="@+id/imgProfileUser"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:layout_margin="5dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.023"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/txtNameUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/feed_item_profile_name"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="314dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/feed_item_profile_info_padd"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgProfileCharity"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/linearLayout2">
 
-            <TextView
-                android:id="@+id/txtAddressUser"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/timestamp"
-                android:textSize="@dimen/feed_item_timestamp" />
+                <TextView
+                    android:id="@+id/txtNameUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/feed_item_profile_name"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtAddressUser"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/timestamp"
+                    android:textSize="@dimen/feed_item_timestamp" />
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btnAcceptFriend"
-            android:layout_width="90dp"
-            android:layout_height="27dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button"
-            android:text="Accept"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toStartOf="@+id/btnDeclineFriend"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" />
+            <Button
+                android:id="@+id/btnAcceptFriend"
+                android:layout_width="90dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/custom_button"
+                android:text="Accept"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnDeclineFriend"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
-        <Button
-            android:id="@+id/btnDeclineFriend"
-            android:layout_width="90dp"
-            android:layout_height="27dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/custom_button"
-            android:text="Decline"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" />
+            <Button
+                android:id="@+id/btnDeclineFriend"
+                android:layout_width="90dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/custom_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Decline" />
 
-    </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>
