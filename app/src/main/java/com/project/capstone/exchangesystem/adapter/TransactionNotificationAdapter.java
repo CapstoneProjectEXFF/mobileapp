@@ -185,7 +185,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             });
 
             txtNameUser.setText(relationship.getSender().getFullName());
-            txtAddressUser.setText("");
+            txtAddressUser.setText(relationship.getSender().getAddress());
             Picasso.with(context).load(relationship.getSender().getAvatar())
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
@@ -196,7 +196,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             final ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
             final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
             TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
-          
+
             List<UserRoom> listUser = room.getUsers();
             for (int i = 0; i < listUser.size(); i++) {
                 if (listUser.get(i).getUserId() != idMe) {

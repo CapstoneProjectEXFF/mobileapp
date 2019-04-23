@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
@@ -27,7 +28,7 @@ import java.util.List;
 public class OwnDonationPost extends AppCompatActivity {
 
     public int idUser;
-//    Toolbar toolbar;
+    //    Toolbar toolbar;
     ListView listView;
     TextView btnAdd;
     MainCharityPostAdapter mainCharityPostAdapter;
@@ -42,9 +43,11 @@ public class OwnDonationPost extends AppCompatActivity {
     RmaAPIService rmaAPIService;
     User userDetail;
     TextView btnAddCharityPost;
+    ImageButton imgBtnAddCharityPost;
     private static final int UPDATE_CODE = 1;
     private static final int NO_CODE = 0;
-    private boolean reloadNeed =  true;
+    private boolean reloadNeed = true;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +55,35 @@ public class OwnDonationPost extends AppCompatActivity {
         setContentView(R.layout.fragment_main_charity_post);
         direct();
         getData();
-//        actionToolbar();
+        ActionToolbar();
     }
 
     private void direct() {
         rmaAPIService = RmaAPIUtils.getAPIService();
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
-//        toolbar = findViewById(R.id.ownDonationToolbar);
+        toolbar = findViewById(R.id.ownDonationToolbar);
         btnAddCharityPost = findViewById(R.id.btnAddCharityPost);
-//        btnAddCharityPost.setVisibility(View.GONE);
+        imgBtnAddCharityPost = findViewById(R.id.imgBtnAddCharityPost);
         Intent intent = this.getIntent();
         if (intent.hasExtra("userDetail")) {
             userDetail = (User) intent.getSerializableExtra("userDetail");
             idUser = userDetail.getId();
+            btnAddCharityPost.setVisibility(View.GONE);
+            imgBtnAddCharityPost.setVisibility(View.GONE);
+            toolbar.setTitle("Từ Thiện Của " + userDetail.getFullName());
+
         } else {
             idUser = sharedPreferences.getInt("userId", 0);
+            toolbar.setTitle("Từ Thiện Của Bạn");
+            btnAddCharityPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), CreateDonationPostActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
-
-
         listView = findViewById(R.id.charityPostListView);
         donationPosts = new ArrayList<>();
         mainCharityPostAdapter = new MainCharityPostAdapter(getApplicationContext(), donationPosts);
@@ -133,5 +146,16 @@ public class OwnDonationPost extends AppCompatActivity {
         });
     }
 
+    private void ActionToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
+
+    }
 }

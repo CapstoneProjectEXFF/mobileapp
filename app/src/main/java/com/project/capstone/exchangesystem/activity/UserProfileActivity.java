@@ -8,10 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
 import com.project.capstone.exchangesystem.model.Rate;
@@ -29,7 +26,8 @@ import java.util.List;
 public class UserProfileActivity extends AppCompatActivity {
 
     ImageView imageView, iconEdit;
-    TextView txtNameUserProfile;
+    TextView txtNameUserProfile, txtAddressUserProfile;
+    ImageButton btnQR;
     TextView txtPhoneNumberProfile, txtNumberDonation, txtNumberInventory;
     LinearLayout linlay2;
     Toolbar toolbar;
@@ -107,13 +105,16 @@ public class UserProfileActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imgUserProfile);
         iconEdit = findViewById(R.id.iconEdit);
         txtNameUserProfile = findViewById(R.id.txtNameUserProfile);
+        txtAddressUserProfile = findViewById(R.id.txtAddressUserProfile);
         txtPhoneNumberProfile = findViewById(R.id.txtPhoneNumberProfile);
         txtNumberInventory = findViewById(R.id.txtNumberInventory);
         txtNumberDonation = findViewById(R.id.txtNumberDonation);
+        btnQR = findViewById(R.id.btnQR);
         linlay2 = findViewById(R.id.linlay2);
         rmaAPIService = RmaAPIUtils.getAPIService();
         linlay2.setVisibility(View.GONE);
         iconEdit.setVisibility(View.GONE);
+        btnQR.setVisibility(View.GONE);
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
     }
@@ -128,6 +129,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         txtNameUserProfile.setText(userDetail.getFullName());
         txtPhoneNumberProfile.setText(userDetail.getPhone());
+        txtAddressUserProfile.setText(userDetail.getAddress());
         userId = userDetail.getId();
     }
 

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
@@ -125,12 +124,12 @@ public class MainCharityPostFragment extends Fragment {
                 }
             }
         });
-
+        toolbar = view.findViewById(R.id.ownDonationToolbar);
         listView = view.findViewById(R.id.charityPostListView);
         donationPosts = new ArrayList<>();
         mainCharityPostAdapter = new MainCharityPostAdapter(view.getContext(), donationPosts);
         listView.setAdapter(mainCharityPostAdapter);
-
+        toolbar.setTitle("Từ Thiện");
         LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         footerView = layoutInflater.inflate(R.layout.progressbar, null);
         mHandler = new mHandler();
