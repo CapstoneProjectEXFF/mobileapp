@@ -68,7 +68,7 @@ public class NotificationFragment extends Fragment {
         rmaAPIService = RmaAPIUtils.getAPIService();
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
         sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
+        authorization = sharedPreferences.getString("authorization", "");
         userId = sharedPreferences.getInt("userId", 0);
         listView = (ListView) view.findViewById(R.id.notificationListview);
         transactions = new ArrayList<>();

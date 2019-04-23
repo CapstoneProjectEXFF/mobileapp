@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import java.util.Map;
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ENABLE;
 
 public class SignInActivity extends AppCompatActivity {
+    private static final int SIGNUP_CODE = 1;
     Context context;
     EditText txtPhone, txtPassword;
     ProgressDialog progressDialog;
@@ -75,7 +77,7 @@ public class SignInActivity extends AppCompatActivity {
             txtPhone.setBackgroundResource(R.drawable.signupedt);
         }
 
-        if (txtpassword.length() < 6) {
+        if (txtpassword.length() < 8) {
             flag2 = false;
             txtPassword.setBackgroundResource(R.drawable.signuperror);
         } else {
@@ -184,7 +186,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void toSignUp(View view) {
         Intent intent = new Intent(this, SignUpAcitivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SIGNUP_CODE);
 
     }
 
@@ -195,5 +197,14 @@ public class SignInActivity extends AppCompatActivity {
 
     public void onBackButton(View view) {
         finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SIGNUP_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                txtPhone.setText(data.getStringExtra("signupUsername"));
+            }
+        }
     }
 }
