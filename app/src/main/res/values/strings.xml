@@ -132,6 +132,11 @@
     <string name="share">Chia sẻ</string>
     <string name="category">Danh mục</string>
     <string name="add_image">Thêm hình ảnh</string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="donation_default_title">Bài quyên góp</string>
+    <string name="error_category">Vui lòng chọn danh mục.</string>
+    <string name="select_item">Chọn đồ dùng</string>
+  
     <string name="no_item_found">Không tìm thấy đồ vật</string>
     <string name="keyword_hint">Nhập từ khóa</string>
     <string name="edit_profile_btn">THAY ĐỔI</string>
@@ -142,5 +147,16 @@
     <string name="cancel_btn">Hủy</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
+  
+    <string name="rating_title_profile">Đánh giá</string>
+    <string name="trans_finish">Hoàn thành</string>
+    <string name="add_receipt">Thêm biên nhận</string>
+    <string name="view_my_receipt">Xem biên nhận của bạn</string>
+    <string name="receipt_title">Biên nhận của</string>
+    <string name="added_receipt">Biên nhận của bạn đã đăng tải thành công.</string>
+    <string name="on_off_delivery">Nhờ vận chuyển</string>
+    <string name="confirm_receipt">Xác nhận\nđã trao đổi</string>
+    <string name="confirmed_receipt">Xác nhận biên nhận thành công.</string>
+
     <string name="donation_transaction">Giao Dịch Từ Thiện</string>
 </resources>

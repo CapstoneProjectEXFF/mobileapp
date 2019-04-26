@@ -51,6 +51,14 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     @Expose
     private User receiver;
 
+    @SerializedName("senderReceipt")
+    @Expose
+    private String senderReceipt;
+
+    @SerializedName("receiverReceipt")
+    @Expose
+    private String receiverReceipt;
+
 
     public int getId() {
         return id;
@@ -132,7 +140,23 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         this.qrCode = qrCode;
     }
 
-    public Transaction(int id, int senderId, int receiverId, int donationPostId, String status, Timestamp createTime, Timestamp modifyTime, String qrCode) {
+    public String getSenderReceipt() {
+        return senderReceipt;
+    }
+
+    public void setSenderReceipt(String senderReceipt) {
+        this.senderReceipt = senderReceipt;
+    }
+
+    public String getReceiverReceipt() {
+        return receiverReceipt;
+    }
+
+    public void setReceiverReceipt(String receiverReceipt) {
+        this.receiverReceipt = receiverReceipt;
+    }
+
+    public Transaction(int id, int senderId, int receiverId, int donationPostId, String status, Timestamp createTime, Timestamp modifyTime, String qrCode, String senderReceipt, String receiverReceipt) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -141,6 +165,8 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         this.createTime = createTime;
         this.modifyTime = modifyTime;
         this.qrCode = qrCode;
+        this.senderReceipt = senderReceipt;
+        this.receiverReceipt = receiverReceipt;
     }
 
     public Transaction() {
