@@ -65,7 +65,7 @@ public class MyInventoryFragment extends Fragment {
 //        }
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-        String authorization = sharedPreferences.getString("authorization", null);
+        String authorization = sharedPreferences.getString("authorization", "");
         int userID = sharedPreferences.getInt("userId", 0);
 
         // Get a List of item ID

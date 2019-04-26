@@ -25,6 +25,7 @@ public interface RmaAPIService {
     @GET("/phone")
     Call<Object> checkValidationLogin(@Query("phone") String phone);
 
+
 //    @GET("/item")
 //    Call<List<Item>> getAllItems(@Header("Authorization") String authorization);
 
@@ -48,6 +49,9 @@ public interface RmaAPIService {
 
     @GET("/category")
     Call<List<Category>> getAllCategory();
+
+    @GET("verify")
+    Call<Object> verifyPhoneNumber(@Query("PhoneNumber") String phoneNumber, @Query("CountryCode") String countryCode, @Query("APIKey") String APIKey);
 
 
     @POST("/item")
@@ -116,6 +120,12 @@ public interface RmaAPIService {
 
     @GET("/transaction/history/count")
     Call<Integer> countAllTransactionByUserId(@Header("Authorization") String authorization);
+
+    @GET("/user/{id}/item")
+    Call<Integer> countAllItemByUserId(@Header("Authorization") String authorization, @Path("id") int userID);
+
+    @GET("/user/{userId}/donationPost/count")
+    Call<Integer> countDonationPostByUserId(@Path("userId") int userId);
 
 //    @HTTP(method = "DELETE", path = "/transaction/{transID}", hasBody = true)
 //    Call<Object> cancelTransactionByID(@Header("Authorization") String authorization, @Path("transID") int transID);

@@ -89,12 +89,16 @@
     <string name="error_server">Lỗi Hệ Thống!</string>
     <string name="error_request">Xảy ra lỗi!</string>
     <string name="lock_donation">Khóa Thành Công</string>
-    <string name="signup_error">Đăng Nhập Lại</string>
+    <string name="signup_error">Đăng Kí Lại</string>
     <string name="edit_profile_success">Thay đổi thông tin cá nhân thành công</string>
     <string name="login">Đăng Nhập</string>
     <string name="cancle">Hủy</string>
-    <string name="waiting_transaction">Đang chờ xử lý</string>
-    <string name="done_transaction">Giao dịch thành công</string>
+    <string name="waiting_transaction">Giao dịch được xác nhận</string>
+    <string name="done_transaction">Giao dịch đã thành công</string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="donation_default_title">Bài quyên góp</string>
+    <string name="error_category">Vui lòng chọn danh mục.</string>
+    <string name="select_item">Chọn đồ dùng</string>
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt.</string>
@@ -110,6 +114,7 @@
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
     <string name="comment_hint">Thêm bình luận</string>
+    <string name="rating_title_profile">Đánh giá</string>
 
     <!--qrCode-->
     <string name="qr_title">Quét mã QR</string>
@@ -131,7 +136,7 @@
     <string name="donation_default_title">Bài quyên góp</string>
     <string name="error_category">Vui lòng chọn danh mục.</string>
     <string name="select_item">Chọn đồ dùng</string>
-
+  
     <string name="no_item_found">Không tìm thấy đồ vật</string>
     <string name="keyword_hint">Nhập từ khóa</string>
     <string name="edit_profile_btn">THAY ĐỔI</string>
@@ -142,7 +147,7 @@
     <string name="cancel_btn">Hủy</string>
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
-
+  
     <string name="rating_title_profile">Đánh giá</string>
     <string name="trans_finish">Hoàn thành</string>
     <string name="add_receipt">Thêm biên nhận</string>
@@ -152,4 +157,6 @@
     <string name="on_off_delivery">Nhờ vận chuyển</string>
     <string name="confirm_receipt">Xác nhận\nđã trao đổi</string>
     <string name="confirmed_receipt">Xác nhận biên nhận thành công.</string>
+
+    <string name="donation_transaction">Giao Dịch Từ Thiện</string>
 </resources>

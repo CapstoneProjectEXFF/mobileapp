@@ -8,18 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.activity.OwnTransaction;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.Transaction;
-import com.project.capstone.exchangesystem.model.TransactionDetail;
-import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,8 +83,10 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         String status = "";
         if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE) || transaction.getStatus().equals(AppStatus.TRANSACTION_DONATED)) {
             status = status + context.getString(R.string.done_transaction);
-        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND) || transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
+        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
             status = status + context.getString(R.string.waiting_transaction);
+        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONATIOM)) {
+            status = status + context.getString(R.string.donation_transaction);
         }
         viewHolder.txtStatusTrans.setText(status);
 

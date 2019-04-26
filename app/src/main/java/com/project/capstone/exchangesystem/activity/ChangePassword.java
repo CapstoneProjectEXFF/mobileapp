@@ -23,6 +23,8 @@ public class ChangePassword extends AppCompatActivity {
     EditText txtConfirmPass, txtOldPass, txtNewPass;
     boolean flag1 = true, flag2 = true, flag3 = true, flag4 = true, flag5 = true;
     String toastText;
+    SharedPreferences sharedPreferences;
+    String authorization, userPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +58,10 @@ public class ChangePassword extends AppCompatActivity {
         String oldPass = txtOldPass.getText().toString();
         String newPass = txtNewPass.getText().toString();
         String confirmNewPass = txtConfirmPass.getText().toString();
-
-        System.out.println("old pass " + oldPass);
-        System.out.println("new pass " + newPass);
-        System.out.println("confirm pass " + confirmNewPass);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
-        String authorization = sharedPreferences.getString("authorization", null);
-        System.out.println("old pass " + oldPass);
-        System.out.println("new pass " + newPass);
-        System.out.println("confirm pass " + confirmNewPass);
-        System.out.println("authorization " + authorization);
-
-
-        if (oldPass.length() < 6) {
+        sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        userPhoneNumber = sharedPreferences.getString("phoneNumberSignIn", "Non");
+        authorization = sharedPreferences.getString("authorization", null);
+        if (oldPass.length() < 8) {
             flag1 = false;
             Toast.makeText(getApplicationContext(), R.string.password_validation_alert, Toast.LENGTH_LONG).show();
         } else {
@@ -78,7 +69,7 @@ public class ChangePassword extends AppCompatActivity {
         }
 
 
-        if (newPass.length() < 6) {
+        if (newPass.length() < 8) {
             flag2 = false;
             Toast.makeText(getApplicationContext(), R.string.string_password_alert, Toast.LENGTH_LONG).show();
         } else {
@@ -122,10 +113,6 @@ public class ChangePassword extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
-//                    System.out.println("old pass " + oldPass);
-//                    System.out.println("new pass " + newPass);
-//                    System.out.println("confirm pass " + confirmNewPass);
-//                    System.out.println("authorization " + authorization);
                     if (response.isSuccessful()) {
 
                         LinkedTreeMap<String, Object> responeBody = (LinkedTreeMap<String, Object>) response.body();
@@ -146,7 +133,7 @@ public class ChangePassword extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
                     System.out.println(getString(R.string.pass_change_fail_alert));
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.pass_change_fail_alert), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
