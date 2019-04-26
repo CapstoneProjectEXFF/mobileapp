@@ -29,6 +29,9 @@ public class AppStatus {
     public static final String TRANSACTION_DONE = "2";
     public static final String TRANSACTION_DONATED = "3";
     public static final String TRANSACTION_RESEND = "4";
+    public static final String TRANSACTION_GIFTAWAY = "5";
+    public static final String TRANSACTION_SENDER_RECEIPT_CONFRIMED = "6";
+    public static final String TRANSACTION_RECEIVER_RECEIPT_CONFRIMED = "7";
     public static final int SEND_MSG = 0;
     public static final int RECEIVE_MSG = 1;
     public static final String DISABLED_DONATION_POST = "0";

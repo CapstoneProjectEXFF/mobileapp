@@ -58,7 +58,7 @@ public class FirebaseImg {
                                     urlList.add(uri.toString());
                                     if (urlList.size() == selectedImages.size()) {
                                         progressDialog.dismiss();
-                                        if (item != null){
+                                        if (item != null) {
                                             postAction.manageItem(item, urlList, authorization, context, action);
                                         } else if (donationPostWrapper != null) {
                                             postAction.manageDonation(donationPostWrapper, urlList, authorization, context, action);
@@ -107,7 +107,7 @@ public class FirebaseImg {
         return result[0];
     }
 
-    public void deleteImageOnFirebase(String url){
+    public void deleteImageOnFirebase(String url) {
         StorageReference reference = firebaseStorage.getReferenceFromUrl(url);
         reference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -121,4 +121,5 @@ public class FirebaseImg {
             }
         });
     }
+
 }

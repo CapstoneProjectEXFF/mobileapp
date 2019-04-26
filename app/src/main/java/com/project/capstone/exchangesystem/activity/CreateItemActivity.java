@@ -316,10 +316,6 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         spinner.setAdapter(dataAdapter);
     }
 
-    private void setDataForCategorySpinner(Spinner spinner, List<String> dataArray) {
-
-    }
-
     @Override
     public void onButtonClicked(int choice) {
         switch (choice) {

@@ -174,4 +174,10 @@ public interface RmaAPIService {
 
     @GET("/rating/{userId}")
     Call<List<Rate>> getRating(@Path("userId") int userId);
+
+    @PUT("/transaction/uploadReceipt")
+    Call<Transaction> uploadReceipt(@Header("Authorization") String authorization, @Body Map<String, Object> body);
+
+    @PUT("/transaction/confirmReceipt")
+    Call<Transaction> confirmReceipt(@Header("Authorization") String authorization, @Body Map<String, Object> body);
 }

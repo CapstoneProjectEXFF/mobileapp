@@ -14,7 +14,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_min_height"
-            android:background="@drawable/toolbar_default"
+            android:background="@drawable/bg_gradient_dark"
             android:gravity="center"
             android:minHeight="50dp">
 
@@ -94,7 +94,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_normal"
+                android:background="@drawable/btn_gradient_dark"
 
                 android:text="Trở về Đăng Nhập"
                 android:textColor="#FFFFFF"
@@ -103,6 +103,5 @@
 
 
     </TableLayout>
-
 
 </android.support.constraint.ConstraintLayout>
