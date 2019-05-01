@@ -122,8 +122,8 @@ public interface RmaAPIService {
     @GET("/transaction/history/count")
     Call<Integer> countAllTransactionByUserId(@Header("Authorization") String authorization);
 
-    @GET("/user/{id}/item")
-    Call<Integer> countAllItemByUserId(@Header("Authorization") String authorization, @Path("id") int userID);
+    @GET("/user/{userId}/item/count")
+    Call<Integer> countAllItemByUserId(@Path("userId") int userID);
 
     @GET("/user/{userId}/donationPost/count")
     Call<Integer> countDonationPostByUserId(@Path("userId") int userId);

@@ -241,7 +241,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void getInventoryNumber() {
-        rmaAPIService.countAllItemByUserId(authorization, userId).enqueue(new Callback<Integer>() {
+        rmaAPIService.countAllItemByUserId(userId).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful()) {
