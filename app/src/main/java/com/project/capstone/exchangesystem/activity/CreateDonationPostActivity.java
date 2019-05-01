@@ -10,11 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,27 +22,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
-import com.project.capstone.exchangesystem.model.Category;
-import com.project.capstone.exchangesystem.model.DonationPostTarget;
-import com.project.capstone.exchangesystem.model.DonationPostWrapper;
-import com.project.capstone.exchangesystem.model.FirebaseImg;
-import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.model.DonationPost;
-import com.project.capstone.exchangesystem.model.Image;
-import com.project.capstone.exchangesystem.model.PostAction;
+import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.util.*;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
@@ -94,7 +90,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         txtCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChooseCategoryActivity.class);
+                Intent intent = new Intent(context, ChooseCategoryDonationActivity.class);
                 intent.putExtra("selectedCategory", selectedCategoryList);
                 startActivityForResult(intent, CATEGORY_REQUEST);
             }
@@ -258,7 +254,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CATEGORY_REQUEST) {
-            //selected items but not add to recycleview yet
             if (data != null) {
                 Bundle bundle = data.getExtras();
                 selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");

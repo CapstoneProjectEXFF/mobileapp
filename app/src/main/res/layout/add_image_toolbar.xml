@@ -9,7 +9,8 @@
         android:id="@+id/btnAddImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -17,15 +18,17 @@
             android:text="@string/add_image"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
-            android:textSize="20sp"
+            android:textSize="9pt"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/app_icon_color_start"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_add_photo_alternate_black_36"/>
+            android:background="@drawable/round_add_photo_alternate_black_24"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/app_icon_color_start"/>
     </LinearLayout>
 
 

@@ -13,9 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="NOTI MESSAGE"
         android:textColor="@color/colorPrimary"
         android:layout_gravity="center"
+        android:gravity="center"
         android:visibility="gone"/>
 
     <LinearLayout
@@ -36,7 +39,7 @@
             tools:ignore="NestedWeights">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/txtYourItems"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -60,9 +63,9 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:text="@string/trade_add_receive_item"
-                app:layout_constraintBottom_toBottomOf="@+id/textView5"
+                app:layout_constraintBottom_toBottomOf="@+id/txtYourItems"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView5" />
+                app:layout_constraintTop_toTopOf="@+id/txtYourItems" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvYourItems"
@@ -76,7 +79,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintTop_toBottomOf="@+id/txtYourItems" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -239,7 +242,8 @@
             android:textAllCaps="false"
             android:background="@drawable/btn_gradient_dark"
             android:textAppearance="@style/text_toolbar"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/btnSendRequest"
@@ -251,7 +255,8 @@
             android:textAllCaps="false"
             android:background="@drawable/btn_gradient_dark"
             android:textAppearance="@style/text_toolbar"
-            android:text="@string/finish" />
+            android:text="@string/finish"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

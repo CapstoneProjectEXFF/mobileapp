@@ -13,163 +13,309 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_gradient_dark" />
 
-    <!--<Button-->
-        <!--android:id="@+id/btnRating"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Đánh giá"/>-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/trade_inf_title"
-        android:textColor="@color/colorGrayDark"
-        android:textSize="12pt"
-        android:textStyle="bold" />
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1.35"
-            android:background="@drawable/bg_border_trade"
-            android:orientation="vertical"
-            android:paddingBottom="4dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linearInf"
+                android:id="@+id/linearFinish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/light_green"
+                android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/ivQRCode"
+                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/round_thumb_up_black_18"
+                    android:backgroundTint="@color/dark_green" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/done_transaction"
+                    android:textColor="@color/dark_green" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtReceiverName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Receiver's Name"
-                        android:textColor="@color/colorGrayDark"
-                        android:textSize="9pt"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txtReceiverPhone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Receiver's Phone"
-                        android:textColor="@color/colorGrayDark"
-                        android:textSize="8pt" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtReceiverName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Receiver's Name"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtReceiverPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Receiver's Phone"
+                            android:textColor="@color/colorGrayDark"
+                            android:textSize="9pt" />
 
                         <TextView
                             android:id="@+id/txtReceiverAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
                             android:layout_marginTop="2dp"
-                            android:layout_marginRight="8dp"
                             android:layout_weight="1"
                             android:singleLine="false"
                             android:text="Receiver's Address"
                             android:textColor="@color/colorGrayDark"
-                            android:textSize="8pt" />
+                            android:textSize="9pt" />
 
-                        <!--<ImageButton-->
-                            <!--android:id="@+id/btnMaps"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:layout_marginRight="8dp"-->
-                            <!--android:background="@drawable/round_directions_bike_black_36" />-->
+                        <TextView
+                            android:id="@+id/txtShowYourItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/trade_receive_item"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
+                            android:textStyle="bold" />
+
+                        <ListView
+                            android:id="@+id/lvYourItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/colorGrayWhite"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/txtShowMyItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/trade_send_item"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
+                            android:textStyle="bold" />
+
+                        <ListView
+                            android:id="@+id/lvMyItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/colorGrayWhite"
+                            android:visibility="gone" />
 
                     </LinearLayout>
+
                 </LinearLayout>
+
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvYourItems"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/colorGrayWhite"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/myItemLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_border_trade"
-            android:orientation="vertical"
-            android:paddingBottom="4dp">
-
-            <TextView
-                android:id="@+id/txtSend"
+            <LinearLayout
+                android:id="@+id/linearQR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/trade_send_item"
-                android:textColor="@color/colorGrayDark"
-                android:textSize="9pt"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/rvMyItems"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvMyItems"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/scan_qr_remind"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/ivQRCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="2dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearReceipt"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/colorGrayWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtSend" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txtReceiptTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/receipt_title"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/receiptImage"
+                    android:layout_width="420px"
+                    android:layout_height="420px"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btnConfirmReceipt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_gradient_dark"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/confirm_receipt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="7pt"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnAddViewImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/add_receipt"
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="9pt"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtDeleteImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/remove_receipt"
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="8pt"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/swDelivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/lavendar"
+                    android:paddingTop="5dp" />
+
+                <LinearLayout
+                    android:id="@+id/btnMaps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableTint="@color/app_icon_color_start"
+                        android:text="@string/delivery_open_app"
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="9pt"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/round_directions_bike_black_24"
+                        android:backgroundTint="@color/app_icon_color_start"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

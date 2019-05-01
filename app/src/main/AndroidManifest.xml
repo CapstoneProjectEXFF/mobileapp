@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ChooseCategoryActivity"></activity>
+        <activity android:name=".activity.ChooseCategoryItemActivity"></activity>
+        <activity android:name=".activity.ChooseCategoryDonationActivity" />
 
         <meta-data
             android:name="asset_statements"

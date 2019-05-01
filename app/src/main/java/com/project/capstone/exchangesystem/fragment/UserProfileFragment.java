@@ -25,12 +25,12 @@ import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -38,12 +38,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class UserProfileFragment extends Fragment {
     String tempTransaction;
-    String tempFriend;
-    //    TextView txtNumberTransaction;
+    String tempFriend, tempInventory, tempDonation;
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization;
-    TextView txtNumberTransaction, txtNumberFriend, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
+    TextView txtNumberTransaction, txtNumberFriend, txtNumberInventory, txtNumberDonation, txtNameUserProfile, txtPhoneNumberProfile, txtAddressProfile;
     ImageView imageView;
     ImageButton btnQR, iconPhone;
     UserSession userSession;
@@ -66,7 +65,7 @@ public class UserProfileFragment extends Fragment {
 
         rmaAPIService = RmaAPIUtils.getAPIService();
         sharedPreferences = getActivity().getSharedPreferences("localData", MODE_PRIVATE);
-        authorization = sharedPreferences.getString("authorization", null);
+        authorization = sharedPreferences.getString("authorization", "");
     }
 
     @Override
@@ -125,6 +124,8 @@ public class UserProfileFragment extends Fragment {
         txtNameUserProfile = view.findViewById(R.id.txtNameUserProfile);
         txtPhoneNumberProfile = view.findViewById(R.id.txtPhoneNumberProfile);
         txtNumberTransaction = view.findViewById(R.id.txtNumberTransaction);
+        txtNumberInventory = view.findViewById(R.id.txtNumberInventory);
+        txtNumberDonation = view.findViewById(R.id.txtNumberDonation);
         txtAddressProfile = view.findViewById(R.id.txtAddressUserProfile);
         txtNumberFriend = view.findViewById(R.id.txtNumberFriends);
         rvReviewers = view.findViewById(R.id.rvReviewers);
@@ -137,11 +138,7 @@ public class UserProfileFragment extends Fragment {
 
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-//            String avatar = "";
             String avatar = sharedPreferences.getString("avatar", null);
-//            if (sharedPreferences.contains("avatar")) {
-//                avatar = avatar + sharedPreferences.getString("avatar", "");
-//            }
             String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
             String userName = sharedPreferences.getString("username", null);
             String status = sharedPreferences.getString("status", null);
@@ -153,7 +150,7 @@ public class UserProfileFragment extends Fragment {
             txtNameUserProfile.setText(userName);
             txtPhoneNumberProfile.setText(phoneNumber);
 
-            if (avatar != null){
+            if (avatar != null) {
                 Picasso.with(view.getContext()).load(avatar)
                         .placeholder(R.drawable.ic_no_image)
                         .error(R.drawable.ic_no_image)
@@ -161,23 +158,27 @@ public class UserProfileFragment extends Fragment {
             }
             tempTransaction = "";
             tempFriend = "";
+            tempInventory = "";
+            tempDonation = "";
             rmaAPIService = RmaAPIUtils.getAPIService();
             txtAddressProfile.setText(address);
 
             getTransactionNumber();
             getFriendNumber();
-          
+            getDonationPostNumber();
+            getInventoryNumber();
+
             btnQR.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
-                  ArrayList<Integer> transactionIds = new ArrayList<>();
-                  for (int i = 0; i < transactions.size(); i++){
-                      transactionIds.add(transactions.get(i).getId());
-                  }
-                  intent.putExtra("transactionIds", transactionIds);
-                  startActivity(intent);
-              }
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), QRCodeActivity.class);
+                    ArrayList<Integer> transactionIds = new ArrayList<>();
+                    for (int i = 0; i < transactions.size(); i++) {
+                        transactionIds.add(transactions.get(i).getId());
+                    }
+                    intent.putExtra("transactionIds", transactionIds);
+                    startActivity(intent);
+                }
             });
 
             //load reviewers
@@ -195,6 +196,8 @@ public class UserProfileFragment extends Fragment {
             txtPhoneNumberProfile.setVisibility(View.GONE);
             iconPhone.setVisibility(View.GONE);
             view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
+            setHasOptionsMenu(false);
+            getActivity().setTitle(" ");
         }
 
         return view;
@@ -235,6 +238,42 @@ public class UserProfileFragment extends Fragment {
         });
 
         txtNumberTransaction.setText(tempTransaction);
+    }
+
+    private void getInventoryNumber() {
+        rmaAPIService.countAllItemByUserId(authorization, userId).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempInventory = response.body().toString();
+                    txtNumberInventory.setText(tempInventory);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+
+        txtNumberInventory.setText(tempInventory);
+    }
+
+    private void getDonationPostNumber() {
+        rmaAPIService.countDonationPostByUserId(userId).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempDonation = response.body().toString();
+                    txtNumberDonation.setText(tempDonation);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
     }
 
     public void toOwnInventory(View view) {
@@ -304,7 +343,7 @@ public class UserProfileFragment extends Fragment {
 
     private void getTransactionData() {
         transactions = new ArrayList<>();
-        if (authorization != null){
+        if (authorization != null) {
             rmaAPIService.getAllTransactionByUserID(authorization).enqueue(new Callback<List<Transaction>>() {
                 @Override
                 public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {

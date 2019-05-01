@@ -38,6 +38,7 @@ public class PostAction {
         String itemDes = item.getDescription();
         String itemAddress = item.getAddress();
         String privacy = item.getPrivacy();
+//        String preferItems = item.getPreferItems();
         int category = item.getCategory().getId();
         final Map<String, Object> jsonBody = new HashMap<String, Object>();
 
@@ -45,7 +46,8 @@ public class PostAction {
         jsonBody.put("description", itemDes);
         jsonBody.put("address", itemAddress);
         jsonBody.put("privacy", privacy);
-        jsonBody.put("category", "" + (category + 1));
+        jsonBody.put("category", "" + category);
+//        jsonBody.put("preferItems", preferItems);
 //        jsonBody.put("urls", urlList);
 
         if (authorization != null) {
@@ -59,9 +61,6 @@ public class PostAction {
                             if (response.body() != null) {
                                 Log.i("PostAction", "item added");
                                 progressDialog.dismiss();
-//                                Intent intent = new Intent(context, OwnInventory.class);
-//                                intent.putExtra("itemId", response.body().getId());
-//                                context.startActivity(intent);
 
                                 Intent returnIntent = new Intent();
                                 ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
@@ -74,7 +73,7 @@ public class PostAction {
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
-                            Log.i("PostAction", "item create error: " + response.message());
+                            Log.i("PostAction", "item create error: " + response.code());
                         }
                     }
 
@@ -125,8 +124,6 @@ public class PostAction {
 
         setDialog(context);
 
-//        jsonBody.put("urls", urlList);
-
         if (authorization != null) {
             if (action == DONATION_CREATE_ACTION) {
                 donationPostWrapper.setUrls(urlList);
@@ -142,9 +139,6 @@ public class PostAction {
                                 //go to main screen
                                 Intent intent = new Intent(context, MainActivity.class);
                                 context.startActivity(intent);
-
-                                //TODO on activity result
-
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(context, "Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
@@ -166,8 +160,6 @@ public class PostAction {
                 });
             } else if (action == DONATION_UPDATE_ACTION) {
                 donationPostWrapper.setNewUrls(urlList);
-//                jsonBody.put("newUrls", urlList);
-//                jsonBody.put("removedUrlIds", donationPost.getImageIds());
                 rmaAPIService.updateDonationPost(donationPostWrapper, donationPostWrapper.getDonationPost().getId(), authorization).enqueue(new Callback<Object>() {
 
                     @Override
@@ -175,10 +167,7 @@ public class PostAction {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 Log.i("PostAction", "donation updated");
-                                //go to main
                                 progressDialog.dismiss();
-//                                Intent intent = new Intent(context, MainActivity.class);
-//                                context.startActivity(intent);
 
                                 Intent returnIntent = new Intent();
                                 ((Activity) context).setResult(Activity.RESULT_OK, returnIntent);
@@ -248,7 +237,6 @@ public class PostAction {
                         progressDialog.dismiss();
                     }
                 }
-                //TODO: updating...
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {

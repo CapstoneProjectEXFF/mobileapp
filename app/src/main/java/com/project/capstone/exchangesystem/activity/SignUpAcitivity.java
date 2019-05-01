@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.project.capstone.exchangesystem.R;
+import com.project.capstone.exchangesystem.constants.AppApi;
 import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
+import com.project.capstone.exchangesystem.service.MyInterface;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,10 +24,11 @@ import java.util.Map;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ENABLE;
 
-public class SignUpAcitivity extends AppCompatActivity {
+public class SignUpAcitivity extends AppCompatActivity implements MyInterface {
     EditText txtFullname, txtPhone, txtPassword, txtAddress, txtPasswordCheck;
     private Context context;
     TextView lbl_toolbar;
+    RmaAPIService rmaAPIService, thirdPartyrmaAPIService;
     boolean flag = true;
     boolean flag2 = true;
     boolean flag3 = true;
@@ -33,6 +37,7 @@ public class SignUpAcitivity extends AppCompatActivity {
     boolean flag6 = true;
     boolean flag7 = true;
     boolean flag8 = true;
+    boolean flag9 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,8 @@ public class SignUpAcitivity extends AppCompatActivity {
     }
 
     public void signUpUser(View view) {
-        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+        rmaAPIService = RmaAPIUtils.getAPIService();
+        thirdPartyrmaAPIService = RmaAPIUtils.getThirdPartyService();
 
         User user = new User();
 
@@ -69,10 +75,11 @@ public class SignUpAcitivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                     if (response.body().toString().equals("no")) {
-                        txtPhone.setBackgroundResource(R.drawable.signupedt);
+//                        txtPhone.setBackgroundResource(R.drawable.signupedt);
                     } else {
-                        flag4 = false;
+                        onCheckPhoneValid();
                         txtPhone.setBackgroundResource(R.drawable.signuperror);
+                        Toast.makeText(getApplicationContext(), "Số điện thoại đã được đăng kí", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -84,6 +91,31 @@ public class SignUpAcitivity extends AppCompatActivity {
             }
         });
 
+        thirdPartyrmaAPIService.verifyPhoneNumber(phone, AppApi.CountryCode, AppApi.APIKey).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+
+                if (response.body() != null) {
+                    Map<String, String> body = (Map<String, String>) response.body();
+                    if (body.get("status").toString().equals("VALID_CONFIRMED")) {
+//                        txtPhone.setBackgroundResource(R.drawable.signupedt);
+
+                    } else {
+                        onCheckPhoneExist();
+                        txtPhone.setBackgroundResource(R.drawable.signuperror);
+                        Toast.makeText(getApplicationContext(), "Số điện thoại không tồn tại", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+
+            }
+        });
+        System.out.println("test flag 2 " + flag2);
+
         if (fullname.length() < 1) {
             flag = false;
             txtFullname.setBackgroundResource(R.drawable.signuperror);
@@ -92,14 +124,14 @@ public class SignUpAcitivity extends AppCompatActivity {
         }
 
 
-        if (!android.util.Patterns.PHONE.matcher(phone).matches()) {
-            flag2 = false;
-            txtPhone.setBackgroundResource(R.drawable.signuperror);
-        } else {
-            txtPhone.setBackgroundResource(R.drawable.signupedt);
-        }
+//        if (!android.util.Patterns.PHONE.matcher(phone).matches()) {
+//            flag2 = false;
+//            txtPhone.setBackgroundResource(R.drawable.signuperror);
+//        } else {
+//            txtPhone.setBackgroundResource(R.drawable.signupedt);
+//        }
 
-        if (password.length() < 6) {
+        if (password.length() < 8) {
             flag3 = false;
             txtPassword.setBackgroundResource(R.drawable.signuperror);
         } else {
@@ -138,12 +170,12 @@ public class SignUpAcitivity extends AppCompatActivity {
         }
 
 
-        if (flag && flag2 && flag3 && flag4 && flag5 && flag6 && flag7) {
+        if (flag && flag2 && flag3 && flag4 && flag5 && flag6 && flag7 && flag9) {
 
 
             user.setFullName(fullname);
             user.setPhone(phone);
-//            user.setPassword(password);
+//            user.setPassword(password)
 
             final Map<String, String> jsonBody = new HashMap<String, String>();
             jsonBody.put("phoneNumber", phone);
@@ -157,8 +189,12 @@ public class SignUpAcitivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
                     if (response.body() != null && response.isSuccessful()) {
-                        Intent intent = new Intent(context, CreateSuccessActivity.class);
-                        startActivity(intent);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Đăng Kí Thành Công", Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("signupUsername", txtPhone.getText().toString().trim());
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
                     } else {
                         Toast toast = Toast.makeText(getApplicationContext(), R.string.signup_error, Toast.LENGTH_SHORT);
                         toast.show();
@@ -167,7 +203,7 @@ public class SignUpAcitivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable t) {
-                    Toast toast = Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             });
@@ -180,5 +216,16 @@ public class SignUpAcitivity extends AppCompatActivity {
 
     public void toSignUp(View view) {
         finish();
+    }
+
+
+    @Override
+    public void onCheckPhoneValid() {
+        flag9 = false;
+    }
+
+    @Override
+    public void onCheckPhoneExist() {
+        flag2 = false;
     }
 }

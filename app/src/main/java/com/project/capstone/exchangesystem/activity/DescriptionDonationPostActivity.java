@@ -1,13 +1,18 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,11 +27,13 @@ import com.facebook.share.widget.ShareDialog;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.DonationTargetAdapter;
 import com.project.capstone.exchangesystem.adapter.DonatorAdapter;
+import com.project.capstone.exchangesystem.adapter.GalleryAdapter;
 import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.dialog.LoginDialogFragment;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.model.DonationPostTarget;
 import com.project.capstone.exchangesystem.model.Donator;
+import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.TargetStatus;
 import com.project.capstone.exchangesystem.model.TransactionRequestWrapper;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
@@ -57,20 +64,23 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
 
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
-    String authorization;
+    String authorization, url;
 
     DonationPost donationPost;
     int userId;
     ArrayList<Donator> donators;
     DonatorAdapter donatorAdapter;
-    RecyclerView rvDonators, rvTargets;
+    RecyclerView rvDonators, rvTargets, rvItemImages;
     private static final int UPDATE_CODE = 1;
     private static final int ADD_CODE = 2;
     private boolean reloadNeed = true, checkDonatorClick = false, checkTargetClick = false;
     List<DonationPostTarget> targets;
     ArrayList<TargetStatus> targetStatusList;
     DonationTargetAdapter donationTargetAdapter;
-
+    List<String> urlList, tmpUrlList;
+    GalleryAdapter galleryAdapter;
+    Context context;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +95,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         if (appLinkData == null) { //check if app was opened from link or not
             GetInformation(-1);
         } else {
-            int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace("http://35.247.191.68/donation-post.html?id=", ""));
+            int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace(getString(R.string.donation_link), ""));
             GetInformation(uriDonationPostId);
         }
     }
@@ -119,9 +129,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             menu.getItem(1).setTitle("Khóa bài viết");
             return true;
         }
-//        if (donationPost.getStatus().equals(AppStatus.DISABLED_DONATION_POST)) {
-//            return false;
-//        }
         return false;
     }
 
@@ -170,11 +177,9 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.editpost) {
             Intent intent = new Intent(getApplicationContext(), UpdateDonationPostActivity.class);
-//            intent.putExtra("donationPostId", donationPost.getId());
             intent.putExtra("donationPost", donationPost);
             startActivityForResult(intent, UPDATE_CODE);
         } else if (item.getItemId() == R.id.deletepost) {
-            // TODO dialog choose options
             deleteDonationPost();
         }
         return true;
@@ -197,12 +202,12 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
-
             }
         });
     }
 
     private void direct() {
+        context = this;
         userSession = new UserSession(getApplicationContext());
         imgUserDonation = findViewById(R.id.imgUserDonation);
         imgDescriptionDonationPost = findViewById(R.id.imgDescriptionDonationPost);
@@ -223,6 +228,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         txtTargets = findViewById(R.id.txtTargets);
         rvTargets = findViewById(R.id.rvTargets);
         txtDonationName = findViewById(R.id.txtDonationName);
+        rvItemImages = findViewById(R.id.rvItemImages);
 
         //share facebook
         callbackManager = CallbackManager.Factory.create();
@@ -232,7 +238,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             @Override
             public void onClick(View v) {
                 ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
-                        .setQuote("Test").setContentUrl(Uri.parse("http://35.247.191.68/donation-post.html?id=" + donationPost.getId())).build();
+                        .setQuote(donationPost.getTitle()).setContentUrl(Uri.parse(getString(R.string.donation_link) + donationPost.getId())).build();
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
                     shareDialog.show(shareLinkContent);
                 }
@@ -286,6 +292,43 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
                 }
             }
         });
+
+        imgDescriptionDonationPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFullImage();
+            }
+        });
+    }
+
+    private void showFullImage() {
+        dialog = new Dialog(DescriptionDonationPostActivity.this);
+        dialog.setContentView(R.layout.full_receipt_view);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        setReceiptDialogComponents(dialog);
+    }
+
+    private void setReceiptDialogComponents(final Dialog dialog) {
+        ImageView ivFullReceipt;
+        ImageButton btnCloseImage;
+
+        ivFullReceipt = dialog.findViewById(R.id.ivFullReceipt);
+        btnCloseImage = dialog.findViewById(R.id.btnCloseImage);
+
+        Picasso.with(getApplicationContext()).load(url)
+                .placeholder(R.drawable.ic_no_image)
+                .error(R.drawable.ic_no_image)
+                .into(ivFullReceipt);
+
+        btnCloseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     private void showDonators() {
@@ -293,8 +336,6 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         donatorAdapter = new DonatorAdapter(getApplicationContext(), donators, new DonatorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Donator donator) {
-                //TODO VIEW USER'S PROFILE
-                Toast.makeText(getApplicationContext(), "" + donator.getDonatorName(), Toast.LENGTH_LONG).show();
             }
         });
         rvDonators.setHasFixedSize(true);
@@ -388,10 +429,12 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         }
 
         if (donationPost.getImages().size() > 0) {
-            Picasso.with(getApplicationContext()).load(donationPost.getImages().get(0).getUrl())
+            url = donationPost.getImages().get(0).getUrl();
+            Picasso.with(getApplicationContext()).load(url)
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
                     .into(imgDescriptionDonationPost);
+            setImageList();
         }
 
         Picasso.with(getApplicationContext()).load(donationPost.getUser().getAvatar())
@@ -410,6 +453,33 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
         showDonators();
 
         ActionToolbar();
+    }
+
+    private void setImageList() {
+        urlList = new ArrayList<>();
+        galleryAdapter = new GalleryAdapter(context, urlList, new GalleryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String selectedUrl) {
+                Picasso.with(getApplicationContext()).load(selectedUrl)
+                        .placeholder(R.drawable.ic_no_image)
+                        .error(R.drawable.ic_no_image)
+                        .into(imgDescriptionDonationPost);
+                url = selectedUrl;
+            }
+        });
+
+        rvItemImages.setHasFixedSize(true);
+        rvItemImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvItemImages.setAdapter(galleryAdapter);
+
+        tmpUrlList = new ArrayList<>();
+
+        for (int i = 0; i < donationPost.getImages().size(); i++){
+            Image tmpImage = donationPost.getImages().get(i);
+            tmpUrlList.add(tmpImage.getUrl());
+        }
+
+        galleryAdapter.setfilter(tmpUrlList);
     }
 
     private void showTargets() {

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
 import com.project.capstone.exchangesystem.model.Rate;
@@ -20,19 +19,18 @@ import com.project.capstone.exchangesystem.model.User;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserProfileActivity extends AppCompatActivity {
 
     ImageView imageView, iconEdit;
     TextView txtNameUserProfile;
-    TextView txtPhoneNumberProfile;
+    TextView txtPhoneNumberProfile, txtNumberDonation, txtNumberInventory;
     LinearLayout linlay2;
     Toolbar toolbar;
     SharedPreferences sharedPreferences;
@@ -42,6 +40,8 @@ public class UserProfileActivity extends AppCompatActivity {
     ReviewerAdapter reviewerAdapter;
     ArrayList<Rate> ratingList;
     String authorization;
+    int userId;
+    String tempInventory, tempDonation;
 
 
     @Override
@@ -52,6 +52,8 @@ public class UserProfileActivity extends AppCompatActivity {
         getData();
         showReviewers();
         actionToolbar();
+        getInventoryNumber();
+        getDonationPostNumber();
     }
 
     private void showReviewers() {
@@ -99,11 +101,15 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void direct() {
+        tempDonation = "";
+        tempInventory = "";
         toolbar = findViewById(R.id.userProfileToolbar);
         imageView = findViewById(R.id.imgUserProfile);
         iconEdit = findViewById(R.id.iconEdit);
         txtNameUserProfile = findViewById(R.id.txtNameUserProfile);
         txtPhoneNumberProfile = findViewById(R.id.txtPhoneNumberProfile);
+        txtNumberInventory = findViewById(R.id.txtNumberInventory);
+        txtNumberDonation = findViewById(R.id.txtNumberDonation);
         linlay2 = findViewById(R.id.linlay2);
         rmaAPIService = RmaAPIUtils.getAPIService();
         linlay2.setVisibility(View.GONE);
@@ -122,6 +128,45 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         txtNameUserProfile.setText(userDetail.getFullName());
         txtPhoneNumberProfile.setText(userDetail.getPhone());
+        userId = userDetail.getId();
+    }
+
+    private void getInventoryNumber() {
+        rmaAPIService.countAllItemByUserId(authorization, userId).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempInventory = response.body().toString();
+                    txtNumberInventory.setText(tempInventory);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+
+        txtNumberInventory.setText(tempInventory);
+    }
+
+    private void getDonationPostNumber() {
+        rmaAPIService.countDonationPostByUserId(userId).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()) {
+                    tempDonation = response.body().toString();
+                    txtNumberDonation.setText(tempDonation);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+
+        txtNumberDonation.setText(tempDonation);
     }
 
     public void toOwnInventory(View view) {

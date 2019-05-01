@@ -1,6 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,11 +23,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import com.project.capstone.exchangesystem.R;
-import com.project.capstone.exchangesystem.adapter.CategoryAdapter;
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.Category;
@@ -49,15 +48,12 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class CreateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    TextView txtError;
-    Spinner spCategory;
+    TextView txtError, txtCategory;
     LinearLayout btnAddImage;
-    EditText edtItemName, edtItemDes;
-    Spinner spPrivacy;
+    EditText edtItemName, edtItemDes, edtPreferItems;
     Context context;
     String authorization;
     SharedPreferences sharedPreferences;
-    List<String> categoryList, privacyList;
     int onClickFlag;
     FirebaseImg firebaseImg;
     RmaAPIService rmaAPIService;
@@ -67,19 +63,23 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     ArrayList<Image> imageList, tmpImageList;
     Image tmpImage;
     RecyclerView rvSelectedImages;
-    List<Category> tmpCategoryList;
-    CategoryAdapter categoryAdapter;
+    ScrollView scrollView;
+    RadioGroup spPrivacy;
+    InputMethodManager inputMethodManager;
+    ArrayList<Category> selectedCategoryList;
+    Category selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_item);
         context = this;
+
+        loadProgressDialog();
         getComponents();
         setToolbar();
         setImageAdapter();
-        getAllCategory();
-        getAllPrivacy();
+        getCategoryData();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +88,58 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
                 optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+
+        spPrivacy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                hideKeyboard(group);
+            }
+        });
+
+        txtCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChooseCategoryItemActivity.class);
+                intent.putExtra("selectedCategory", selectedCategoryList);
+                intent.putExtra("selectedCategoryPos", selectedCategory);
+                startActivityForResult(intent, CATEGORY_REQUEST);
+            }
+        });
+    }
+
+    private void loadProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+    }
+
+    private void getCategoryData() {
+        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        List<Category> tmpCategoryList;
+                        tmpCategoryList = response.body();
+                        for (int i = 0; i < tmpCategoryList.size(); i++) {
+                            selectedCategoryList.add(tmpCategoryList.get(i));
+                        }
+                        progressDialog.dismiss();
+                    } else {
+                        Log.i("loadCategory", "category null");
+                    }
+                } else {
+                    Log.i("loadCategory", "response unsucceed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.i("loadCategory", "failed on calling API");
             }
         });
     }
@@ -131,7 +183,7 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         String itemName = edtItemName.getText().toString();
         String itemDes = edtItemDes.getText().toString();
 
-        if (itemName.trim().length() == 0 || itemDes.trim().length() == 0 || imageList.size() == 0) {
+        if (itemName.trim().length() == 0 || itemDes.trim().length() == 0 || imageList.size() == 0 || selectedCategory == null) {
             notifyError(itemName.trim().length(), itemDes.trim().length());
         } else {
             if (firebaseImg.checkLoginFirebase()) {
@@ -145,8 +197,11 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         Item item = new Item();
         item.setName(itemName);
         item.setDescription(itemDes);
-        item.setPrivacy("" + spPrivacy.getSelectedItemPosition());
-        item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
+
+        View checkedPrivacyButton = spPrivacy.findViewById(spPrivacy.getCheckedRadioButtonId());
+        item.setPrivacy("" + spPrivacy.indexOfChild(checkedPrivacyButton));
+        item.setCategory(selectedCategory);
+        item.setPreferItems(edtPreferItems.getText().toString());
         List<Uri> listUri = new ArrayList<>();
         for (int i = 0; i < imageList.size(); i++) {
             listUri.add(imageList.get(i).getUri());
@@ -165,6 +220,9 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         }
         if (imageList.size() == 0) {
             Toast.makeText(getApplicationContext(), R.string.error_input_image, Toast.LENGTH_LONG).show();
+        }
+        if (selectedCategory == null){
+            Toast.makeText(getApplicationContext(), R.string.error_category, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -185,7 +243,13 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && data != null) {
+        if (requestCode == CATEGORY_REQUEST) {
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");
+                selectedCategory = (Category) bundle.getSerializable("selectedCategory");
+            }
+        } else if (resultCode == RESULT_OK && data != null) {
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
@@ -238,62 +302,13 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         return Uri.parse(path);
     }
 
-    private void getAllCategory() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(R.string.data_loading_noti);
-        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-
-        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        tmpCategoryList = response.body();
-                        categoryList = new ArrayList<>();
-                        for (int i = 0; i < tmpCategoryList.size(); i++) {
-                            categoryList.add(tmpCategoryList.get(i).getName());
-                        }
-
-                        categoryAdapter = new CategoryAdapter(context, tmpCategoryList);
-                        spCategory.setAdapter(categoryAdapter);
-                        progressDialog.dismiss();
-                    } else {
-                        notifyLoadingError("loadCategory", "httpstatus" + response.code());
-                    }
-                } else {
-                    notifyLoadingError("loadCategory", "cannot load category");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                notifyLoadingError("loadCategory", "failed on calling API");
-            }
-        });
-
-
-    }
-
-    private void notifyLoadingError(String tag, String msg) {
-        progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
-        Log.i(tag, msg);
-        Intent intent = new Intent(getApplicationContext(), OwnInventory.class);
-        startActivity(intent);
-    }
-
     private void getComponents() {
         txtError = findViewById(R.id.txtError);
         btnAddImage = findViewById(R.id.btnAddImage);
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
         spPrivacy = findViewById(R.id.spPrivacy);
-        spPrivacy.setPopupBackgroundResource(R.color.white);
         rmaAPIService = RmaAPIUtils.getAPIService();
-        spCategory = findViewById(R.id.spCategory);
-        spCategory.setPopupBackgroundResource(R.color.white);
         toolbar = findViewById(R.id.tbToolbar);
         rvSelectedImages = findViewById(R.id.rvSelectedImages);
         imageList = new ArrayList<>();
@@ -301,23 +316,10 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
         authorization = sharedPreferences.getString("authorization", null);
         firebaseImg = new FirebaseImg();
-    }
-
-    private void getAllPrivacy() {
-        privacyList = new ArrayList<>();
-        privacyList.add(getString(R.string.privacy_public));
-        privacyList.add(getString(R.string.privacy_friends));
-        setDataForSpinner(spPrivacy, privacyList);
-    }
-
-    private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, dataArray);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(dataAdapter);
-    }
-
-    private void setDataForCategorySpinner(Spinner spinner, List<String> dataArray) {
-
+        scrollView = findViewById(R.id.scrollView);
+        edtPreferItems = findViewById(R.id.edtPreferItems);
+        txtCategory = findViewById(R.id.txtCategory);
+        selectedCategoryList = new ArrayList<>();
     }
 
     @Override
@@ -383,5 +385,10 @@ public class CreateItemActivity extends AppCompatActivity implements ImageOption
         if (imageList.size() == 0) {
             rvSelectedImages.setVisibility(View.GONE);
         }
+    }
+
+    private void hideKeyboard(View view) {
+        inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

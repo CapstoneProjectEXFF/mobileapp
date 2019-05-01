@@ -25,6 +25,7 @@
     <!--Facebook-->
     <string name="facebook_app_id">293758374637458</string>
     <string name="facebook_login_protocol_schema">fb293758374637458</string>
+
     <string name="asset_statements" translatable="false">[{ \"include\":
         \"https://exff-104b8.firebaseapp.com/.well-known/assetlinks.json\" }]
     </string>
@@ -65,7 +66,7 @@
     <string name="view_map">Xem bản đồ</string>
     <string name="continuous">Tiếp tục</string>
     <string name="input_message">Tin nhắn</string>
-    <string name="trade_receive_item">Đồ dùng muốn nhận</string>
+    <string name="trade_receive_item">Đồ dùng của</string>
     <string name="trade_send_item">Đồ dùng của bạn</string>
     <string name="trade_add_receive_item">Thêm đồ muốn nhận</string>
     <string name="trade_add_send_item">Thêm đồ muốn gửi</string>
@@ -89,20 +90,21 @@
     <string name="error_server">Lỗi Hệ Thống!</string>
     <string name="error_request">Xảy ra lỗi!</string>
     <string name="lock_donation">Khóa Thành Công</string>
-    <string name="signup_error">Đăng Nhập Lại</string>
+    <string name="signup_error">Đăng Kí Lại</string>
     <string name="edit_profile_success">Thay đổi thông tin cá nhân thành công</string>
     <string name="login">Đăng Nhập</string>
     <string name="cancle">Hủy</string>
-    <string name="waiting_transaction">Đang chờ xử lý</string>
-    <string name="done_transaction">Giao dịch thành công</string>
+    <string name="waiting_transaction">Giao dịch\nđang chờ xác nhận</string>
+    <string name="done_transaction">Giao dịch\nđã thành công</string>
+    <string name="donation_transaction">Quyên góp\ntừ thiện</string>
 
     <!--trade room noti-->
-    <string name="user_accepted_trade">đã chốt.</string>
-    <string name="user_reseted_trade">đã xóa tất cả đồ dùng.</string>
-    <string name="user_canceled_confirm_trade">đã hủy chốt.</string>
-    <string name="user_added_item">đã được thêm vào.</string>
-    <string name="user_removed_item">đã bị xóa.</string>
-    <string name="trade_done">Xác nhận trao đổi.</string>
+    <string name="user_accepted_trade">đã chốt</string>
+    <string name="user_reseted_trade">đã xóa tất cả đồ dùng</string>
+    <string name="user_canceled_confirm_trade">đã hủy chốt</string>
+    <string name="user_added_item">đã được thêm vào</string>
+    <string name="user_removed_item">đã bị xóa</string>
+    <string name="trade_done">Xác nhận trao đổi</string>
     <string name="me_confirmed">Bạn</string>
 
     <!--rating-->
@@ -110,6 +112,7 @@
     <string name="rating_send">Gửi</string>
     <string name="rating_title">Đánh giá người dùng</string>
     <string name="comment_hint">Thêm bình luận</string>
+    <string name="rating_title_profile">Đánh giá</string>
 
     <!--qrCode-->
     <string name="qr_title">Quét mã QR</string>
@@ -131,7 +134,9 @@
     <string name="donation_default_title">Bài quyên góp</string>
     <string name="error_category">Vui lòng chọn danh mục.</string>
     <string name="select_item">Chọn đồ dùng</string>
-  
+    <string name="prefer_item">Sách, quần áo,...</string>
+    <string name="prefer_item_title">Bạn mong muốn đổi với đồ dùng nào?</string>
+
     <string name="no_item_found">Không tìm thấy đồ vật</string>
     <string name="keyword_hint">Nhập từ khóa</string>
     <string name="edit_profile_btn">THAY ĐỔI</string>
@@ -143,5 +148,22 @@
     <string name="login_reminder">Đăng Nhập Để Tiếp Tục</string>
     <string name="search_hint">Tìm kiếm</string>
 
-    <string name="rating_title_profile">Đánh giá</string>
+    <!--Transaction Detail-->
+    <string name="trans_finish">Hoàn thành</string>
+    <string name="add_receipt">Thêm biên nhận</string>
+    <string name="view_my_receipt">Xem biên nhận của bạn</string>
+    <string name="receipt_title">Biên nhận của</string>
+    <string name="added_receipt">Biên nhận của bạn đã đăng tải thành công.</string>
+    <string name="on_off_delivery">Nhờ vận chuyển</string>
+    <string name="confirm_receipt">Xác nhận đã trao đổi</string>
+    <string name="confirmed_receipt">Xác nhận biên nhận thành công.</string>
+    <string name="scan_qr_remind">Hãy quét mã này khi gặp nhau nhé</string>
+    <string name="not_upload_receipt_yet">chưa gửi biên nhận.</string>
+    <string name="remove_receipt">Xóa biên nhận</string>
+    <string name="delivery">Nhờ vận chuyển</string>
+    <string name="delivery_open_app">Đặt Grab</string>
+
+    <!--Share FB-->
+    <string name="item_link">http://35.247.191.68/item.html?id=</string>
+    <string name="donation_link">http://35.247.191.68/donation-post.html?id=</string>
 </resources>

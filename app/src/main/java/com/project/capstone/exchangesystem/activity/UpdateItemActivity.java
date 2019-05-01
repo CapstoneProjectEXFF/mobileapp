@@ -46,14 +46,11 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
 public class UpdateItemActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    TextView txtError;
-    Spinner spCategory;
+    TextView txtError, txtCategory;
     RmaAPIService rmaAPIService;
-    List<String> categoryList, privacyList;
     List<Integer> removedImageIds;
     LinearLayout btnAddImage;
     EditText edtItemName, edtItemDes;
-    Spinner spPrivacy;
     Context context;
     String authorization;
     int itemId, onClickFlag = -1;
@@ -65,17 +62,20 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     ArrayList<Image> imageList, tmpImageList;
     Image tmpImage;
     RecyclerView rvSelectedImages;
+    RadioGroup spPrivacy;
+    ArrayList<Category> selectedCategoryList;
+    Category selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_item);
         context = this;
+        loadProgressDialog();
         getComponents();
         setToolbar();
         setImageAdapter();
-        getAllCategory();
-        getAllPrivacy();
+        loadItem();
 
         btnAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +84,44 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                 ImageOptionDialog optionDialog = new ImageOptionDialog();
                 optionDialog.setActivityFlag(ADD_IMAGE_FLAG);
                 optionDialog.show(getSupportFragmentManager(), "optionDialog");
+            }
+        });
+
+        txtCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChooseCategoryItemActivity.class);
+                intent.putExtra("selectedCategory", selectedCategoryList);
+                intent.putExtra("selectedCategoryPos", selectedCategory);
+                startActivityForResult(intent, CATEGORY_REQUEST);
+            }
+        });
+    }
+
+    private void getCategoryData() {
+        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        List<Category> tmpCategoryList;
+                        tmpCategoryList = response.body();
+                        for (int i = 0; i < tmpCategoryList.size(); i++) {
+                            selectedCategoryList.add(tmpCategoryList.get(i));
+                        }
+                        selectedCategoryList.get(selectedCategory.getId() - 1).setCheckSelectedCategory(true);
+                        progressDialog.dismiss();
+                    } else {
+                        Log.i("loadCategory", "category null");
+                    }
+                } else {
+                    Log.i("loadCategory", "response unsucceed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.i("loadCategory", "failed on calling API");
             }
         });
     }
@@ -140,8 +178,11 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         item.setId(itemId);
         item.setName(itemName);
         item.setDescription(itemDes);
-        item.setPrivacy("" + spPrivacy.getSelectedItemPosition());
-        item.setCategory(new Category(spCategory.getSelectedItemPosition(), null, -1));
+
+        View checkedPrivacyButton = spPrivacy.findViewById(spPrivacy.getCheckedRadioButtonId());
+        item.setPrivacy("" + spPrivacy.indexOfChild(checkedPrivacyButton));
+
+        item.setCategory(selectedCategory);
         item.setImageIds(removedImageIds);
 
         List<Uri> listUri = new ArrayList<>();
@@ -172,55 +213,6 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         }
     }
 
-    private void getAllPrivacy() {
-        privacyList = new ArrayList<>();
-        privacyList.add(getString(R.string.privacy_public));
-        privacyList.add(getString(R.string.privacy_friends));
-        setDataForSpinner(spPrivacy, privacyList);
-    }
-
-    private void setDataForSpinner(Spinner spinner, List<String> dataArray) {
-        ArrayAdapter dataAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, dataArray);
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(dataAdapter);
-    }
-
-    private void getAllCategory() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(R.string.data_loading_noti);
-        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-
-        rmaAPIService.getAllCategory().enqueue(new Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        List<Category> result = response.body();
-                        categoryList = new ArrayList<>();
-                        for (int i = 0; i < result.size(); i++) {
-                            categoryList.add(result.get(i).getName());
-                        }
-                        setDataForSpinner(spCategory, categoryList);
-                        if (categoryList.size() == result.size()) {
-                            loadItem();
-                        }
-                    } else {
-                        notifyLoadingError("loadCategory", "httpstatus" + response.code());
-                    }
-                } else {
-                    notifyLoadingError("loadCategory", "cannot load category");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                notifyLoadingError("loadCategory", "failed on calling API");
-            }
-        });
-    }
-
     private void getImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -238,7 +230,13 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && data != null) {
+        if (requestCode == CATEGORY_REQUEST) {
+            if (data != null) {
+                Bundle bundle = data.getExtras();
+                selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");
+                selectedCategory = (Category) bundle.getSerializable("selectedCategory");
+            }
+        } else if (resultCode == RESULT_OK && data != null) {
             if (requestCode == GALLERY_REQUEST) {
                 if (onClickFlag == ADD_IMAGE_FLAG) {
                     if (data.getClipData() != null) {
@@ -310,8 +308,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                         if (response.body() != null) {
                             edtItemName.setText(response.body().getName());
                             edtItemDes.setText(response.body().getDescription());
-                            spPrivacy.setSelection(Integer.parseInt(response.body().getPrivacy()));
-                            spCategory.setSelection((response.body().getCategory().getId() - 1));
+                            spPrivacy.check(spPrivacy.getChildAt(Integer.parseInt(response.body().getPrivacy())).getId());
+                            selectedCategory = response.body().getCategory();
                             for (int i = 0; i < response.body().getImages().size(); i++) {
                                 Image newImage = new Image();
                                 newImage.setUrl(response.body().getImages().get(i).getUrl());
@@ -320,7 +318,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
                             }
                             imageAdapter.setfilter(tmpImageList);
                             rvSelectedImages.setVisibility(View.VISIBLE);
-                            progressDialog.dismiss();
+
+                            getCategoryData();
                         } else {
                             notifyLoadingError("loadItem", "httpstatus " + response.code());
                         }
@@ -351,10 +350,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         edtItemName = findViewById(R.id.edtItemName);
         edtItemDes = findViewById(R.id.edtItemDes);
         spPrivacy = findViewById(R.id.spPrivacy);
-        spPrivacy.setPopupBackgroundResource(R.color.white);
         rmaAPIService = RmaAPIUtils.getAPIService();
-        spCategory = findViewById(R.id.spCategory);
-        spCategory.setPopupBackgroundResource(R.color.white);
         toolbar = findViewById(R.id.tbToolbar);
         rvSelectedImages = findViewById(R.id.rvSelectedImages);
         imageList = new ArrayList<>();
@@ -366,6 +362,8 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
 
         Intent intent = getIntent();
         itemId = intent.getIntExtra("itemId", 0);
+        txtCategory = findViewById(R.id.txtCategory);
+        selectedCategoryList = new ArrayList<>();
     }
 
     @Override
@@ -437,5 +435,13 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         if (imageList.size() == 0) {
             rvSelectedImages.setVisibility(View.GONE);
         }
+    }
+
+    private void loadProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 }

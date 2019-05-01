@@ -1,19 +1,23 @@
 package com.project.capstone.exchangesystem.activity;
 
-//import com.project.capstone.exchangesystem.adapter.ItemAdapter;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.github.nkzawa.emitter.Emitter;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.dialog.LoginOptionDialog;
 import com.project.capstone.exchangesystem.fragment.*;
+import com.project.capstone.exchangesystem.helper.BottomMenuHelper;
+import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.UserSession;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.CANCEL_IMAGE_OPTION;
@@ -25,9 +29,12 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
     private final Fragment NOTIFICATION_FRAGMENT = NotificationFragment.newInstance();
     private final Fragment PROFILE_FRAGMENT = UserProfileFragment.newInstance();
     private final Fragment MESSENGER_FRAGMENT = MessengerRoomFragment.newInstance();
-    private final Fragment ADDFRIEND_FRAGMENT = AddFriendFragment.newInstance();
     private BottomNavigationView bottomNavigationView;
+
     UserSession userSession;
+    SocketServer socketServer;
+    String userId;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,17 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
 
         userSession = new UserSession(getApplicationContext());
 
+        if (userSession.isUserLoggedIn()) {
+            sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+            userId = "" + sharedPreferences.getInt("userId", 0);
+            socketServer = new SocketServer();
+            socketServer.connect();
+            socketServer.emitAssignUser(userId);
+            socketServer.mSocket.on("trade-change", tradeChange);
+        }
+
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -51,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
                     case R.id.bottombaritem_notification:
                         if (userSession.isUserLoggedIn()) {
                             selectedFragment = NOTIFICATION_FRAGMENT;
+                            BottomMenuHelper.removeBadge(bottomNavigationView, R.id.bottombaritem_notification);
                         } else {
                             selectedFragment = PROFILE_FRAGMENT;
                         }
@@ -84,6 +102,19 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
         transaction.commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (userSession.isUserLoggedIn()) {
+            sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+            userId = "" + sharedPreferences.getInt("userId", 0);
+            socketServer = new SocketServer();
+            socketServer.connect();
+            socketServer.emitAssignUser(userId);
+            socketServer.mSocket.on("trade-change", tradeChange);
+        }
+    }
 
     public void toSearch(View view) {
         Intent iTimKiem = new Intent(this, SearchActivity.class);
@@ -131,5 +162,25 @@ public class MainActivity extends AppCompatActivity implements LoginOptionDialog
     private void login() {
         Intent signInActivity = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(signInActivity);
+    }
+
+    Emitter.Listener tradeChange = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i("tradeChange", args[0].toString());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (bottomNavigationView.getSelectedItemId() != R.id.bottombaritem_notification) {
+                        BottomMenuHelper.showBadge(getApplicationContext(), bottomNavigationView, R.id.bottombaritem_notification, "");
+                    }
+                }
+            });
+        }
+    };
+
+    public SocketServer getSocketServer() {
+        return socketServer;
     }
 }
