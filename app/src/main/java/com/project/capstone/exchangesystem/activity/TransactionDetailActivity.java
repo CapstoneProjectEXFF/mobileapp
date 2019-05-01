@@ -9,19 +9,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -51,16 +46,10 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.DetailItemAdapter;
-import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
-import com.project.capstone.exchangesystem.model.DonationPostWrapper;
 import com.project.capstone.exchangesystem.model.FirebaseImg;
-import com.project.capstone.exchangesystem.model.Image;
 import com.project.capstone.exchangesystem.model.Rate;
-import com.project.capstone.exchangesystem.model.User;
-import com.project.capstone.exchangesystem.sockets.SocketServer;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
-import com.project.capstone.exchangesystem.adapter.ItemAdapter;
 import com.project.capstone.exchangesystem.model.Item;
 import com.project.capstone.exchangesystem.model.Transaction;
 import com.project.capstone.exchangesystem.model.TransactionDetail;
@@ -80,11 +69,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.project.capstone.exchangesystem.constants.AppStatus.ADD_IMAGE_FLAG;
 import static com.project.capstone.exchangesystem.constants.AppStatus.CAMERA_REQUEST;
-import static com.project.capstone.exchangesystem.constants.AppStatus.CHANGE_IMAGE_FLAG;
 import static com.project.capstone.exchangesystem.constants.AppStatus.EXTERNAL_STORAGE_REQUEST;
 import static com.project.capstone.exchangesystem.constants.AppStatus.GALLERY_REQUEST;
 import static com.project.capstone.exchangesystem.constants.AppStatus.TRANSACTION_DONE;
@@ -93,22 +79,17 @@ import static com.project.capstone.exchangesystem.constants.AppStatus.TRANSACTIO
 
 public class TransactionDetailActivity extends AppCompatActivity implements ImageOptionDialog.ImageOptionListener {
 
-    //    RecyclerView rvYourItems, rvMyItems;
     ListView lvYourItems, lvMyItems;
-    TextView txtReceiverName, txtReceiverPhone, txtReceiverAddress, txtShowYourItems, txtShowMyItems, txtDeleteImage, txtReceiptTitle;
+    TextView txtReceiverName, txtReceiverPhone, txtReceiverAddress, txtShowYourItems, txtShowMyItems, txtDeleteImage, txtReceiptTitle, btnAddViewImage;
     ImageView ivQRCode, receiptImage;
-    Button btnAddViewImage, btnConfirmReceipt;
-    //    ImageButton btnMaps;
-//    LinearLayout myItemLayout;
-    LinearLayout linearQR, linearReceipt, linearFinish;
+    Button btnConfirmReceipt;
+    LinearLayout linearQR, linearReceipt, linearFinish, btnMaps;
     Toolbar toolbar;
-    //    Button btnRating;
     Dialog dialog;
     SwitchCompat swDelivery;
     ProgressDialog progressDialog;
 
     ArrayList<Item> myItems, yourItems;
-    //    SelectedItemAdapter myItemAdapter, yourItemAdapter;
     DetailItemAdapter myItemAdapter, yourItemAdapter;
     List<TransactionDetail> transDetailList;
     TransactionRequestWrapper dataInf;
@@ -134,40 +115,16 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
 
     private void setItemAdapter() {
         myItems = new ArrayList<>();
-//        myItemAdapter = new SelectedItemAdapter(this, myItems, new SelectedItemAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(Item item) {
-//            }
-//        });
-
         myItemAdapter = new DetailItemAdapter(this, myItems);
-
-//        rvMyItems.setHasFixedSize(true);
-//        rvMyItems.setLayoutManager(new GridLayoutManager(this, 2));
-//        rvMyItems.setAdapter(myItemAdapter);
-
         lvMyItems.setAdapter(myItemAdapter);
 
         yourItems = new ArrayList<>();
-//        yourItemAdapter = new SelectedItemAdapter(this, yourItems, new SelectedItemAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(Item item) {
-//            }
-//        });
-
         yourItemAdapter = new DetailItemAdapter(this, yourItems);
         lvYourItems.setAdapter(yourItemAdapter);
-
-//        rvYourItems.setHasFixedSize(true);
-//        rvYourItems.setLayoutManager(new GridLayoutManager(this, 2));
-//        rvYourItems.setAdapter(yourItemAdapter);
     }
 
 
     private void direct() {
-//        rvMyItems = findViewById(R.id.rvMyItems);
-//        rvYourItems = findViewById(R.id.rvYourItems);
-
         lvMyItems = findViewById(R.id.lvMyItems);
         lvYourItems = findViewById(R.id.lvYourItems);
 
@@ -175,8 +132,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
         txtReceiverPhone = findViewById(R.id.txtReceiverPhone);
         txtReceiverAddress = findViewById(R.id.txtReceiverAddress);
         ivQRCode = findViewById(R.id.ivQRCode);
-//        btnMaps = findViewById(R.id.btnMaps);
-//        myItemLayout = findViewById(R.id.myItemLayout);
+        btnMaps = findViewById(R.id.btnMaps);
         toolbar = findViewById(R.id.tbToolbar);
         txtShowMyItems = findViewById(R.id.txtShowMyItems);
         txtShowYourItems = findViewById(R.id.txtShowYourItems);
@@ -191,15 +147,15 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
         btnConfirmReceipt = findViewById(R.id.btnConfirmReceipt);
         linearFinish = findViewById(R.id.linearFinish);
 
-//        btnMaps.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txtReceiverAddress.getText().toString());
-//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//                mapIntent.setPackage("com.google.android.apps.maps");
-//                startActivity(mapIntent);
-//            }
-//        });
+        btnMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + txtReceiverAddress.getText().toString());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
 
         txtShowMyItems.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,20 +194,28 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                     linearQR.setVisibility(View.GONE);
                     linearReceipt.setVisibility(View.VISIBLE);
 
+                    if (yourItems.size() == 0){
+                        btnConfirmReceipt.setVisibility(View.GONE);
+                        btnMaps.setVisibility(View.VISIBLE);
+                    }
+
                     if (yourReceiptUrl != null){
                         btnConfirmReceipt.setVisibility(View.VISIBLE);
+                    } else {
+                        btnConfirmReceipt.setVisibility(View.GONE);
                     }
 
                     if (dataInf.getTransaction().getStatus().equals(TRANSACTION_DONE)){
-                        // || dataInf.getTransaction().getStatus().equals(youConfirmedStatus)
                         btnAddViewImage.setText(getString(R.string.view_my_receipt));
                         checkUploadReceipt = true;
                         btnConfirmReceipt.setVisibility(View.GONE);
+                        btnMaps.setVisibility(View.GONE);
                     }
                 } else {
                     linearQR.setVisibility(View.VISIBLE);
                     linearReceipt.setVisibility(View.GONE);
                     btnConfirmReceipt.setVisibility(View.GONE);
+                    btnMaps.setVisibility(View.GONE);
                 }
             }
         });
@@ -292,6 +256,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                 btnAddViewImage.setText(getString(R.string.add_receipt));
                 checkUploadReceipt = false;
                 txtDeleteImage.setVisibility(View.GONE);
+                btnMaps.setVisibility(View.VISIBLE);
                 Toast.makeText(context, "Hãy thêm ảnh mới để cập nhật lại biên nhận của bạn.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -577,7 +542,6 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             yourReceiptUrl = dataInf.getTransaction().getSenderReceipt();
             meConfirmedStatus = TRANSACTION_SENDER_RECEIPT_CONFRIMED;
             youConfirmedStatus = TRANSACTION_RECEIVER_RECEIPT_CONFRIMED;
-
         } else if (myUserId != dataInf.getTransaction().getReceiverId()) {
             yourUserId = dataInf.getTransaction().getReceiverId();
             txtReceiverName.setText(dataInf.getTransaction().getReceiver().getFullName());
@@ -589,7 +553,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             youConfirmedStatus = TRANSACTION_SENDER_RECEIPT_CONFRIMED;
         }
 
-        txtReceiptTitle.setText(getString(R.string.receipt_title) + " " + txtReceiverName.getText().toString());
+        txtShowYourItems.setText(getString(R.string.trade_receive_item) + " " + txtReceiverName.getText().toString());
         setToolbar();
 
         transDetailList = dataInf.getDetails();
@@ -615,12 +579,16 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             myItemAdapter.setfilter(tmpMyItems);
         } else {
             txtShowMyItems.setVisibility(View.GONE);
+            btnAddViewImage.setVisibility(View.GONE);
+            btnMaps.setVisibility(View.GONE);
         }
 
         if (tmpYourItems.size() != 0) {
             yourItemAdapter.setfilter(tmpYourItems);
         } else {
             txtShowYourItems.setVisibility(View.GONE);
+            txtReceiptTitle.setVisibility(View.GONE);
+            receiptImage.setVisibility(View.GONE);
         }
 
         if (yourReceiptUrl != null || myReceiptUrl != null) {
@@ -631,6 +599,8 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                         .error(R.drawable.ic_no_image)
                         .into(receiptImage);
                 btnConfirmReceipt.setVisibility(View.VISIBLE);
+                receiptImage.setVisibility(View.VISIBLE);
+                txtReceiptTitle.setText(getString(R.string.receipt_title) + " " + txtReceiverName.getText().toString());
             }
 
             linearQR.setVisibility(View.GONE);
@@ -641,15 +611,26 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                 btnAddViewImage.setText(getString(R.string.view_my_receipt));
                 checkUploadReceipt = true;
                 txtDeleteImage.setVisibility(View.VISIBLE);
+                btnMaps.setVisibility(View.GONE);
             }
 
             if (dataInf.getTransaction().getStatus().equals(youConfirmedStatus)){
                 btnAddViewImage.setText(getString(R.string.view_my_receipt));
                 checkUploadReceipt = true;
                 txtDeleteImage.setVisibility(View.GONE);
-//                btnConfirmReceipt.setVisibility(View.VISIBLE);
+                btnMaps.setVisibility(View.GONE);
             } else if (dataInf.getTransaction().getStatus().equals(meConfirmedStatus)) {
                 btnConfirmReceipt.setVisibility(View.GONE);
+            }
+        } else {
+            if (yourReceiptUrl == null){
+                txtReceiptTitle.setText(txtReceiverName.getText().toString() + " " + getString(R.string.not_upload_receipt_yet));
+                receiptImage.setVisibility(View.GONE);
+                btnMaps.setVisibility(View.GONE);
+            }
+
+            if (myReceiptUrl == null) {
+
             }
         }
 
@@ -659,6 +640,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             checkUploadReceipt = true;
             btnConfirmReceipt.setVisibility(View.GONE);
             txtDeleteImage.setVisibility(View.GONE);
+            btnMaps.setVisibility(View.GONE);
         }
 
         if (checkScanQRCode != null) {
@@ -806,6 +788,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                         myReceiptUrl = url;
                         btnAddViewImage.setText(getString(R.string.view_my_receipt));
                         txtDeleteImage.setVisibility(View.VISIBLE);
+                        btnMaps.setVisibility(View.GONE);
                         checkUploadReceipt = true;
                         Toast.makeText(context, getString(R.string.added_receipt), Toast.LENGTH_SHORT).show();
                         if (removedReceiptUrl != null) {
@@ -836,6 +819,9 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                     if (response.body() != null){
                         Toast.makeText(context, getString(R.string.confirmed_receipt), Toast.LENGTH_SHORT).show();
                         btnConfirmReceipt.setVisibility(View.GONE);
+                        if (response.body().getStatus().equals(TRANSACTION_DONE)){
+                            linearFinish.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         Log.i("confirmReceipt", "Cannot save to DB");
                         Log.i("confirmReceipt", "" + response.code());

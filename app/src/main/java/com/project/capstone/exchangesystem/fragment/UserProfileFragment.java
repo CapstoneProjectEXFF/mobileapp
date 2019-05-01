@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.activity.*;
 import com.project.capstone.exchangesystem.adapter.ReviewerAdapter;
@@ -23,6 +24,7 @@ import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.utils.UserSession;
 import com.squareup.picasso.Picasso;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +39,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class UserProfileFragment extends Fragment {
     String tempTransaction;
     String tempFriend, tempInventory, tempDonation;
-    //    TextView txtNumberTransaction;
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
     String authorization;
@@ -137,17 +138,13 @@ public class UserProfileFragment extends Fragment {
 
 
             sharedPreferences = getContext().getSharedPreferences("localData", MODE_PRIVATE);
-//            String avatar = "";
-            String avatar = sharedPreferences.getString("avatar", "");
-//            if (sharedPreferences.contains("avatar")) {
-//                avatar = avatar + sharedPreferences.getString("avatar", "");
-//            }
+            String avatar = sharedPreferences.getString("avatar", null);
             String phoneNumber = sharedPreferences.getString("phoneNumberSignIn", null);
-            String userName = sharedPreferences.getString("username", "");
-            String status = sharedPreferences.getString("status", "");
+            String userName = sharedPreferences.getString("username", null);
+            String status = sharedPreferences.getString("status", null);
             int id = sharedPreferences.getInt("userId", 0);
-            String address = sharedPreferences.getString("address", "");
-            authorization = sharedPreferences.getString("authorization", "");
+            String address = sharedPreferences.getString("address", null);
+            authorization = sharedPreferences.getString("authorization", null);
             userId = sharedPreferences.getInt("userId", 0);
 
             txtNameUserProfile.setText(userName);
@@ -201,8 +198,6 @@ public class UserProfileFragment extends Fragment {
             view.findViewById(R.id.linlay4).setVisibility(View.VISIBLE);
             setHasOptionsMenu(false);
             getActivity().setTitle(" ");
-
-
         }
 
         return view;
@@ -279,8 +274,6 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-
-        txtNumberDonation.setText(tempDonation);
     }
 
     public void toOwnInventory(View view) {

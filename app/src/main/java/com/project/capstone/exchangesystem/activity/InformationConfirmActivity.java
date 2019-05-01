@@ -127,18 +127,18 @@ public class InformationConfirmActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (transactionRequestWrapper.getTransaction().getDonationPostId() != null) {
             if (authorization != null) {
-                rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        Toast.makeText(getApplicationContext(), "postID: " + response.message(), Toast.LENGTH_SHORT).show();
-                        goToSuccessPage();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
-                    }
-                });
+//                rmaAPIService.sendTradeRequest(authorization, transactionRequestWrapper).enqueue(new Callback<Object>() {
+//                    @Override
+//                    public void onResponse(Call<Object> call, Response<Object> response) {
+//                        Toast.makeText(getApplicationContext(), "postID: " + response.message(), Toast.LENGTH_SHORT).show();
+//                        goToSuccessPage();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Object> call, Throwable t) {
+//                        Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+//                    }
+//                });
             }
         } else {
             if (userId == transactionRequestWrapper.getTransaction().getReceiverId()) {

@@ -10,7 +10,7 @@
         android:id="@+id/tbToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/bg_gradient_dark"
         app:title="Title" />
 
     <LinearLayout

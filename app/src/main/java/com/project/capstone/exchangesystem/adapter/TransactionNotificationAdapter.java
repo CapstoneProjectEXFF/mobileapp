@@ -3,31 +3,38 @@ package com.project.capstone.exchangesystem.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.squareup.picasso.Picasso;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.project.capstone.exchangesystem.constants.AppStatus.TRADE_DONE_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ACCEPTED_TRADE_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ADDED_ITEM_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_CANCELED_TRADE_CONFIRM_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_REMOVED_ITEM_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.USER_RESET_TRADE_MESSAGE;
 
 public class TransactionNotificationAdapter extends BaseAdapter {
     Context context;
-    //    ArrayList<Transaction> transactions;
     ArrayList<Object> notifications;
-    int idMe, yourUserId;
+    int idMe;
     String authorization;
     SharedPreferences sharedPreferences;
     RmaAPIService rmaAPIService;
@@ -51,11 +58,6 @@ public class TransactionNotificationAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    public class ViewHolder {
-        public TextView txtNotification, txtDateNoti;
-        public ImageView imgSender;
     }
 
     @Override
@@ -89,9 +91,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             if (type == 0) {
                 // Inflate the layout with image
                 view = inflater.inflate(R.layout.notification_friend_request_item, parent, false);
-            } else if (type == 1) {
-                view = inflater.inflate(R.layout.transaction_notification, parent, false);
-            } else if (type == 2) {
+            } else if (type == 1 || type == 2 || type == 3) {
                 view = inflater.inflate(R.layout.transaction_notification, parent, false);
             }
         }
@@ -102,28 +102,23 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             Transaction transaction = (Transaction) c;
             ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
             TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
-            TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
 
             String notification = "";
             if (transaction.getSenderId() == idMe && transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
-                notification = transaction.getReceiver().getFullName() + "đã đồng ý yêu cầu của bạn";
+                notification = transaction.getReceiver().getFullName() + " đã đồng ý yêu cầu của bạn";
             } else if (transaction.getReceiverId() == idMe && transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
                 notification = transaction.getSender().getFullName() + " vừa gửi yêu cầu";
-            } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
-                if (transaction.getReceiverId() == idMe) {
-                    notification = transaction.getSender().getFullName() + " vừa cập nhật yêu cầu";
-                } else {
-                    notification = transaction.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
-                }
+//            } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
+//                if (transaction.getReceiverId() == idMe) {
+//                    notification = transaction.getSender().getFullName() + " vừa cập nhật yêu cầu";
+//                } else {
+//                    notification = transaction.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
+//                }
             } else if (transaction.getDonationPostId() != null && transaction.getStatus().equals(String.valueOf(AppStatus.DONATION_UPDATE_ACTION))) {
                 notification = transaction.getSender().getFullName() + " vừa gửi từ thiện";
             }
 
             txtNotification.setText(notification);
-            Date date = new Date();
-            date.setTime(transaction.getCreateTime().getTime());
-            String formattedDate = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(date);
-            txtDateNoti.setText(formattedDate);
             Picasso.with(context).load(transaction.getSender().getAvatar())
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
@@ -190,26 +185,66 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     .placeholder(R.drawable.ic_no_image)
                     .error(R.drawable.ic_no_image)
                     .into(imgProfileUser);
-        } else if (c.getClass() == Room.class) {
-            final Room room = (Room) c;
-            String otherUserName = "";
+        } else if (c.getClass() == NotiTransaction.class) {
+            NotiTransaction notiItem = (NotiTransaction) c;
+
             final ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
             final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
-            TextView txtDateNoti = (TextView) view.findViewById(R.id.txtDateNoti);
-          
-            List<UserRoom> listUser = room.getUsers();
-            for (int i = 0; i < listUser.size(); i++) {
-                if (listUser.get(i).getUserId() != idMe) {
-                    Picasso.with(context).load(listUser.get(i).getAvatar())
-                            .placeholder(R.drawable.ic_no_image)
-                            .error(R.drawable.ic_no_image)
-                            .into(imgSender);
-                    otherUserName = otherUserName + listUser.get(i).getFullName();
 
-                }
+            Picasso.with(context).load(notiItem.getUsers().get(0).getAvatar())
+                    .placeholder(R.drawable.ic_no_image)
+                    .error(R.drawable.ic_no_image)
+                    .into(imgSender);
+
+            switch (notiItem.getNotification().getNotiType()) {
+                case USER_ACCEPTED_TRADE_MESSAGE:
+                    txtNotification.setText(notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_accepted_trade));
+                    break;
+                case USER_CANCELED_TRADE_CONFIRM_MESSAGE:
+                    txtNotification.setText(notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_canceled_confirm_trade));
+                    break;
+                case USER_RESET_TRADE_MESSAGE:
+                    txtNotification.setText(notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_reseted_trade) + " trong phòng trao đổi");
+                    break;
+                case TRADE_DONE_MESSAGE:
+                    txtNotification.setText(context.getString(R.string.trade_done) + "giữa bạn và " + notiItem.getUsers().get(0).getFullName());
+                    break;
+                case USER_ADDED_ITEM_MESSAGE:
+                    setNotiByUserIdAndItemId(notiItem.getNotification().getMsg(), context.getString(R.string.user_added_item), txtNotification, notiItem.getUsers().get(0).getFullName());
+                    break;
+                case USER_REMOVED_ITEM_MESSAGE:
+                    setNotiByUserIdAndItemId(notiItem.getNotification().getMsg(), context.getString(R.string.user_removed_item), txtNotification, notiItem.getUsers().get(0).getFullName());
+                    break;
             }
-            txtNotification.setText("Phòng Trao Đổi của bạn và " + otherUserName + " đang hoạt động");
         }
         return view;
+    }
+
+    private void setNotiByUserIdAndItemId(String itemId, final String content, final TextView txtNotification, final String yourName) {
+        final int tmpItemId = Integer.parseInt(itemId);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("localData", MODE_PRIVATE);
+        String authorization = sharedPreferences.getString("authorization", null);
+        RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
+
+        if (authorization != null) {
+            rmaAPIService.getItemById(authorization, tmpItemId).enqueue(new Callback<Item>() {
+                @Override
+                public void onResponse(Call<Item> call, Response<Item> response) {
+                    if (response.body() != null) {
+                        String noti = response.body().getName() + " " + content + " trong phòng của bạn và " + yourName;
+                        txtNotification.setText(noti);
+                        Log.i("getItem", response.body().toString());
+                    } else {
+                        Log.i("getItem", "null");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Item> call, Throwable t) {
+                    Log.i("getItem", "cannot connect");
+                }
+            });
+        }
     }
 }

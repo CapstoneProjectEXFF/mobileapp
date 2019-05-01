@@ -4,5 +4,6 @@
     <item android:id="@+id/btnConfirm"
         android:title="Confirm"
         android:icon="@drawable/round_done_black_36"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:iconTint="@color/white"/>
 </menu>

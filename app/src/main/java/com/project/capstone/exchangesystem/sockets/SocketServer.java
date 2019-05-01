@@ -44,42 +44,11 @@ import static com.project.capstone.exchangesystem.constants.AppApi.WEBSERVER;
 
 public class SocketServer {
 
-    private static final int ADD_ITEM = 0;
-    private static final int REMOVE_ITEM = 1;
-
     public Socket mSocket;
-    private ListView listView;
-
-    private String authorization;
-    private RmaAPIService rmaRealtimeService = RmaAPIUtils.getRealtimeService();
-    private RmaAPIService rmaAPIService = RmaAPIUtils.getAPIService();
 
     private Fragment fragment;
-    private TradeTabFragment tradeTabFragment;
-    private MessengerTabFragment messengerTabFragment;
-    private Activity activity;
 
     public Room room;
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
-    }
-
-    public TradeTabFragment getTradeTabFragment() {
-        return tradeTabFragment;
-    }
-
-    public void setTradeTabFragment(TradeTabFragment tradeTabFragment) {
-        this.tradeTabFragment = tradeTabFragment;
-    }
-
-    public MessengerTabFragment getMessengerTabFragment() {
-        return messengerTabFragment;
-    }
-
-    public void setMessengerTabFragment(MessengerTabFragment messengerTabFragment) {
-        this.messengerTabFragment = messengerTabFragment;
-    }
 
     public SocketServer() {
         try {
@@ -94,10 +63,6 @@ public class SocketServer {
 
     public void setFragment(Fragment fragment) {
         this.fragment = fragment;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
     public void connect() {
@@ -136,5 +101,9 @@ public class SocketServer {
     public void emitQRCode(JSONObject data){
         mSocket.emit("qr-scan", data);
     }
+
+    public void emitAssignUser(String userId) {mSocket.emit("assign-user", userId);}
+
+    public void emitNotiRead(String idNoti) {mSocket.emit("noti-read", idNoti);}
 
 }

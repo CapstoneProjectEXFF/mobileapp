@@ -6,7 +6,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.project.capstone.exchangesystem.R;
 
@@ -15,8 +15,9 @@ public class BottomMenuHelper {
         removeBadge(bottomNavigationView, itemId);
         BottomNavigationItemView itemView = bottomNavigationView.findViewById(itemId);
         View badge = LayoutInflater.from(context).inflate(R.layout.layout_news_badge, bottomNavigationView, false);
-        TextView text = badge.findViewById(R.id.badge_text_view);
-        text.setText(value);
+
+        ImageView ivNoti = badge.findViewById(R.id.ivNoti);
+        ivNoti.setVisibility(View.VISIBLE);
         itemView.addView(badge);
     }
 

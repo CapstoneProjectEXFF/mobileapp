@@ -90,7 +90,7 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         txtCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChooseCategoryActivity.class);
+                Intent intent = new Intent(context, ChooseCategoryDonationActivity.class);
                 intent.putExtra("selectedCategory", selectedCategoryList);
                 startActivityForResult(intent, CATEGORY_REQUEST);
             }
@@ -254,7 +254,6 @@ public class CreateDonationPostActivity extends AppCompatActivity implements Ima
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CATEGORY_REQUEST) {
-            //selected items but not add to recycleview yet
             if (data != null) {
                 Bundle bundle = data.getExtras();
                 selectedCategoryList = (ArrayList<Category>) bundle.getSerializable("LISTCHOOSE");

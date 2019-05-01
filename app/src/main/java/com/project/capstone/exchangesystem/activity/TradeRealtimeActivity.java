@@ -49,6 +49,7 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
     boolean checkRoom = false;
 
     Toolbar tbToolbar;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
         rmaRealtimeService = RmaAPIUtils.getRealtimeService();
 
         item = (Item) getIntent().getSerializableExtra("descriptionItem");
+        room = (Room) getIntent().getSerializableExtra("room");
         mySelectedItems = new ArrayList<>();
         yourSelectedItems = new ArrayList<>();
 
@@ -92,8 +94,6 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
 
         socketServer = new SocketServer();
         socketServer.connect();
-        socketServer.setAuthorization(authorization);
-        socketServer.setActivity(this);
         socketServer.mSocket.on("room-ready", onRoomReady);
 
         myItemAdapter = new SelectedItemAdapter(getApplicationContext(), mySelectedItems, new SelectedItemAdapter.OnItemClickListener() {
@@ -119,22 +119,21 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
         myFinalItemAdapter = new SelectedItemAdapter(getApplicationContext(), mySelectedItems, new SelectedItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-
+                //do nothing
             }
         });
 
         yourFinalItemAdapter = new SelectedItemAdapter(getApplicationContext(), yourSelectedItems, new SelectedItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-
+                //do nothing
             }
         });
 
         if (item != null) {
             yourUserId = item.getUser().getId();
             roomName = "" + myUserId + "-" + yourUserId;
-        } else {
-            room = (Room) getIntent().getSerializableExtra("room");
+        } else if (room != null){
             roomName = room.getRoom();
 
             for (int i = 0; i < room.getUsers().size(); i++) {
@@ -144,6 +143,9 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
                     break;
                 }
             }
+        } else {
+            yourUserId = Integer.parseInt(getIntent().getStringExtra("userId"));
+            roomName = "" + myUserId + "-" + yourUserId;
         }
     }
 
@@ -223,8 +225,9 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
             JSONObject tradeInfo = new JSONObject();
             try {
                 int tmpUserId = tmpItem.getUser().getId();
-                tradeInfo.put("userId", "" + tmpUserId);
+                tradeInfo.put("ownerId", "" + tmpUserId);
                 tradeInfo.put("itemId", "" + tmpItem.getId());
+                tradeInfo.put("userId", "" + myUserId);
                 tradeInfo.put("room", roomName);
                 socketServer.emitRemoveItem(tradeInfo);
             } catch (JSONException e) {
@@ -294,15 +297,15 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
         public void call(Object... args) {
             Log.i("loadRoom", args[0].toString());
             final String tmpRoomName = args[0].toString();
-
-            if (!checkRoom && tmpRoomName.equals(roomName)){
+            String reversedRoomName = reverseRoomName(roomName);
+            if (!checkRoom && (tmpRoomName.equals(roomName) || tmpRoomName.equals(reversedRoomName))){
                 checkRoom = true;
-
+                roomName = tmpRoomName;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (authorization != null) {
-                            rmaRealtimeService.loadRoom(roomName).enqueue(new Callback<Room>() {
+                            rmaRealtimeService.loadRoom(tmpRoomName).enqueue(new Callback<Room>() {
                                 @Override
                                 public void onResponse(Call<Room> call, Response<Room> response) {
                                     if (response.body() != null) {
@@ -312,7 +315,7 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
                                         TradePagerAdapter tradePagerAdapter = new TradePagerAdapter(getSupportFragmentManager());
                                         viewPager.setAdapter(tradePagerAdapter);
 
-                                        TabLayout tabLayout = findViewById(R.id.tabBar);
+                                        tabLayout = findViewById(R.id.tabBar);
                                         tabLayout.setupWithViewPager(viewPager);
                                         tabLayout.getTabAt(0).setIcon(R.drawable.round_cached_black_36);
                                         tabLayout.getTabAt(1).setIcon(R.drawable.round_forum_black_36);
@@ -332,4 +335,9 @@ public class TradeRealtimeActivity extends AppCompatActivity implements ImageOpt
             }
         }
     };
+
+    public String reverseRoomName(String roomName){
+        String[] splittedRoomName = roomName.split("-");
+        return splittedRoomName[1] + "-" + splittedRoomName[0];
+    }
 }

@@ -52,5 +52,7 @@
     <color name="app_icon_color_start_dark">#0839a5</color>
     <color name="toolbar_des">#0792ff</color>
     <color name="yellow">#FFDE07</color>
+    <color name="light_green">#E1FDDB</color>
+    <color name="dark_green">#177003</color>
 
 </resources>

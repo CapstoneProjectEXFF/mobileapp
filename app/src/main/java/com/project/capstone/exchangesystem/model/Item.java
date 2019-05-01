@@ -55,6 +55,10 @@ public class Item implements Serializable {
     @Expose
     private List<Image> images;
 
+    @SerializedName("preferItems")
+    @Expose
+    private String preferItems;
+
     private List<Integer> imageIds;
 
     private boolean checkPrivacy = false;
@@ -171,7 +175,15 @@ public class Item implements Serializable {
         this.checkPrivacy = checkPrivacy;
     }
 
-    public Item(int id, String name, String description, String address, String status, String privacy, Timestamp createTime, Timestamp modifyTime, Category category, User user, List<Image> images) {
+    public String getPreferItems() {
+        return preferItems;
+    }
+
+    public void setPreferItems(String preferItems) {
+        this.preferItems = preferItems;
+    }
+
+    public Item(int id, String name, String description, String address, String status, String privacy, Timestamp createTime, Timestamp modifyTime, Category category, User user, List<Image> images, String preferItems) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -183,6 +195,7 @@ public class Item implements Serializable {
         this.category = category;
         this.user = user;
         this.images = images;
+        this.preferItems = preferItems;
     }
 
     public Item(){}

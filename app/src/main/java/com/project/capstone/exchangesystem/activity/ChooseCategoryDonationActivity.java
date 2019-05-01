@@ -28,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChooseCategoryActivity extends AppCompatActivity {
+public class ChooseCategoryDonationActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ListView lvCategory;

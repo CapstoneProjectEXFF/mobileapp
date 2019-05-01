@@ -1,5 +1,6 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,18 +17,25 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.adapter.SelectedItemAdapter;
 import com.project.capstone.exchangesystem.fragment.ImageOptionDialog;
 import com.project.capstone.exchangesystem.model.*;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
+
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
 
@@ -39,7 +47,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     DonationPost donationPost;
     SharedPreferences sharedPreferences;
     String authorization, userPhoneNumber, userFullName;
-    RmaAPIService rmaAPIService;
+    RmaAPIService rmaAPIService, rmaAPIRealtime;
     Integer userId;
 
     Context context;
@@ -51,6 +59,8 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     ImageButton btnAddItems;
     Item tmpItem;
     TextView txtNoti;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +130,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     }
 
     private void createDonateTransaction() {
+        loadProgressDialog();
         List<TransactionDetail> transactionDetailList = new ArrayList<>();
         for (int i = 0; i < itemList.size(); i++) { //create transaction detail
             TransactionDetail transactionDetail = new TransactionDetail();
@@ -128,21 +139,60 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
             transactionDetailList.add(transactionDetail);
         }
 
-        Transaction transaction = new Transaction();
+        final Transaction transaction = new Transaction();
         transaction.setSenderId(userId);
         transaction.setReceiverId(donationPost.getUser().getId());
         transaction.setDonationPostId(donationPost.getId());
         TransactionRequestWrapper transactionRequestWrapper = new TransactionRequestWrapper(transaction, transactionDetailList);
 
-        Intent intent = new Intent(getApplicationContext(), InformationConfirmActivity.class);
+        if (authorization != null) {
+            Map<String, Object> jsonBody = new HashMap<String, Object>();
+            jsonBody.put("transactionWrapper", transactionRequestWrapper);
+            jsonBody.put("token", authorization);
+            Log.i("jsonBody", jsonBody.toString());
+            rmaAPIRealtime.sendTradeRequest(jsonBody).enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                    if (response.body() != null){
+                        Double tmpTransactionId = (Double) response.body();
+                        Log.i("donatedTransaction", "" + tmpTransactionId);
+                        final int transactionId = Integer.valueOf(tmpTransactionId.intValue());
+                        Log.i("donatedTransaction", "" + transactionId);
 
-        intent.putExtra("transaction", transactionRequestWrapper);
-        intent.putExtra("senderAddress", itemList.get(0).getAddress());
-        intent.putExtra("donationPost", donationPost);
-        intent.putExtra("itemList", itemList);
-        intent.putExtra("userPhoneNumber", userPhoneNumber);
-        intent.putExtra("userFullName", userFullName);
-        startActivity(intent);
+                        rmaAPIService.getTransactionByTransID(authorization, transactionId).enqueue(new Callback<TransactionRequestWrapper>() {
+                            @Override
+                            public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
+                                if (response.body() != null) {
+                                    String qrCode = response.body().getTransaction().getQrCode();
+                                    Intent intent = new Intent(context, TransactionDetailActivity.class);
+                                    intent.putExtra("qrCode", qrCode);
+                                    intent.putExtra("transactionId", transactionId);
+                                    progressDialog.dismiss();
+                                    startActivity(intent);
+                                } else {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+                                    Log.i("donatedTransaction", "null");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
+                                Log.i("donatedTransaction", t.getMessage());
+                                Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), R.string.error_loading, Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+            });
+        }
     }
 
     private void getComponent() {
@@ -161,6 +211,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         userId = sharedPreferences.getInt("userId", 0);
         userPhoneNumber = sharedPreferences.getString("phoneNumber", null);
         userFullName = sharedPreferences.getString("username", null);
+        rmaAPIRealtime = RmaAPIUtils.getRealtimeService();
     }
 
     private void setNoti() {
@@ -257,5 +308,13 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
         } else {
             Log.i("loadAvailableItems", "load failed");
         }
+    }
+
+    private void loadProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(R.string.data_loading_noti);
+        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
     }
 }
