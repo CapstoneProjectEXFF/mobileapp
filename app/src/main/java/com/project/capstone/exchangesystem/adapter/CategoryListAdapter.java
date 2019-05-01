@@ -1,8 +1,6 @@
 package com.project.capstone.exchangesystem.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.model.Category;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -63,18 +58,13 @@ public class CategoryListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         CategoryListAdapter.ViewHolder viewHolder = null;
-//        if (convertView == null) {
             viewHolder = new CategoryListAdapter.ViewHolder();
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.category_item, null);
+            convertView = layoutInflater.inflate(R.layout.category_donation, null);
             viewHolder.ckbCategory = convertView.findViewById(R.id.ckbCategory);
             viewHolder.txtCategoryName = convertView.findViewById(R.id.txtCategoryName);
             viewHolder.edtNumOfItem = convertView.findViewById(R.id.edtNumOfItem);
-//            convertView.setTag(viewHolder);
-//
-//        } else {
-//            viewHolder = (CategoryListAdapter.ViewHolder) convertView.getTag();
-//        }
+
         final Category category = (Category) getItem(position);
 
         viewHolder.txtCategoryName.setText(category.getName());

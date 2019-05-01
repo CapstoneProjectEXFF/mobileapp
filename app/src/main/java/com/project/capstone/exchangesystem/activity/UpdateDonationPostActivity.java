@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 
 import com.project.capstone.exchangesystem.adapter.ImageAdapter;
@@ -37,14 +36,12 @@ import com.project.capstone.exchangesystem.R;
 import com.project.capstone.exchangesystem.utils.RmaAPIUtils;
 import com.project.capstone.exchangesystem.model.DonationPost;
 import com.project.capstone.exchangesystem.remote.RmaAPIService;
-import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 import static com.project.capstone.exchangesystem.constants.AppStatus.*;
@@ -58,7 +55,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
     EditText edtContent, edtAddress, edtTitle;
     Context context;
     String authorization, donationPostTitle;
-    int donationPostId, onClickFlag = -1;
+    int onClickFlag = -1;
     SharedPreferences sharedPreferences;
     FirebaseImg firebaseImg;
     ProgressDialog progressDialog;
@@ -100,7 +97,7 @@ public class UpdateDonationPostActivity extends AppCompatActivity implements Ima
         txtCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChooseCategoryActivity.class);
+                Intent intent = new Intent(context, ChooseCategoryDonationActivity.class);
                 intent.putExtra("selectedCategory", selectedCategoryList);
                 startActivityForResult(intent, CATEGORY_REQUEST);
             }

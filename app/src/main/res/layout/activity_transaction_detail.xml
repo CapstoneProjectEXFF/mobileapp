@@ -30,21 +30,22 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:background="@color/light_green"
                 android:visibility="gone">
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:background="@drawable/round_thumb_up_black_18"
-                    android:backgroundTint="@color/app_icon_color_start"
-                    android:layout_gravity="center_vertical"/>
+                    android:backgroundTint="@color/dark_green" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="@string/trans_finish"
-                    android:textColor="@color/colorBlack" />
+                    android:text="@string/done_transaction"
+                    android:textColor="@color/dark_green" />
             </LinearLayout>
 
 
@@ -73,8 +74,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Receiver's Name"
-                            android:textColor="@color/colorGrayDark"
-                            android:textSize="9pt"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
                             android:textStyle="bold" />
 
                         <TextView
@@ -84,7 +85,7 @@
                             android:layout_marginTop="2dp"
                             android:text="Receiver's Phone"
                             android:textColor="@color/colorGrayDark"
-                            android:textSize="8pt" />
+                            android:textSize="9pt" />
 
                         <TextView
                             android:id="@+id/txtReceiverAddress"
@@ -95,49 +96,50 @@
                             android:singleLine="false"
                             android:text="Receiver's Address"
                             android:textColor="@color/colorGrayDark"
-                            android:textSize="8pt" />
-
-                        <!--<ImageButton-->
-                        <!--android:id="@+id/btnMaps"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:layout_marginRight="8dp"-->
-                        <!--android:background="@drawable/round_directions_bike_black_36" />-->
+                            android:textSize="9pt" />
 
                         <TextView
                             android:id="@+id/txtShowYourItems"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
                             android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"
-                            android:text="Your items"
-                            android:textColor="@color/colorBlack" />
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/trade_receive_item"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
+                            android:textStyle="bold" />
 
                         <ListView
                             android:id="@+id/lvYourItems"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:visibility="gone"
-                            android:background="@color/colorGrayWhite" />
+                            android:background="@color/colorGrayWhite"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/txtShowMyItems"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="5dp"
                             android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"
-                            android:text="My items"
-                            android:textColor="@color/colorBlack" />
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/trade_send_item"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="10pt"
+                            android:textStyle="bold" />
 
                         <ListView
                             android:id="@+id/lvMyItems"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:visibility="gone"
-                            android:background="@color/colorGrayWhite" />
+                            android:background="@color/colorGrayWhite"
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -154,9 +156,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
-                    android:text="Hãy quét mã này khi gặp nhau nhé"
-                    android:textColor="@color/colorBlack" />
+                    android:text="@string/scan_qr_remind"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/ivQRCode"
@@ -166,7 +171,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="4dp"
-                    android:layout_marginBottom="2dp"/>
+                    android:layout_marginBottom="2dp" />
 
             </LinearLayout>
 
@@ -181,20 +186,41 @@
                     android:id="@+id/txtReceiptTitle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="@string/receipt_title"
-                    android:textColor="@color/colorBlack" />
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/receiptImage"
                     android:layout_width="420px"
                     android:layout_height="420px"
-                    android:scaleType="centerCrop"
                     android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="4dp"
                     android:layout_marginBottom="2dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btnConfirmReceipt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_gradient_dark"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/confirm_receipt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="7pt"
+                    android:textStyle="bold"
                     android:visibility="visible" />
 
                 <LinearLayout
@@ -204,28 +230,29 @@
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal">
 
-                    <Button
+                    <TextView
                         android:id="@+id/btnAddViewImage"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
+                        android:layout_marginRight="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
                         android:text="@string/add_receipt"
-                        android:textColor="@color/colorWhite"
-                        android:textStyle="bold"
-                        android:textSize="7pt"
-                        android:textAllCaps="false"
-                        android:background="@drawable/btn_gradient_dark"
-                        android:layout_marginBottom="10dp"/>
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="9pt"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtDeleteImage"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="20dp"
-                        android:text="Xóa biên nhận"
+                        android:layout_marginLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/remove_receipt"
                         android:textColor="@color/app_icon_color_start"
-                        android:visibility="gone"/>
+                        android:textSize="8pt"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -234,35 +261,56 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="9pt"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/swDelivery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
-                    android:text="Nhờ vận chuyển    "
-                    android:textColor="@color/colorBlack"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/lavendar"
+                    android:paddingTop="5dp" />
 
-                <Button
-                    android:id="@+id/btnConfirmReceipt"
+                <LinearLayout
+                    android:id="@+id/btnMaps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/confirm_receipt"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold"
-                    android:textSize="7pt"
-                    android:textAllCaps="false"
-                    android:background="@drawable/btn_gradient_dark"
-                    android:gravity="center"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="10dp"
-                    android:visibility="gone"/>
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableTint="@color/app_icon_color_start"
+                        android:text="@string/delivery_open_app"
+                        android:textColor="@color/app_icon_color_start"
+                        android:textSize="9pt"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/round_directions_bike_black_24"
+                        android:backgroundTint="@color/app_icon_color_start"/>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

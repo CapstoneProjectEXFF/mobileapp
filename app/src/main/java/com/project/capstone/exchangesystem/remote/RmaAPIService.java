@@ -82,7 +82,8 @@ public interface RmaAPIService {
     Call<List<Image>> getImagesByItemId(@Header("Authorization") String authorization, @Path("itemId") int itemId);
 
     @POST("/transaction")
-    Call<Object> sendTradeRequest(@Header("Authorization") String authorization, @Body TransactionRequestWrapper body);
+//    Call<Object> sendTradeRequest(@Header("Authorization") String authorization, @Body TransactionRequestWrapper body);
+    Call<Object> sendTradeRequest(@Body Map<String, Object> body);
 
     @GET("/donationPost")
     Call<List<DonationPost>> getDonationPost(@Query("page") int page, @Query("size") int size);
@@ -190,4 +191,7 @@ public interface RmaAPIService {
 
     @PUT("/transaction/confirmReceipt")
     Call<Transaction> confirmReceipt(@Header("Authorization") String authorization, @Body Map<String, Object> body);
+
+    @GET("/notification")
+    Call<List<NotiTransaction>> getNotiTransaction(@Query("userId") int userId);
 }

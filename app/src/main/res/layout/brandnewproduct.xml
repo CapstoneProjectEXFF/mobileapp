@@ -41,7 +41,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="2.5dp"
                 android:layout_alignParentBottom="true"
-                android:gravity="center"
+                android:gravity="bottom"
                 android:background="@drawable/bg_gradient_info_item">
 
                 <TextView
@@ -49,8 +49,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="Name Item"
                     android:textColor="@color/colorWhite"
                     android:textSize="12pt"
@@ -59,9 +59,10 @@
                     android:id="@+id/txtDateItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:ellipsize="end"
-                    android:gravity="center"
                     android:maxLines="1"
                     android:text="Ngay dang"
                     android:textColor="@color/colorGrayWhite"

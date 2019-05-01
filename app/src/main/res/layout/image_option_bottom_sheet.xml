@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <Button
-            android:id="@+id/btnChoose"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edt_whitebg"
-            android:text="Chọn ảnh"
-            android:textColor="@color/colorBlack"
-            android:textSize="22dp"/>
+        android:id="@+id/btnChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:paddingBottom="5dp"
+        android:text="Chọn ảnh"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12pt" />
+
     <Button
-            android:id="@+id/btnCapture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edt_whitebg"
-            android:text="Chụp ảnh"
-            android:textColor="@color/colorBlack"
-            android:textSize="22dp"/>
+        android:id="@+id/btnCapture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:paddingBottom="5dp"
+        android:text="Chụp ảnh"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12pt" />
+
     <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edt_whitebg"
-            android:text="Xóa ảnh"
-            android:textColor="@color/colorBlack"
-            android:textSize="22dp"/>
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:paddingBottom="5dp"
+        android:text="Xóa ảnh"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="12pt" />
+
     <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edt_whitebg"
-            android:text="@string/cancel_btn"
-            android:textColor="@color/colorRed"
-            android:textSize="22dp"/>
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_whitebg"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:text="@string/cancel_btn"
+        android:textAllCaps="false"
+        android:textColor="@color/colorRed"
+        android:textSize="12pt" />
 
 </LinearLayout>

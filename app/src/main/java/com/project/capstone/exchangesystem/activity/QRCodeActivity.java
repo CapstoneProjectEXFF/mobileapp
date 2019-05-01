@@ -91,8 +91,6 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
             JSONObject data = (JSONObject) args[0];
             try {
                 final int transactionId = Integer.parseInt(data.getString("transactionId"));
-                int tmpUserId = Integer.parseInt(data.getString("userId"));
-                //TODO move to transactionDetail
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -130,7 +128,6 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //TODO move to transactionDetail
                     boolean checkExistedTransId = false;
                     for (int i = 0; i < transactionIds.size(); i++){
                         if (transactionId == transactionIds.get(i)){

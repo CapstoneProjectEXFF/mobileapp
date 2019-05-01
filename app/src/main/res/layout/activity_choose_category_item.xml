@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.ChooseCategoryDonationActivity">
+    tools:context=".activity.ChooseCategoryItemActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbToolbar"
@@ -42,24 +42,13 @@
                 android:paddingRight="10dp"
                 android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.01"
-                android:gravity="end"
-                android:text="@string/donation_post_number_of_item"
-                android:textColor="@color/colorGrayDark"
-                android:textSize="20sp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textStyle="bold"/>
 
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
-    <ListView
-        android:id="@+id/lvCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ListView
+            android:id="@+id/lvCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

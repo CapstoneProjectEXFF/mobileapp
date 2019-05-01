@@ -38,15 +38,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class MainItemShowFragment extends Fragment {
-    int pastVisibleItems, visibleItemCount, totalItemCount;
     GridLayoutManager gridLayoutManager;
     RecyclerView mainRecyclerView;
     ArrayList<Item> itemArrayList;
     ItemAdapter itemAdapter;
-    Menu menu;
     EditText txtSearch;
     ImageButton btnSearch;
-    private boolean loading;
     private ProgressBar marker_progress;
     View footerView;
     boolean isLoading;
@@ -119,7 +116,6 @@ public class MainItemShowFragment extends Fragment {
         itemAdapter = new ItemAdapter(view.getContext(), itemArrayList, new ItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item item) {
-                Toast.makeText(view.getContext(), item.getDescription(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(view.getContext(), DescriptionItemActivity.class);
                 intent.putExtra("descriptionItem", item);
                 startActivity(intent);
@@ -259,5 +255,4 @@ public class MainItemShowFragment extends Fragment {
             super.run();
         }
     }
-
 }

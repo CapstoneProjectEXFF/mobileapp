@@ -57,6 +57,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvItemImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"/>
+
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -169,10 +176,9 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="4dp"
                         android:text="Tiêu đề"
-                        android:textColor="@color/colorGrayDark"
+                        android:textColor="@color/colorBlack"
                         android:textSize="10pt"
-                        android:textStyle="bold"
-                        android:singleLine="true"/>
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/txtAddressDonation"
@@ -183,8 +189,7 @@
                         android:layout_marginLeft="8dp"
                         android:textColor="@color/colorGrayDark"
                         android:text="Địa chỉ"
-                        android:textSize="7pt"
-                        android:singleLine="true"/>
+                        android:textSize="7pt"/>
 
                 </LinearLayout>
 
@@ -217,7 +222,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="Nội dung"
                 android:textColor="@color/colorGrayDark"
-                android:textSize="8pt" />
+                android:textSize="9pt" />
 
             <TextView
                 android:id="@+id/txtTargets"
@@ -229,7 +234,7 @@
                 android:text="@string/donation_post_target"
                 android:gravity="left"
                 android:textStyle="bold"
-                android:textColor="@color/colorGrayDark"
+                android:textColor="@color/colorBlack"
                 android:textSize="10pt"
                 android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"/>
 
@@ -252,7 +257,7 @@
                 android:text="@string/donation_post_donators"
                 android:gravity="left"
                 android:textStyle="bold"
-                android:textColor="@color/colorGrayDark"
+                android:textColor="@color/colorBlack"
                 android:textSize="10pt"
                 android:drawableRight="@drawable/round_keyboard_arrow_right_black_24"/>
 
