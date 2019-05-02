@@ -65,7 +65,7 @@ public class ChooseCategoryDonationActivity extends AppCompatActivity {
         lvCategory.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                hideKeyboard(view);
+//                hideKeyboard(view);
             }
 
             @Override

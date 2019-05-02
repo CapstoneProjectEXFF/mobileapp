@@ -42,4 +42,5 @@ public class AppStatus {
     public static final int TRADE_DONE_MESSAGE = -4;
     public static final int USER_ADDED_ITEM_MESSAGE = -5;
     public static final int USER_REMOVED_ITEM_MESSAGE = -6;
+    public static final int UNREMOVE_INVENTORY = 0;
 }
