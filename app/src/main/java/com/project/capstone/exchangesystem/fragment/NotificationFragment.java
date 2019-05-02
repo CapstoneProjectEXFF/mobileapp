@@ -90,7 +90,7 @@ public class NotificationFragment extends Fragment {
     public void onResume() {
         super.onResume();
         transactions.clear();
-        getDataFromTransaction();
+//        getDataFromTransaction();
         getDataFromRelationship();
         getNotiTransaction();
     }

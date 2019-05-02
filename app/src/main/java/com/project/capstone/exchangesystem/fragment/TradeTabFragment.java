@@ -43,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.UNREMOVE_INVENTORY;
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ACCEPTED_TRADE;
 
 /**
@@ -131,6 +132,7 @@ public class TradeTabFragment extends Fragment {
         socketServer.mSocket.on("trade-done", tradeDoneData);
         socketServer.mSocket.on("trade-reseted", tradeResetedData);
         socketServer.mSocket.on("trade-unconfirmed", unconfirmedTradeData);
+        socketServer.mSocket.on("remove-from-inv", removedFromInv);
     }
 
     @Override
@@ -527,38 +529,48 @@ public class TradeTabFragment extends Fragment {
             try {
                 final int itemId = Integer.parseInt(itemInfo.getString("itemId"));
                 final int userId = Integer.parseInt(itemInfo.getString("ownerId"));
+                final int removeInv = Integer.parseInt(itemInfo.getString("removeInv"));
                 tmpRoomName = itemInfo.getString("room");
                 if (tmpRoomName.equals(roomName)) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (userId == myUserId) {
-                                for (int i = 0; i < tmpMySelectedItems.size(); i++) {
-                                    if (itemId == tmpMySelectedItems.get(i).getId()) {
-                                        Item tmpItem = tmpMySelectedItems.get(i);
-                                        tmpMySelectedItems.remove(tmpItem);
-                                        Log.i("removedMyItem", "" + tmpItem.getId());
-                                        getMyItemAdapter().setfilter(tmpMySelectedItems);
-                                        myAvailableItems.add(tmpItem);
-                                        setNotiByUserIdAndItemId(getString(R.string.user_removed_item), tmpItem);
-                                    }
-                                }
-                            } else {
-                                for (int i = 0; i < tmpYourSelectedItems.size(); i++) {
-                                    if (itemId == tmpYourSelectedItems.get(i).getId()) {
-                                        Item tmpItem = tmpYourSelectedItems.get(i);
-                                        tmpYourSelectedItems.remove(tmpItem);
-                                        getYourItemAdapter().setfilter(tmpYourSelectedItems);
-                                        if (!tmpItem.isCheckPrivacy()) {
-                                            yourAvailableItems.add(tmpItem);
+                    if (getActivity() == null) {
+                        return;
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (userId == myUserId) {
+                                    for (int i = 0; i < tmpMySelectedItems.size(); i++) {
+                                        if (itemId == tmpMySelectedItems.get(i).getId()) {
+                                            Item tmpItem = tmpMySelectedItems.get(i);
+                                            tmpMySelectedItems.remove(tmpItem);
+                                            Log.i("removedMyItem", "" + tmpItem.getId());
+                                            getMyItemAdapter().setfilter(tmpMySelectedItems);
+                                            if (removeInv == UNREMOVE_INVENTORY){
+                                                myAvailableItems.add(tmpItem);
+                                            }
+                                            setNotiByUserIdAndItemId(getString(R.string.user_removed_item), tmpItem);
                                         }
-                                        setNotiByUserIdAndItemId(getString(R.string.user_removed_item), tmpItem);
+                                    }
+                                } else if (userId == yourUserId) {
+                                    for (int i = 0; i < tmpYourSelectedItems.size(); i++) {
+                                        if (itemId == tmpYourSelectedItems.get(i).getId()) {
+                                            Item tmpItem = tmpYourSelectedItems.get(i);
+                                            tmpYourSelectedItems.remove(tmpItem);
+                                            getYourItemAdapter().setfilter(tmpYourSelectedItems);
+                                            if (removeInv == UNREMOVE_INVENTORY){
+                                                if (!tmpItem.isCheckPrivacy()) {
+                                                    yourAvailableItems.add(tmpItem);
+                                                }
+                                            }
+                                            setNotiByUserIdAndItemId(getString(R.string.user_removed_item), tmpItem);
+                                        }
                                     }
                                 }
+                                setRoomAfterUnconfirm();
+                                setVisibleCancelAndSendButton();
                             }
-                            setVisibleCancelAndSendButton();
-                        }
-                    });
+                        });
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -729,6 +741,36 @@ public class TradeTabFragment extends Fragment {
 
         }
     };
+
+    Emitter.Listener removedFromInv = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.i("removedFromInv", args[0].toString());
+//            JSONObject data = (JSONObject) args[0];
+//            try {
+//                int removedItemId = Integer.parseInt(data.getString("itemId"));
+//                int tmpUserId = Integer.parseInt(data.getString("ownerId"));
+//
+//                if (tmpUserId == myUserId){
+//                    removeItemInAvailableItems(removedItemId, tmpMySelectedItems, myItemAdapter);
+//                } else {
+//                    removeItemInAvailableItems(removedItemId, tmpYourSelectedItems, yourItemAdapter);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+        }
+    };
+
+    private void removeItemInAvailableItems(int removedItemId, ArrayList<Item> selectedItems, SelectedItemAdapter selectedItemAdapter) {
+        for (int i = 0; i < selectedItems.size(); i++){
+            if (selectedItems.get(i).getId() == removedItemId){
+                selectedItems.remove(i);
+                selectedItemAdapter.setfilter(selectedItems);
+                break;
+            }
+        }
+    }
 
     private void setRoomAfterUnconfirm() {
         checkTradeConfirm = false;

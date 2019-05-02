@@ -819,6 +819,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                     if (response.body() != null){
                         Toast.makeText(context, getString(R.string.confirmed_receipt), Toast.LENGTH_SHORT).show();
                         btnConfirmReceipt.setVisibility(View.GONE);
+                        showRatingDialog();
                         if (response.body().getStatus().equals(TRANSACTION_DONE)){
                             linearFinish.setVisibility(View.VISIBLE);
                         }
