@@ -96,6 +96,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             GetInformation(-1);
         } else {
             int uriDonationPostId = Integer.parseInt(appLinkData.toString().replace(getString(R.string.donation_link), ""));
+            reloadNeed = false;
             GetInformation(uriDonationPostId);
         }
     }
@@ -108,7 +109,7 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
             public void onClick(View v) {
 
 
-                if (reloadNeed = true) {
+                if (reloadNeed) {
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
@@ -417,9 +418,10 @@ public class DescriptionDonationPostActivity extends AppCompatActivity implement
 
         Date date = new Date();
         date.setTime(donationPost.getCreateTime().getTime());
-        String formattedDate = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(date);
+        String dateStr = new SimpleDateFormat("dd.MM.yyyy").format(date);
+        String timeStr = new SimpleDateFormat("HH:mm").format(date);
 
-        txtTimestampDonation.setText(formattedDate);
+        txtTimestampDonation.setText(dateStr + " " + getString(R.string.at) + " " + timeStr);
         txtUserNameDonation.setText(donationPost.getUser().getFullName());
 
         if (donationPost.getTitle() != null){

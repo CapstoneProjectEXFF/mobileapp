@@ -82,11 +82,9 @@ public class TransactionHistoryAdapter extends BaseAdapter {
         final Transaction transaction = (Transaction) getItem(position);
         String status = "";
         if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
-            status = status + context.getString(R.string.done_transaction);
-        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
+            status = status + context.getString(R.string.trans_finish);
+        } else  {
             status = status + context.getString(R.string.waiting_transaction);
-        } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONATED)) {
-            status = status + context.getString(R.string.donation_transaction);
         }
         viewHolder.txtStatusTrans.setText(status);
 

@@ -176,9 +176,10 @@ public class DescriptionItemActivity extends AppCompatActivity implements LoginO
 
         Date date = new Date();
         date.setTime(item.getCreateTime().getTime());
-        String formattedDate = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(date);
+        String dateStr = new SimpleDateFormat("dd.MM.yyyy").format(date);
+        String timeStr = new SimpleDateFormat("HH:mm").format(date);
 
-        txtDateDescriptionItem.setText(formattedDate);
+        txtDateDescriptionItem.setText(dateStr + " " + getString(R.string.at) + " " + timeStr);
         txtViewDescriptionItem.setText(item.getDescription());
         txtItemName.setText(item.getName());
         txtAddress.setText(item.getUser().getAddress());

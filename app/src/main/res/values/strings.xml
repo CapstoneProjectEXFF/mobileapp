@@ -94,7 +94,7 @@
     <string name="edit_profile_success">Thay đổi thông tin cá nhân thành công</string>
     <string name="login">Đăng Nhập</string>
     <string name="cancle">Hủy</string>
-    <string name="waiting_transaction">Giao dịch\nđang chờ xác nhận</string>
+    <string name="waiting_transaction">Chờ xác nhận chuyển đồ</string>
     <string name="done_transaction">Giao dịch\nđã thành công</string>
     <string name="donation_transaction">Quyên góp\ntừ thiện</string>
 
@@ -150,7 +150,7 @@
 
     <!--Transaction Detail-->
     <string name="trans_finish">Hoàn thành</string>
-    <string name="add_receipt">Thêm biên nhận</string>
+    <string name="add_receipt">Đăng biên nhận chuyển hàng</string>
     <string name="view_my_receipt">Xem biên nhận của bạn</string>
     <string name="receipt_title">Biên nhận của</string>
     <string name="added_receipt">Biên nhận của bạn đã đăng tải thành công.</string>
@@ -164,6 +164,8 @@
     <string name="delivery_open_app">Đặt Grab</string>
 
     <!--Share FB-->
-    <string name="item_link">http://35.247.191.68/item.html?id=</string>
-    <string name="donation_link">http://35.247.191.68/donation-post.html?id=</string>
+    <string name="item_link">http://35.247.191.68:9000/item.html?id=</string>
+    <string name="donation_link">http://35.247.191.68:9000/donation-post.html?id=</string>
+
+    <string name="at">lúc</string>
 </resources>

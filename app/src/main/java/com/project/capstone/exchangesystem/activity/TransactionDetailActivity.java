@@ -643,7 +643,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             btnMaps.setVisibility(View.GONE);
         }
 
-        if (checkScanQRCode != null) {
+        if (checkScanQRCode != null && dataInf.getTransaction().getStatus().equals(TRANSACTION_DONE)) {
             showRatingDialog();
         }
     }
