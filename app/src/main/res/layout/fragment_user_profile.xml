@@ -73,7 +73,10 @@
             android:layout_centerHorizontal="true"
             android:text="address"
             android:textColor="@color/address"
-            android:textSize="9pt" />
+            android:textSize="9pt"
+            android:paddingLeft="5pt"
+            android:paddingRight="5pt"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/txtPhoneNumberProfile"

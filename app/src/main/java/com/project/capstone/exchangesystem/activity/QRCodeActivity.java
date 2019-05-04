@@ -34,7 +34,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
     Toolbar tbToolbar;
     ArrayList<Integer> transactionIds;
     Context context;
-    String tmpQrCode;
+    String tmpQrCode, authorization;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         setContentView(R.layout.activity_qrcode);
         context = this;
         sharedPreferences = getSharedPreferences("localData", MODE_PRIVATE);
+        authorization = sharedPreferences.getString("authorization", null);
         userId = sharedPreferences.getInt("userId", 0);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.qr_scanner);
         tbToolbar = findViewById(R.id.tbToolbar);
@@ -61,6 +62,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
             tmpQrCode = barcode.displayValue;
             qrCode.put("qrCode", barcode.displayValue);
             qrCode.put("userId", userId);
+            qrCode.put("token", authorization);
             socketServer.connect();
             socketServer.emitQRCode(qrCode);
         } catch (JSONException e) {
@@ -138,7 +140,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
                     if (checkExistedTransId){
                         settingDialog("Xác nhận giao dịch", "Xác nhận thành công", "Hoàn thành", true, transactionId);
                     } else {
-                        settingDialog("Xác nhận giao dịch", "Mã giao dịch không đúng", "Thử lại", true, -1);
+                        settingDialog("Xác nhận giao dịch", "Mã giao dịch không đúng", "Thử lại", false, -1);
                     }
                 }
             });

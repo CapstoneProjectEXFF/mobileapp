@@ -63,22 +63,22 @@ public class DonatorAdapter extends RecyclerView.Adapter<DonatorAdapter.ViewHold
 
         public void bind(Donator donator, OnItemClickListener listener) {
             txtNameDonator.setText(donator.getDonatorName());
-            String nameDonatedItems = "";
-            for (int i = 0; i < donator.getItemNames().size(); i++){
-                if (i == (donator.getItemNames().size() - 1)){
-                    nameDonatedItems += donator.getItemNames().get(i);
-                } else {
-                    nameDonatedItems += donator.getItemNames().get(i) + ", ";
-                }
-            }
-            txtNameDonatedItems.setText(nameDonatedItems);
+//            String nameDonatedItems = "";
+//            for (int i = 0; i < donator.getItemNames().size(); i++){
+//                if (i == (donator.getItemNames().size() - 1)){
+//                    nameDonatedItems += donator.getItemNames().get(i);
+//                } else {
+//                    nameDonatedItems += donator.getItemNames().get(i) + ", ";
+//                }
+//            }
+//            txtNameDonatedItems.setText(nameDonatedItems);
+
+            txtNameDonatedItems.setText("Quyên góp " + donator.getItemNames().size() + " đồ dùng.");
             Picasso.with(context).load(donator.getAvatarUrl())
                     .placeholder(R.drawable.ic_profile)
                     .error(R.drawable.ic_profile)
                     .into(ivDonatorAvatar);
         }
-
-
     }
 
     public interface OnItemClickListener {
