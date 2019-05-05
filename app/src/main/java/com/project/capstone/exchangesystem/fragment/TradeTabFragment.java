@@ -225,6 +225,8 @@ public class TradeTabFragment extends Fragment {
             }
         }
 
+        setVisibleCancelAndSendButton();
+
         for (int i = 0; i < room.getUsers().size(); i++) {
             UserRoom tmpUser = room.getUsers().get(i);
             if (tmpUser.getUserId() == myUserId) {
@@ -237,8 +239,6 @@ public class TradeTabFragment extends Fragment {
                 }
             }
         }
-
-        setVisibleCancelAndSendButton();
     }
 
     private void setVisibleCancelAndSendButton() {
@@ -688,7 +688,7 @@ public class TradeTabFragment extends Fragment {
                                     yourItemAdapter.setfilter(tmpMySelectedItems);
 
                                     if (userId == yourUserId) {
-                                        setNoti(getString(R.string.user_reseted_trade));
+                                        setNoti("Phòng trao đổi " + getString(R.string.user_reseted_trade));
                                     } else {
                                         txtNoti.setVisibility(View.GONE);
                                     }

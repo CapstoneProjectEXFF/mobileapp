@@ -46,7 +46,7 @@
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/circle"
+                    android:background="@drawable/user"
                     android:scaleType="centerCrop" />
             </android.support.v7.widget.CardView>
 
@@ -149,7 +149,7 @@
                     android:id="@+id/txtNumberInventory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    android:text="0"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -185,7 +185,7 @@
                     android:id="@+id/txtNumberDonation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13"
+                    android:text="0"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -231,7 +231,7 @@
                     android:id="@+id/txtNumberFriends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13"
+                    android:text="0"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -269,7 +269,7 @@
                     android:id="@+id/txtNumberTransaction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    android:text="0"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 

@@ -122,8 +122,8 @@ public class MessageAdapter extends BaseAdapter {
 
             if (myUserId != senderId) {
                 Picasso.with(context).load(friendAccount.getAvatar())
-                        .placeholder(R.drawable.ic_profile)
-                        .error(R.drawable.ic_profile)
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
                         .into(viewHolder.ivAvatar);
             }
         }

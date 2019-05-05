@@ -24,7 +24,7 @@
             android:layout_height="50dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_user" />
+            android:src="@drawable/user" />
     </android.support.v7.widget.CardView>
 
 

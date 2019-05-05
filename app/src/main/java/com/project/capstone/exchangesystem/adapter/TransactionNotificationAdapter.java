@@ -25,6 +25,7 @@ import java.util.*;
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.project.capstone.exchangesystem.constants.AppStatus.TRADE_DONE_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.TRANSACTION_DONATED;
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ACCEPTED_TRADE_MESSAGE;
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_ADDED_ITEM_MESSAGE;
 import static com.project.capstone.exchangesystem.constants.AppStatus.USER_CANCELED_TRADE_CONFIRM_MESSAGE;
@@ -100,30 +101,20 @@ public class TransactionNotificationAdapter extends BaseAdapter {
 
         if (c.getClass() == Transaction.class) {
             Transaction transaction = (Transaction) c;
-            ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
-            TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
-
             String notification = "";
-            if (transaction.getSenderId() == idMe && transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
-                notification = transaction.getReceiver().getFullName() + " đã đồng ý yêu cầu của bạn";
-            } else if (transaction.getReceiverId() == idMe && transaction.getStatus().equals(AppStatus.TRANSACTION_SEND)) {
-                notification = transaction.getSender().getFullName() + " vừa gửi yêu cầu";
-//            } else if (transaction.getStatus().equals(AppStatus.TRANSACTION_RESEND)) {
-//                if (transaction.getReceiverId() == idMe) {
-//                    notification = transaction.getSender().getFullName() + " vừa cập nhật yêu cầu";
-//                } else {
-//                    notification = transaction.getReceiver().getFullName() + " vừa cập nhật yêu cầu";
-//                }
-            } else if (transaction.getDonationPostId() != null && transaction.getStatus().equals(String.valueOf(AppStatus.DONATION_UPDATE_ACTION))) {
-                notification = transaction.getSender().getFullName() + " vừa gửi từ thiện";
+
+            if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE)) {
+                if (transaction.getReceiverId() != idMe){
+                    notification = "Cuộc trao đổi của bạn và " + transaction.getReceiver().getFullName() + " đã hoàn thành";
+                    setNotiItem(notification, transaction.getSender().getAvatar(), view);
+                } else {
+                    notification = "Cuộc trao đổi của bạn và " + transaction.getSender().getFullName() + " đã hoàn thành";
+                    setNotiItem(notification, transaction.getSender().getAvatar(), view);
+                }
+            } else if (transaction.getStatus().equals(TRANSACTION_DONATED)) {
+                notification = transaction.getSender().getFullName() + " vừa quyên góp cho bài viết của bạn";
+                setNotiItem(notification, transaction.getSender().getAvatar(), view);
             }
-
-            txtNotification.setText(notification);
-            Picasso.with(context).load(transaction.getSender().getAvatar())
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
-                    .into(imgSender);
-
         } else if (c.getClass() == Relationship.class) {
             final Relationship relationship = (Relationship) c;
             ImageView imgProfileUser = (ImageView) view.findViewById(R.id.imgProfileUser);
@@ -204,7 +195,7 @@ public class TransactionNotificationAdapter extends BaseAdapter {
                     txtNotification.setText(notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_canceled_confirm_trade));
                     break;
                 case USER_RESET_TRADE_MESSAGE:
-                    txtNotification.setText(notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_reseted_trade) + " trong phòng trao đổi");
+                    txtNotification.setText("Phòng của bạn và " + notiItem.getUsers().get(0).getFullName() + " " + context.getString(R.string.user_reseted_trade));
                     break;
                 case TRADE_DONE_MESSAGE:
                     txtNotification.setText(context.getString(R.string.trade_done) + "giữa bạn và " + notiItem.getUsers().get(0).getFullName());
@@ -218,6 +209,16 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             }
         }
         return view;
+    }
+
+    private void setNotiItem(String notification, String avatar, View view) {
+        ImageView imgSender = (ImageView) view.findViewById(R.id.imgSender);
+        TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
+        txtNotification.setText(notification);
+        Picasso.with(context).load(avatar)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
+                .into(imgSender);
     }
 
     private void setNotiByUserIdAndItemId(String itemId, final String content, final TextView txtNotification, final String yourName) {

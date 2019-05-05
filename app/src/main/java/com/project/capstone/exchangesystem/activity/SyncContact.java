@@ -116,7 +116,7 @@ public class SyncContact extends AppCompatActivity {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 SyncContact.this,
                 Manifest.permission.READ_CONTACTS)) {
-            Toast.makeText(SyncContact.this, "CONTACTS permission allows us to Access CONTACTS app", Toast.LENGTH_LONG).show();
+//            Toast.makeText(SyncContact.this, "CONTACTS permission allows us to Access CONTACTS app", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(SyncContact.this, new String[]{
                     Manifest.permission.READ_CONTACTS}, RequestPermissionCode);
@@ -129,9 +129,9 @@ public class SyncContact extends AppCompatActivity {
         switch (RC) {
             case RequestPermissionCode:
                 if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(SyncContact.this, "Permission Granted, Now your application can access CONTACTS.", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(SyncContact.this, "Permission Granted, Now your application can access CONTACTS.", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(SyncContact.this, "Permission Canceled, Now your application cannot access CONTACTS.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SyncContact.this, "Không thể truy cập danh bạ của bạn", Toast.LENGTH_LONG).show();
                 }
                 break;
         }

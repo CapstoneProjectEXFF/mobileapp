@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -110,6 +112,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
         context = this;
         direct();
         setItemAdapter();
+        setToolbar();
         getData();
     }
 
@@ -554,7 +557,6 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
         }
 
         txtShowYourItems.setText(getString(R.string.trade_receive_item) + " " + txtReceiverName.getText().toString());
-        setToolbar();
 
         transDetailList = dataInf.getDetails();
 
@@ -643,7 +645,7 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
             btnMaps.setVisibility(View.GONE);
         }
 
-        if (checkScanQRCode != null && dataInf.getTransaction().getStatus().equals(TRANSACTION_DONE)) {
+        if (checkScanQRCode != null) {
             showRatingDialog();
         }
     }
@@ -679,6 +681,20 @@ public class TransactionDetailActivity extends AppCompatActivity implements Imag
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_transaction_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(getApplicationContext(), QRCodeActivity.class);
+        intent.putExtra("transactionId", transactionId);
+        startActivity(intent);
+        return true;
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.project.capstone.exchangesystem.activity.MainActivity;
 import com.project.capstone.exchangesystem.activity.TradeRealtimeActivity;
 import com.project.capstone.exchangesystem.activity.TransactionDetailActivity;
 import com.project.capstone.exchangesystem.adapter.TransactionNotificationAdapter;
+import com.project.capstone.exchangesystem.constants.AppStatus;
 import com.project.capstone.exchangesystem.model.NotiTransaction;
 import com.project.capstone.exchangesystem.model.Relationship;
 import com.project.capstone.exchangesystem.model.Room;
@@ -38,6 +39,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.project.capstone.exchangesystem.constants.AppStatus.TRADE_DONE_MESSAGE;
+import static com.project.capstone.exchangesystem.constants.AppStatus.TRANSACTION_DONATED;
 
 
 public class NotificationFragment extends Fragment {
@@ -90,7 +92,7 @@ public class NotificationFragment extends Fragment {
     public void onResume() {
         super.onResume();
         transactions.clear();
-//        getDataFromTransaction();
+        getDataFromTransaction();
         getDataFromRelationship();
         getNotiTransaction();
     }
@@ -125,27 +127,11 @@ public class NotificationFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 if (transactions.get(position).getClass() == Transaction.class) {
-                    Transaction tempTrans = (Transaction) transactions.get(position);
-                    rmaAPIService.getTransactionByTransID(authorization, tempTrans.getId()).enqueue(new Callback<TransactionRequestWrapper>() {
-
-                        @Override
-                        public void onResponse(Call<TransactionRequestWrapper> call, Response<TransactionRequestWrapper> response) {
-                            if (response.isSuccessful()) {
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<TransactionRequestWrapper> call, Throwable t) {
-
-                        }
-                    });
-                } else if (transactions.get(position).getClass() == Room.class) {
-                    Room room = (Room) transactions.get(position);
-                    Intent intent2 = new Intent(view.getContext(), TradeRealtimeActivity.class);
-                    intent2.putExtra("room", room);
-                    startActivity(intent2);
-                } else if (transactions.get(position).getClass() == NotiTransaction.class) {
+                    Transaction transaction = (Transaction) transactions.get(position);
+                    Intent intent = new Intent(view.getContext(), TransactionDetailActivity.class);
+                    intent.putExtra("transactionId", transaction.getId());
+                    startActivity(intent);
+                }  else if (transactions.get(position).getClass() == NotiTransaction.class) {
                     NotiTransaction notiTransaction = (NotiTransaction) transactions.get(position);
                     socketServer.emitNotiRead(notiTransaction.getNotification().getId());
 
@@ -172,13 +158,20 @@ public class NotificationFragment extends Fragment {
 
     private void getDataFromTransaction() {
 
-        rmaAPIService.getTransactionsByReceiverID(authorization).enqueue(new Callback<List<Transaction>>() {
+        rmaAPIService.getAllTransactionByUserID(authorization).enqueue(new Callback<List<Transaction>>() {
             @Override
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
 
                 if (response.isSuccessful()) {
                     List<Transaction> temp = new ArrayList<>();
-                    temp = response.body();
+
+                    for (int i = 0; i < response.body().size(); i++){
+                        Transaction transaction = response.body().get(i);
+                        if (transaction.getStatus().equals(AppStatus.TRANSACTION_DONE) || (transaction.getStatus().equals(TRANSACTION_DONATED) && transaction.getSenderId() != userId)){
+                            temp.add(transaction);
+                        }
+                    }
+
                     transactions.addAll(temp);
                     transactionNotificationAdapter.notifyDataSetChanged();
                 } else {
@@ -191,48 +184,6 @@ public class NotificationFragment extends Fragment {
                 Toast.makeText(getApplicationContext(), R.string.error_server, Toast.LENGTH_LONG).show();
             }
         });
-
-        rmaAPIService.getTransactionsTradedBySenderId(authorization).enqueue(new Callback<List<Transaction>>() {
-            @Override
-            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
-                if (response.isSuccessful()) {
-                    List<Transaction> temp = new ArrayList<>();
-                    temp = response.body();
-                    transactions.addAll(temp);
-                    transactionNotificationAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Transaction>> call, Throwable t) {
-                System.out.println("Fail rồi");
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        rmaAPIService.getDonationnTransactionByAgentID(authorization).enqueue(new Callback<List<TransactionRequestWrapper>>() {
-            @Override
-            public void onResponse(Call<List<TransactionRequestWrapper>> call, Response<List<TransactionRequestWrapper>> response) {
-                if (response.isSuccessful()) {
-                    List<TransactionRequestWrapper> temp = new ArrayList<>();
-                    temp = response.body();
-                    for (int i = 0; i < temp.size(); i++) {
-                        transactions.add(temp.get(i).getTransaction());
-                        transactionNotificationAdapter.notifyDataSetChanged();
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<TransactionRequestWrapper>> call, Throwable t) {
-                System.out.println("Fail rồi");
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        transactionNotificationAdapter.notifyDataSetChanged();
-
     }
 
     private void getDataFromRelationship() {

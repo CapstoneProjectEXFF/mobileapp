@@ -1,5 +1,7 @@
 package com.project.capstone.exchangesystem.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +40,7 @@ public class OwnTransaction extends AppCompatActivity {
     RmaAPIService rmaAPIService;
     SharedPreferences sharedPreferences;
     String authorization;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class OwnTransaction extends AppCompatActivity {
         transactionHistoryAdapter = new TransactionHistoryAdapter(this, transactions);
 
         listView.setAdapter(transactionHistoryAdapter);
+        context = this;
     }
 
     private void actionToolbar() {

@@ -37,6 +37,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class UserProfileFragment extends Fragment {
+
     String tempTransaction;
     String tempFriend, tempInventory, tempDonation;
     SharedPreferences sharedPreferences;
@@ -152,8 +153,8 @@ public class UserProfileFragment extends Fragment {
 
             if (avatar != null) {
                 Picasso.with(view.getContext()).load(avatar)
-                        .placeholder(R.drawable.ic_no_image)
-                        .error(R.drawable.ic_no_image)
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
                         .into(imageView);
             }
             tempTransaction = "";

@@ -75,8 +75,8 @@ public class DonatorAdapter extends RecyclerView.Adapter<DonatorAdapter.ViewHold
 
             txtNameDonatedItems.setText("Quyên góp " + donator.getItemNames().size() + " đồ dùng.");
             Picasso.with(context).load(donator.getAvatarUrl())
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
                     .into(ivDonatorAvatar);
         }
     }
