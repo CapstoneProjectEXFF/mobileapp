@@ -313,7 +313,7 @@ public class DonateItemActivity extends AppCompatActivity implements ImageOption
     private void loadProgressDialog() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setTitle(R.string.data_loading_noti);
-        progressDialog.setMessage(String.valueOf(R.string.waiting_noti));
+        progressDialog.setMessage(getString(R.string.waiting_noti));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }

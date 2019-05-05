@@ -183,8 +183,8 @@ public class TransactionNotificationAdapter extends BaseAdapter {
             final TextView txtNotification = (TextView) view.findViewById(R.id.txtNotification);
 
             Picasso.with(context).load(notiItem.getUsers().get(0).getAvatar())
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
                     .into(imgSender);
 
             switch (notiItem.getNotification().getNotiType()) {
