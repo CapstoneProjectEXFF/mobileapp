@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/btnSyncContact"
+        android:title="Sync Contact"
+        android:icon="@drawable/round_perm_contact_calendar_white_36"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/btnExploreFriend"
+        android:title="Sync Contact"
+        android:icon="@drawable/round_explore_white_36"
+        app:showAsAction="always"/>
+</menu>

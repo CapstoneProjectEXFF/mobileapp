@@ -50,7 +50,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
     RmaAPIService rmaAPIService;
     List<Integer> removedImageIds;
     LinearLayout btnAddImage;
-    EditText edtItemName, edtItemDes;
+    EditText edtItemName, edtItemDes, edtPreferItems;
     Context context;
     String authorization;
     int itemId, onClickFlag = -1;
@@ -184,6 +184,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
 
         item.setCategory(selectedCategory);
         item.setImageIds(removedImageIds);
+        item.setPreferItems(edtPreferItems.getText().toString());
 
         List<Uri> listUri = new ArrayList<>();
         for (int i = 0; i < imageList.size(); i++) {
@@ -364,6 +365,7 @@ public class UpdateItemActivity extends AppCompatActivity implements ImageOption
         itemId = intent.getIntExtra("itemId", 0);
         txtCategory = findViewById(R.id.txtCategory);
         selectedCategoryList = new ArrayList<>();
+        edtPreferItems = findViewById(R.id.edtPreferItems);
     }
 
     @Override

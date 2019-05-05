@@ -82,8 +82,8 @@ public class FriendFeedAdapter extends BaseAdapter {
         viewHolder.txtNameUser.setText(user.getFullName());
         viewHolder.txtAddressUser.setText("Vietnam");
         Picasso.with(context).load(user.getAvatar())
-                .placeholder(R.drawable.ic_no_image)
-                .error(R.drawable.ic_no_image)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
                 .into(viewHolder.imgProfileUser);
 
         final ViewHolder finalViewHolder = viewHolder;

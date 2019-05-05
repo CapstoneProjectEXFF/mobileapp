@@ -38,7 +38,7 @@ public class PostAction {
         String itemDes = item.getDescription();
         String itemAddress = item.getAddress();
         String privacy = item.getPrivacy();
-//        String preferItems = item.getPreferItems();
+        String preferItems = item.getPreferItems();
         int category = item.getCategory().getId();
         final Map<String, Object> jsonBody = new HashMap<String, Object>();
 
@@ -47,8 +47,7 @@ public class PostAction {
         jsonBody.put("address", itemAddress);
         jsonBody.put("privacy", privacy);
         jsonBody.put("category", "" + category);
-//        jsonBody.put("preferItems", preferItems);
-//        jsonBody.put("urls", urlList);
+        jsonBody.put("preferItems", preferItems);
 
         if (authorization != null) {
             if (action == ITEM_CREATE_ACTION) {

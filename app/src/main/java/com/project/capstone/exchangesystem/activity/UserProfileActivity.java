@@ -122,8 +122,8 @@ public class UserProfileActivity extends AppCompatActivity {
         userDetail = (User) getIntent().getSerializableExtra("friendDetail");
         if (userDetail.getAvatar() != null) {
             Picasso.with(getApplicationContext()).load(userDetail.getAvatar())
-                    .placeholder(R.drawable.ic_no_image)
-                    .error(R.drawable.ic_no_image)
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
                     .into(imageView);
         }
         txtNameUserProfile.setText(userDetail.getFullName());

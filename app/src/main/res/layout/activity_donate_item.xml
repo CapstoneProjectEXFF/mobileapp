@@ -57,8 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/app_icon_color_start"
-            android:background="@drawable/round_add_to_photos_black_36"/>
+            android:background="@drawable/round_add_circle_outline_black_36"/>
     </LinearLayout>
 
     <TextView

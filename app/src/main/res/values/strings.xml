@@ -100,7 +100,7 @@
 
     <!--trade room noti-->
     <string name="user_accepted_trade">đã chốt</string>
-    <string name="user_reseted_trade">đã xóa tất cả đồ dùng</string>
+    <string name="user_reseted_trade">đã được làm mới</string>
     <string name="user_canceled_confirm_trade">đã hủy chốt</string>
     <string name="user_added_item">đã được thêm vào</string>
     <string name="user_removed_item">đã bị xóa</string>

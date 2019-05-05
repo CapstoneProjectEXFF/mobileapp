@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -83,6 +85,7 @@ public class OwnFriendList extends AppCompatActivity {
     }
 
     private void actionToolbar() {
+        toolbar.setTitle(getString(R.string.title_own_friend_list));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,13 +96,23 @@ public class OwnFriendList extends AppCompatActivity {
         });
     }
 
-    public void toSyncContact(View view) {
-        Intent intent = new Intent(this, SyncContact.class);
-        startActivity(intent);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_friend_list, menu);
+        return true;
     }
 
-    public void toExploreFriend(View view) {
-        Intent intent = new Intent(this, ExploreFriendActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.btnSyncContact){
+            Intent intent = new Intent(this, SyncContact.class);
+            startActivity(intent);
+        }
+
+        if (item.getItemId() == R.id.btnExploreFriend){
+            Intent intent = new Intent(this, ExploreFriendActivity.class);
+            startActivity(intent);
+        }
+        return true;
     }
 }

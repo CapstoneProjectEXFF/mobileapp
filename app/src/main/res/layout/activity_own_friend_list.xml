@@ -11,34 +11,7 @@
         android:id="@+id/friendToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:title="@string/title_own_friend_list">
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="220dp"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:background="@drawable/round_perm_contact_calendar_white_18"
-                android:id="@+id/btnSyncContact"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:onClick="toSyncContact"
-                app:layout_constraintEnd_toStartOf="@+id/btnExploreFriend"
-                android:theme="@style/Widget.AppCompat.Button" />
-
-            <ImageButton
-                android:background="@drawable/round_explore_white_18"
-                android:id="@+id/btnExploreFriend"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:onClick="toExploreFriend"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:theme="@style/Widget.AppCompat.Button" />
-        </android.support.constraint.ConstraintLayout>
-
-
-    </android.support.v7.widget.Toolbar>
+        android:background="@drawable/bg_gradient_dark"/>
 
     <ListView
         android:id="@+id/friendListview"

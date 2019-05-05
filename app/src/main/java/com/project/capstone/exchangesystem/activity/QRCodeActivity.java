@@ -30,7 +30,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
     BarcodeReader barcodeReader;
     SocketServer socketServer;
     SharedPreferences sharedPreferences;
-    int userId;
+    int userId, ownedTransactionId;
     Toolbar tbToolbar;
     ArrayList<Integer> transactionIds;
     Context context;
@@ -47,6 +47,7 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.qr_scanner);
         tbToolbar = findViewById(R.id.tbToolbar);
         transactionIds = (ArrayList<Integer>) getIntent().getSerializableExtra("transactionIds");
+        ownedTransactionId = (int) getIntent().getSerializableExtra("transactionId");
         setToolbar();
         socketServer = new SocketServer();
         socketServer.mSocket.on("scan-succeeded", succeededQRCode);
@@ -98,10 +99,16 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
                     public void run() {
                         Log.i("here", "aaa");
                         boolean checkExistedTransId = false;
-                        for (int i = 0; i < transactionIds.size(); i++){
-                            if (transactionId == transactionIds.get(i)){
+                        if (transactionIds != null){
+                            for (int i = 0; i < transactionIds.size(); i++){
+                                if (transactionId == transactionIds.get(i)){
+                                    checkExistedTransId = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (transactionId == ownedTransactionId){
                                 checkExistedTransId = true;
-                                break;
                             }
                         }
                         Log.i("here", "bbb");
@@ -131,12 +138,19 @@ public class QRCodeActivity extends AppCompatActivity implements BarcodeReader.B
                 @Override
                 public void run() {
                     boolean checkExistedTransId = false;
-                    for (int i = 0; i < transactionIds.size(); i++){
-                        if (transactionId == transactionIds.get(i)){
+                    if (transactionIds != null){
+                        for (int i = 0; i < transactionIds.size(); i++){
+                            if (transactionId == transactionIds.get(i)){
+                                checkExistedTransId = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        if (transactionId == ownedTransactionId){
                             checkExistedTransId = true;
-                            break;
                         }
                     }
+
                     if (checkExistedTransId){
                         settingDialog("Xác nhận giao dịch", "Xác nhận thành công", "Hoàn thành", true, transactionId);
                     } else {

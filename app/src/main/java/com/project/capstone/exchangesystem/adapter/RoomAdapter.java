@@ -76,8 +76,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 if (room.getUsers().get(i).getUserId() != userId){
                     txtRoomName.setText(room.getUsers().get(i).getFullName());
                     Picasso.with(context).load(room.getUsers().get(i).getAvatar())
-                            .placeholder(R.drawable.ic_no_image)
-                            .error(R.drawable.ic_no_image)
+                            .placeholder(R.drawable.user)
+                            .error(R.drawable.user)
                             .into(imgUser);
                     break;
                 }

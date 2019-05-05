@@ -112,8 +112,8 @@ public class FriendListAdapter extends BaseAdapter {
             }
         });
         Picasso.with(context).load(userItem.getAvatar())
-                .placeholder(R.drawable.ic_profile)
-                .error(R.drawable.ic_profile)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
                 .into(viewHolder.imgUser);
         final User finalUserItem = userItem;
         convertView.setOnClickListener(new View.OnClickListener() {

@@ -101,8 +101,8 @@ public class MainCharityPostAdapter extends BaseAdapter {
             viewHolder.imgCharityPost.setVisibility(View.GONE);
         }
         Picasso.with(context).load(donationPost.getUser().getAvatar())
-                .placeholder(R.drawable.ic_profile)
-                .error(R.drawable.ic_profile)
+                .placeholder(R.drawable.user)
+                .error(R.drawable.user)
                 .into(viewHolder.imgProfileCharity);
 
         if (donationPost.getTitle() != null){
